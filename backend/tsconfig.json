@@ -1,5 +1,4 @@
 {
-  "extends": "./node_modules/gts/tsconfig-google.json",
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
     /* Basic Options */
