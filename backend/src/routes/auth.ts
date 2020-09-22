@@ -41,7 +41,22 @@ passport.deserializeUser(function (username, cb) {
 
 authRoutes.post("/login", passport.authenticate("local"), (req, res) => {
   res.json({
+    msg: "Found user",
     user: req.user,
+  });
+});
+
+authRoutes.get("/check", (req, res) => {
+  console.log(req.user);
+  res.json({
+    msg: `authenticated? ${req.isAuthenticated()}`,
+  });
+});
+
+authRoutes.post("/logout", (req, res) => {
+  req.logout();
+  res.json({
+    msg: `authenticated? ${req.isAuthenticated()}`,
   });
 });
 
