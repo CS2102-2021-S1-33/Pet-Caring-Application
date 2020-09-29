@@ -3,7 +3,10 @@ import axios from "axios";
 import logo from "./logo.svg";
 import "./App.css";
 
-axios.defaults.baseURL = "http://localhost:5000/";
+// ONLY FOR LOCAL DEV
+if (window.location.hostname == "localhost") {
+  axios.defaults.baseURL = "http://localhost:5000/";
+}
 axios.defaults.withCredentials = true;
 
 function App() {
