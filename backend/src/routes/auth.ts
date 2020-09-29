@@ -8,7 +8,7 @@ const authRoutes = express.Router();
 passport.use(
   new passportLocal.Strategy((username: string, password: string, done) => {
     pool.query(
-      "SELECT * FROM username_password WHERE username=$1 AND password=$2",
+      "SELECT * FROM users WHERE username=$1 AND password=$2",
       [username, password],
       (error, result) => {
         if (error) {
@@ -27,7 +27,7 @@ passport.serializeUser(function ({ username, password }, cb) {
 
 passport.deserializeUser(function (username, cb) {
   pool.query(
-    "SELECT * FROM username_password WHERE username=$1",
+    "SELECT * FROM users WHERE username=$1",
     [username],
     (error, result) => {
       if (error) {
