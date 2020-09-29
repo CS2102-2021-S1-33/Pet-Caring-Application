@@ -5,6 +5,7 @@ import session from "express-session";
 import cookieParser from "cookie-parser";
 import passport from "passport";
 import authRoutes from "./routes/auth";
+import path from "path";
 
 const app = express();
 app.use(
@@ -20,6 +21,12 @@ app.use(cors({ credentials: true, origin: process.env.FRONTEND_LOCAL_URL }));
 
 app.use(passport.initialize());
 app.use(passport.session());
+
+if (process.env.NODE_ENV == "production") {
+  app.use(
+    express.static(path.join(__dirname, "../../frontend-prototype/build"))
+  );
+}
 
 app.use("/auth", authRoutes);
 
