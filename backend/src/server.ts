@@ -10,9 +10,11 @@ import path from "path";
 const app = express();
 app.use(
   session({
+    store: new (require("connect-pg-simple")(session))(),
     secret: process.env.SESSION_SECRET || "secret",
     resave: true,
     saveUninitialized: true,
+    cookie: { maxAge: 12 * 60 * 60 * 1000 }, // 0.5 day
   })
 );
 app.use(cookieParser());
