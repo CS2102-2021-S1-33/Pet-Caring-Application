@@ -1,0 +1,21 @@
+{
+  "name": "poochfriendly",
+  "version": "1.0.0",
+  "description": "A pet-caring application that matches pet caretakers to pet owners.",
+  "main": "index.js",
+  "scripts": {
+    "build-backend": "cd backend && npm ci && npm run build && npm run start",
+    "heroku-postbuild": "cd frontend && npm ci && npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CS2102-2021-S1-33/Pet-Caring-Application.git"
+  },
+  "author": "Rayson Koh",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CS2102-2021-S1-33/Pet-Caring-Application/issues"
+  },
+  "homepage": "https://github.com/CS2102-2021-S1-33/Pet-Caring-Application#readme"
+}
