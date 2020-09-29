@@ -47,7 +47,6 @@ authRoutes.post("/login", passport.authenticate("local"), (req, res) => {
 });
 
 authRoutes.get("/check", (req, res) => {
-  console.log(req.user);
   res.json({
     msg: `authenticated? ${req.isAuthenticated()}`,
   });
