@@ -2,7 +2,6 @@ import express from "express";
 import passport from "passport";
 import passportLocal from "passport-local";
 import pool from "../db/init";
-import authMiddleware from "../middlewares/authMiddleware";
 
 const authRoutes = express.Router();
 
@@ -70,7 +69,7 @@ passport.deserializeUser(function (username, cb) {
 authRoutes.post("/login", passport.authenticate("local"), (req, res) => {
   res.json({
     msg: "Found user",
-    user: req.user,
+    isAuthenticated: true,
   });
 });
 
