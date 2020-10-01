@@ -42,25 +42,29 @@ passport.deserializeUser(function (username, cb) {
 /**
  * @swagger
  *
- * /login:
+ * /auth/login:
  *   post:
- *     description: Login as a User
+ *     description: Login to the application
  *     produces:
  *       - application/json
+ *     consumes:
+ *       - application/json
  *     parameters:
- *       - name: username
- *         description: Username to use for login.
- *         in: formData
- *         required: true
- *         type: string
- *       - name: password
- *         description: User's password.
- *         in: formData
- *         required: true
- *         type: string
+ *       - in: body
+ *         name: body
+ *         schema:
+ *           type: object
+ *           properties:
+ *             username:
+ *               type: string
+ *             password:
+ *               type: string
+ *           required:
+ *             - username
+ *             - password
  *     responses:
  *       200:
- *         description: login
+ *         description: Successful login
  */
 authRoutes.post("/login", passport.authenticate("local"), (req, res) => {
   res.json({
