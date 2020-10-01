@@ -4,7 +4,8 @@ import cors from "cors";
 import session from "express-session";
 import cookieParser from "cookie-parser";
 import passport from "passport";
-import authRoutes from "./routes/auth";
+import authRoutes from "./routes/authRoutes";
+import userRoutes from "./routes/userRoutes";
 import path from "path";
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUI from "swagger-ui-express";
@@ -33,6 +34,7 @@ if (process.env.NODE_ENV == "production") {
 }
 
 app.use("/auth", authRoutes);
+app.use("/user", userRoutes);
 
 const options = {
   definition: {

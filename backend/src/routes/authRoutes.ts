@@ -2,6 +2,7 @@ import express from "express";
 import passport from "passport";
 import passportLocal from "passport-local";
 import pool from "../db/init";
+import authMiddleware from "../middlewares/authMiddleware";
 
 const authRoutes = express.Router();
 
@@ -64,7 +65,7 @@ passport.deserializeUser(function (username, cb) {
  *             - password
  *     responses:
  *       200:
- *         description: Successful login
+ *         description: Login successful
  */
 authRoutes.post("/login", passport.authenticate("local"), (req, res) => {
   res.json({
@@ -73,17 +74,31 @@ authRoutes.post("/login", passport.authenticate("local"), (req, res) => {
   });
 });
 
-authRoutes.get("/check", (req, res) => {
-  res.json({
-    msg: `authenticated? ${req.isAuthenticated()}`,
-  });
-});
-
+/**
+ * @swagger
+ *
+ * /auth/logout:
+ *   post:
+ *     description: Logout of the application
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: Logout successful
+ *       400:
+ *         description: Logout unsuccessful
+ */
 authRoutes.post("/logout", (req, res) => {
   req.logout();
-  res.json({
-    msg: `authenticated? ${req.isAuthenticated()}`,
-  });
+  if (req.isAuthenticated()) {
+    res.status(400).json({
+      msg: "Logout unsuccessful",
+    });
+  } else {
+    res.json({
+      msg: "Logout successful",
+    });
+  }
 });
 
 export default authRoutes;
