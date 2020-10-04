@@ -2,22 +2,31 @@
     <div class="login-page" *ngIf="showLoginPage">
         <div class="header">
             <div class="logo">
-
+                <img src="assets/logo.png" width="280" height="36">
             </div>
             <div class="options">
-
+                <ul class="header-list">
+                    <li>Find a caretaker</li>
+                    <li>Login</li>
+                    <li>Sign Up</li>
+                </ul>
             </div>
         </div>
-        <div class="login-options">
-            <div class="third-party-auth">
 
-            </div>
-            <div class="pooch-auth">
+        <!-- <div class="auth">  for login/ forgot password
+            <form [formGroup]="loginForm">
+                <input class="login-fields" type="text" formControlName="user"><br><br>
+                <input class="login-fields" type="text" formControlName="userPassword">
+            </form>
+        </div> -->
 
-            </div>
-        </div>
-        <div class="auth"> <!-- for login/ forgot password -->
-
+        <div class="footer">
+            <ul class="footer-list">
+                <li>Find a caretaker</li>
+                <li>How it works</li>
+                <li>Login</li>
+                <li>Sign Up</li>
+            </ul>
         </div>
     </div>
 
@@ -31,15 +40,18 @@
             </div>
         </div>
         <div class="resister-options">
-            <div class="third-party-auth">
+            <!-- <div class="third-party-auth">
 
-            </div>
+            </div> -->
             <div class="pooch-auth">
-
+                <h2>Pooch username</h2>
             </div>
         </div>
         <div class="terms-and-conditions"> <!-- for terms and conditions -->
+            <h2>Terms and conditions</h2>
+        </div>
 
+        <div class="footer">
         </div>
     </div>
 </div>
