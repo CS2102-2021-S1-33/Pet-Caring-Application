@@ -1,5 +1,5 @@
 import express from "express";
-import pool from "../../dist/db/init";
+import pool from "../db/init";
 import authMiddleware from "../middlewares/authMiddleware";
 import User from "../models/User";
 
