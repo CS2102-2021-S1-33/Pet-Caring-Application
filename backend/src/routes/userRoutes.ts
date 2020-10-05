@@ -134,7 +134,7 @@ userRoutes.post("/create-account", async (req, res) => {
  *
  * /api/user/{username}:
  *   get:
- *     description: Gets user details
+ *     description: Gets ALL user details
  *     produces:
  *       - application/json
  *     parameters:
@@ -152,10 +152,23 @@ userRoutes.post("/create-account", async (req, res) => {
 userRoutes.get("/:username", async (req, res) => {
   const username: string = req.params.username;
   pool
-    .query("SELECT username, email, name FROM users WHERE username=$1", [
-      username,
-    ])
-    .then((result) => res.json({ result: result.rows[0] }))
+    .query(
+      `
+    SELECT 
+      u.username, 
+      u.email, 
+      u.name, 
+      o.pet_name, 
+      o.special_requirements, 
+      o.pet_category_name, 
+      p.set_by, 
+      p.base_price
+    FROM users u LEFT OUTER JOIN owned_pets o ON u.username = o.pet_owner_username 
+      LEFT OUTER JOIN pet_categories p ON o.pet_category_name = p.pet_category_name
+    WHERE u.username=$1`,
+      [username]
+    )
+    .then((result) => res.json({ result: result.rows }))
     .catch((err) => res.status(400).json({ msg: "An error has occured" }));
 });
 
