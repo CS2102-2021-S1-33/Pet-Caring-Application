@@ -30,6 +30,12 @@ enum USER_TYPES {
  *             username:
  *               type: string
  *               example: test
+ *             email:
+ *               type: string
+ *               example: test@test.com
+ *             name:
+ *               type: string
+ *               example: testname
  *             password:
  *               type: string
  *               example: password
@@ -37,7 +43,7 @@ enum USER_TYPES {
  *               type: array
  *               items:
  *                 type: string
- *                 example: [PET_OWNER, PART_TIME_CARETAKER]
+ *               example: [PET_OWNER, PART_TIME_CARETAKER]
  *           required:
  *             - username
  *             - password
@@ -86,7 +92,7 @@ userRoutes.post("/create-account", async (req, res) => {
         name,
         password,
       ])
-      .then((res) => 1)
+      .then((result) => 1)
       .catch((err) => errors.push(err));
   }
 
@@ -98,7 +104,7 @@ userRoutes.post("/create-account", async (req, res) => {
         name,
         password,
       ])
-      .then((res) => 1)
+      .then((result) => 1)
       .catch((err) => errors.push(err));
   }
 
@@ -110,7 +116,7 @@ userRoutes.post("/create-account", async (req, res) => {
         name,
         password,
       ])
-      .then((res) => 1)
+      .then((result) => 1)
       .catch((err) => errors.push(err));
   }
 
@@ -121,6 +127,36 @@ userRoutes.post("/create-account", async (req, res) => {
         : "Successfully created account for new user",
     errors,
   });
+});
+
+/**
+ * @swagger
+ *
+ * /user/{username}:
+ *   get:
+ *     description: Gets user details
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: path
+ *         name: username
+ *         schema:
+ *           type: string
+ *         required: true
+ *     responses:
+ *       200:
+ *         description: Get user details OK
+ *       400:
+ *         description: Bad request
+ */
+userRoutes.get("/:username", async (req, res) => {
+  const username: string = req.params.username;
+  pool
+    .query("SELECT username, email, name FROM users WHERE username=$1", [
+      username,
+    ])
+    .then((result) => res.json({ result: result.rows[0] }))
+    .catch((err) => res.status(400).json({ msg: "An error has occured" }));
 });
 
 export default userRoutes;
