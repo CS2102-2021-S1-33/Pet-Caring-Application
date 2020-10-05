@@ -57,8 +57,10 @@ passport.deserializeUser(function (username, cb) {
  *           properties:
  *             username:
  *               type: string
+ *               example: test
  *             password:
  *               type: string
+ *               example: password
  *           required:
  *             - username
  *             - password
