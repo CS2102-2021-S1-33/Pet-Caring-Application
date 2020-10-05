@@ -4,12 +4,12 @@
 }
 
 .header {
-    position: fixed;
     top: 0;
-    width: 100%;
+    width: 100vw;
     padding: 12px;
     display: flex;
     height: 12vh;
+    float: left;
 }
 
 .logo {
@@ -54,14 +54,21 @@ ul li:last-child {
 .auth {
     width: 100%;
     display: flex;
-    margin-top: 12vh;
-    height: auto;
+    padding: 12px;
     align-content: center;
     justify-content: center;
     vertical-align: middle;
 }
 
+.login-fields {
+    border-radius: 15px;
+    height: 30px;
+    width: 20vw;
+    border: 1px solid #4B4B4B;
+    text-align: center;
+}
 
+.login-fields:focus{outline:none;}
 
 .footer {
     color: #F4AD6E;
