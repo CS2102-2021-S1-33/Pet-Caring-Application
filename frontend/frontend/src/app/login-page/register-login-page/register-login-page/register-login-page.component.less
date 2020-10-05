@@ -1,21 +1,17 @@
-
 .login-page {
-    display: table;
+    display: flex;
+    flex-flow: column;
+    flex-wrap: nowrap;
+    height: 100%;
 }
 
 .header {
-    top: 0;
-    width: 100vw;
-    padding: 12px;
-    display: flex;
-    height: 12vh;
-    float: left;
+    flex: 0 1 auto;
 }
 
 .logo {
     float: left;    
     padding: 8px;
-    width: 50%;
     margin-left: 10%;
 }
 
@@ -24,7 +20,7 @@
     margin: 0;
     overflow: hidden;
     display: flex;
-    padding: 8px;
+    padding: 4px;
     margin: 2px;
     float: right;
 }
@@ -46,19 +42,29 @@ ul li:last-child {
 }
 
 .options {
-    width: 50%;
     float: right;
     padding: 8px;
 }
 
-.auth {
+.footer {
+    position: absolute;
+    bottom: 0 ;
+    color: #F4AD6E;
+    height: 12vh;
     width: 100%;
-    display: flex;
-    padding: 12px;
-    align-content: center;
-    justify-content: center;
-    vertical-align: middle;
+    flex: 0 1 auto;
+    //padding: 8px;
+    background: #F4AD6E 0% 0% no-repeat padding-box;
+    opacity: 1;
 }
+
+.auth {
+    flex: 1 1 auto;
+    align-items: center;
+    justify-content: center;
+    
+    
+}  
 
 .login-fields {
     border-radius: 15px;
@@ -70,16 +76,7 @@ ul li:last-child {
 
 .login-fields:focus{outline:none;}
 
-.footer {
-    color: #F4AD6E;
-    height: 12vh;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    padding: 8px;
-    background: #F4AD6E 0% 0% no-repeat padding-box;
-    opacity: 1;
-}
+
 
 .footer-list {
     list-style-type: none;
