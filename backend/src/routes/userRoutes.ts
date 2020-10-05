@@ -13,7 +13,7 @@ enum USER_TYPES {
 /**
  * @swagger
  *
- * /user/create-account:
+ * /api/user/create-account:
  *   post:
  *     description: Creates a new user account
  *     produces:
@@ -132,7 +132,7 @@ userRoutes.post("/create-account", async (req, res) => {
 /**
  * @swagger
  *
- * /user/{username}:
+ * /api/user/{username}:
  *   get:
  *     description: Gets user details
  *     produces:

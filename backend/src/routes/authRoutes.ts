@@ -42,7 +42,7 @@ passport.deserializeUser(function (username, cb) {
 /**
  * @swagger
  *
- * /auth/login:
+ * /api/auth/login:
  *   post:
  *     description: Login to the application
  *     produces:
@@ -78,7 +78,7 @@ authRoutes.post("/login", passport.authenticate("local"), (req, res) => {
 /**
  * @swagger
  *
- * /auth/logout:
+ * /api/auth/logout:
  *   post:
  *     description: Logout of the application
  *     produces:

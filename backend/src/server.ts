@@ -9,6 +9,7 @@ import userRoutes from "./routes/userRoutes";
 import path from "path";
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUI from "swagger-ui-express";
+import petRoutes from "./routes/petRoutes";
 
 const app = express();
 app.use(
@@ -33,8 +34,9 @@ if (process.env.NODE_ENV == "production") {
   );
 }
 
-app.use("/auth", authRoutes);
-app.use("/user", userRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/user", userRoutes);
+app.use("/api/pet", petRoutes);
 
 const options = {
   definition: {
