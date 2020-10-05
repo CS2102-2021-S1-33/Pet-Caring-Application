@@ -1,5 +1,6 @@
 DROP TABLE IF EXISTS owned_pets;
 DROP TABLE IF EXISTS pet_categories;
+DROP VIEW IF EXISTS users;
 DROP TABLE IF EXISTS pcs_admins;
 DROP TABLE IF EXISTS pet_owners;
 DROP TABLE IF EXISTS part_time_caretakers;
