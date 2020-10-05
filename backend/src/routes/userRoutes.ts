@@ -23,17 +23,21 @@ enum USER_TYPES {
  *     parameters:
  *       - in: body
  *         name: body
+ *         description: userTypes can take in PET_OWNER, PART_TIME_CARETAKER, FULL_TIME_CARETAKER
  *         schema:
  *           type: object
  *           properties:
  *             username:
  *               type: string
+ *               example: test
  *             password:
  *               type: string
+ *               example: password
  *             userTypes:
  *               type: array
  *               items:
  *                 type: string
+ *                 example: [PET_OWNER, PART_TIME_CARETAKER]
  *           required:
  *             - username
  *             - password
@@ -48,10 +52,14 @@ userRoutes.post("/create-account", async (req, res) => {
   const {
     username,
     password,
+    email,
+    name,
     userTypes,
   }: {
     username: string;
     password: string;
+    email: string;
+    name: string;
     userTypes: Array<USER_TYPES>;
   } = req.body;
 
@@ -72,15 +80,22 @@ userRoutes.post("/create-account", async (req, res) => {
 
   if (validCheck && userTypes.includes(USER_TYPES.PET_OWNER)) {
     await pool
-      .query("INSERT INTO pet_owners VALUES ($1, $2)", [username, password])
+      .query("INSERT INTO pet_owners VALUES ($1, $2, $3, $4)", [
+        username,
+        email,
+        name,
+        password,
+      ])
       .then((res) => 1)
       .catch((err) => errors.push(err));
   }
 
   if (validCheck && userTypes.includes(USER_TYPES.PART_TIME_CARETAKER)) {
     await pool
-      .query("INSERT INTO part_time_caretakers VALUES ($1, $2)", [
+      .query("INSERT INTO part_time_caretakers VALUES ($1, $2, $3, $4)", [
         username,
+        email,
+        name,
         password,
       ])
       .then((res) => 1)
@@ -89,8 +104,10 @@ userRoutes.post("/create-account", async (req, res) => {
 
   if (validCheck && userTypes.includes(USER_TYPES.FULL_TIME_CARETAKER)) {
     await pool
-      .query("INSERT INTO full_time_caretakers VALUES ($1, $2)", [
+      .query("INSERT INTO full_time_caretakers VALUES ($1, $2, $3, $4)", [
         username,
+        email,
+        name,
         password,
       ])
       .then((res) => 1)
