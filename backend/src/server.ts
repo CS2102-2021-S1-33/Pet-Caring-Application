@@ -4,12 +4,13 @@ import cors from "cors";
 import session from "express-session";
 import cookieParser from "cookie-parser";
 import passport from "passport";
-import authRoutes from "./routes/authRoutes";
-import userRoutes from "./routes/userRoutes";
 import path from "path";
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUI from "swagger-ui-express";
+import authRoutes from "./routes/authRoutes";
+import userRoutes from "./routes/userRoutes";
 import petRoutes from "./routes/petRoutes";
+import petCategoryRoutes from "./routes/petCategoryRoutes";
 
 const app = express();
 app.use(
@@ -37,6 +38,7 @@ if (process.env.NODE_ENV == "production") {
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/pet", petRoutes);
+app.use("/api/pet-category", petCategoryRoutes);
 
 const options = {
   definition: {
