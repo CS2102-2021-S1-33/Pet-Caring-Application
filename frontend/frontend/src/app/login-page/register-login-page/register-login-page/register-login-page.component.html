@@ -1,8 +1,13 @@
 
-    <div class="login-page" *ngIf="showLoginPage">
+<div class="page" *ngIf="!showLoginPage">
+    <div class="background">
+        <img src="assets/blob.svg" height="400px">
+    </div>
+
+    <div class="actual-content">
         <div class="header">
-            <div class="logo">
-                <img src="assets/logo.png" width="280" height="36">
+            <div class="header-logo">
+                <img src="assets/logo.svg" height="28px">
             </div>
             <div class="options">
                 <ul class="header-list">
@@ -14,45 +19,76 @@
         </div>
 
         <div class="auth"> 
-            <h1>Testing </h1> <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+            <h1>Log In</h1>
             <form [formGroup]="loginForm">
-                <input class="login-fields" type="text" formControlName="user"><br><br>
-                <input class="login-fields" type="text" formControlName="userPassword">
+                <label for="login-user">Username</label>
+                <input class="field" id="login-user" type="text" formControlName="user">
+                <label for="login-password">Password</label>
+                <input class="field" id="login-password" type="password" formControlName="userPassword">
+                <input class="button" type="submit" value="Login">
+                <p><u>Forgot your password?</u></p>
             </form>
         </div>
 
-        <div class="footer">
+        <!-- <div class="footer">
+            <div class="footer-logo">
+                <img src="assets/white logo.svg" height="24px">
+            </div>
             <ul class="footer-list">
                 <li>Find a caretaker</li>
                 <li>How it works</li>
-                <li>Login</li>
-                <li>Sign Up</li>
             </ul>
-        </div>
+        </div> -->
+    </div>
+</div>
+
+<div class="page" *ngIf="showLoginPage">
+    <div class="background">
+        <img src="assets/blob.svg" height="400px">
     </div>
 
-    <div class="register-page" *ngIf="!showLoginPage">
+    <div class="actual-content">
         <div class="header">
-            <div class="logo">
-
+            <div class="header-logo">
+                <img src="assets/logo.svg" height="28px">
             </div>
             <div class="options">
-
+                <ul class="header-list">
+                    <li>Find a caretaker</li>
+                    <li>Login</li>
+                    <li>Sign Up</li>
+                </ul>
             </div>
         </div>
-        <div class="resister-options">
-            <!-- <div class="third-party-auth">
 
-            </div> -->
-            <div class="pooch-auth">
-                <h2>Pooch username</h2>
-            </div>
-        </div>
-        <div class="terms-and-conditions"> <!-- for terms and conditions -->
-            <h2>Terms and conditions</h2>
-        </div>
+        <div class="auth"> 
+            <h1>Sign Up</h1>
+            <form [formGroup]="signUpForm">
+                <label for="signup-name">Name</label>
+                <input class="field" id="signup-name" type="text" formControlName="user">
 
-        <div class="footer">
+                <label for="signup-email">E-mail</label>
+                <input class="field" id="signup-email" type="text" formControlName="userPassword">
+
+                <label for="signup-address">Address</label>
+                <input class="field" id="signup-address" type="text" formControlName="userPassword">
+
+                <label for="signup-username">Username</label>
+                <input class="field" id="signup-username" type="text" formControlName="userPassword">
+
+                <label for="signup-password">Password</label>
+                <input class="field" id="signup-password" type="password" formControlName="userPassword">
+
+                <label for="signup-password">Confirm password</label>
+                <input class="field" id="signup-password" type="password" formControlName="userPassword">
+
+                <input class="button" type="submit" value="Sign up">
+                <div class="terms">
+                    By signing up, I agree to PoochFriendly's <u>Terms of Service and Privacy Policy</u>, 
+                    and consent to receiving email communication.
+                </div>
+            </form>
         </div>
     </div>
+</div>
 
