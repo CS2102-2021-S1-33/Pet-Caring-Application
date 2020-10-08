@@ -7,7 +7,7 @@
     "start": "cd backend && npm run start",
     "build-frontend": "cd frontend/frontend && npm run build",
     "build-backend": "cd backend && npm run build",
-    "heroku-prebuild": "cd ../backend && npm ci && cd ../frontend/frontend && npm ci",
+    "heroku-prebuild": "cd backend && npm ci && cd ../frontend/frontend && npm ci",
     "heroku-postbuild": "npm run build-frontend && npm run build-backend",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
