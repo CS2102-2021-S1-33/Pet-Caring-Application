@@ -62,7 +62,7 @@ CREATE TABLE availabilities (
     availability_start_date VARCHAR,
     availability_end_date VARCHAR,
     PRIMARY KEY (ct_username, admin_username, availability_start_date, availability_end_date),
-    FOREIGN KEY (ct_username, admin_username) REFERENCES verified_caretakers(ct_username, admin_username)
+    FOREIGN KEY (ct_username, admin_username) REFERENCES verified_caretakers(ct_username, admin_username) ON DELETE CASCADE
 );
 
 CREATE VIEW users AS (
@@ -98,7 +98,5 @@ INSERT INTO pet_owners VALUES ('sallyPO', 'sally@gmail.com', 'sally chan', 'pass
 INSERT INTO pet_categories VALUES ('dog', 'admin', 10);
 INSERT INTO owned_pets VALUES ('sallyPO', 'doggy', 'cannot eat sweet things', 'dog');
 CALL add_part_time_caretaker('john', 'john@yahoo.com', 'john tan', 'password');
-CALL add_part_time_caretaker('john', 'john@yahoo.com', 'john tan', 'password');
 CALL add_full_time_caretaker('micky', 'mick@hotmail.com', 'micky mouse', 'password');
 INSERT INTO verified_caretakers VALUES ('micky', 'admin');
-INSERT INTO verified_caretakers VALUES ('error', 'admin');
