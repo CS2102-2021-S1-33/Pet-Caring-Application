@@ -1,12 +1,15 @@
 DROP TABLE IF EXISTS owned_pets;
 DROP TABLE IF EXISTS pet_categories;
-DROP TABLE IF EXISTS availabilities;
+
+DROP TABLE IF EXISTS advertise_availabilities;
 DROP TABLE IF EXISTS verified_caretakers;
+
 DROP VIEW IF EXISTS users;
-DROP TABLE IF EXISTS pcs_admins;
-DROP TABLE IF EXISTS pet_owners;
+
 DROP TABLE IF EXISTS part_time_caretakers;
 DROP TABLE IF EXISTS full_time_caretakers;
+DROP TABLE IF EXISTS pcs_admins;
+DROP TABLE IF EXISTS pet_owners;
 DROP TABLE IF EXISTS caretakers;
 
 CREATE TABLE pcs_admins (
@@ -51,19 +54,28 @@ CREATE TABLE full_time_caretakers (
 );
 
 CREATE TABLE verified_caretakers (
-    ct_username VARCHAR NOT NULL REFERENCES caretakers(username),
-    admin_username VARCHAR NOT NULL REFERENCES pcs_admins(username),
-    PRIMARY KEY(ct_username, admin_username)
+    ct_username VARCHAR PRIMARY KEY REFERENCES caretakers(username),
+    admin_username VARCHAR NOT NULL REFERENCES pcs_admins(username)
 );
 
-CREATE TABLE availabilities (
-    ct_username VARCHAR NOT NULL,
-    admin_username VARCHAR NOT NULL, 
+CREATE TABLE advertise_availabilities (
+    ct_username VARCHAR,
     availability_start_date VARCHAR,
     availability_end_date VARCHAR,
-    PRIMARY KEY (ct_username, admin_username, availability_start_date, availability_end_date),
-    FOREIGN KEY (ct_username, admin_username) REFERENCES verified_caretakers(ct_username, admin_username) ON DELETE CASCADE
+    PRIMARY KEY (ct_username, availability_start_date, availability_end_date),
+    FOREIGN KEY (ct_username) REFERENCES verified_caretakers(ct_username) ON DELETE CASCADE
 );
+
+CREATE TABLE Bid (
+    bid_start_period DATE NOT NULL,
+    bid_end_period DATE NOT NULL,
+    bid_price INTEGER NOT NULL,
+    is_successful BOOLEAN,
+    payment_method VARCHAR,
+    transfer_method VARCHAR,
+    rating INTEGER,
+    review VARCHAR
+)
 
 CREATE VIEW users AS (
     SELECT * FROM pet_owners
