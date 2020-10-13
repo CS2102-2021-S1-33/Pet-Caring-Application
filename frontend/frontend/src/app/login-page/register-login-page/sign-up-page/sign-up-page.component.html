@@ -20,24 +20,75 @@
     <div class="auth">
       <h1>Sign Up</h1>
       <form [formGroup]="registerForm">
-        <label for="signup-name">Name</label>
-        <input class="field" id="signup-name" type="text" formControlName="user">
-
-        <label for="signup-email">E-mail</label>
-        <input class="field" id="signup-email" type="text" formControlName="userPassword">
-
-        <label for="signup-address">Address</label>
-        <input class="field" id="signup-address" type="text" formControlName="userPassword"><br><br>
+        <p>Personal Information</p>
+        <label class="first-label" for="name">Name</label>
+        <input class="field" id="name" type="text" formControlName="name">
+        <label for="email">E-mail</label>
+        <input class="field" id="email" type="email" formControlName="email">
+        <label for="address">Address</label>
+        <input class="field" id="address" type="text" formControlName="address"><br><br>
         <mat-divider></mat-divider>
-        <label for="signup-username">Username</label>
-        <input class="field" id="signup-username" type="text" formControlName="userPassword">
 
-        <label for="signup-password">Password</label>
-        <input class="field" id="signup-password" type="password" formControlName="userPassword">
+        <label for="username">Username</label>
+        <input class="field" id="username" type="text" formControlName="username">
+        <label for="password">Password</label>
+        <input class="field" id="password" type="password" formControlName="password">
+        <label for="confirm-password">Confirm password</label>
+        <input class="field" id="confirm-password" type="password" formControlName="confirmPassword"><br><br>
+        <mat-divider></mat-divider>
 
-        <label for="signup-confirm-password">Confirm password</label>
-        <input class="field" id="signup-confirm-password" type="password" formControlName="userPassword">
+        <label>Account type</label>
+        <div class="type-checkbox">
+          <label class="container">Pet owner
+            <input type="checkbox" formControlName="typePetowner">
+            <span class="checkmark"></span>
+          </label>
+          <label class="container">Caretaker
+            <input type="checkbox" formControlName="typeCaretaker">
+            <span class="checkmark"></span>
+          </label>
+        </div>
 
+
+        <div class="enabled">
+          <p>Caretaker Details</p>
+          <div class="type-checkbox">
+            <label class="container">Full-time
+              <input type="radio" name="caretaker-role" formControlName="caretakerRole">
+              <span class="radio"></span>
+            </label>
+            <label class="container">Part-time
+              <input type="radio" name="caretaker-role" formControlName="caretakerRole">
+              <span class="radio"></span>
+            </label>
+          </div>
+
+
+          <label>Select pet categories to care for</label>
+          <div><i>~insert a <b>multiselect</b> dropdown here~</i></div>
+        </div>
+
+        <div class="enabled">
+          <p>Pet Information</p>
+          <div>
+            <label id="no-of-pets-label">How many pets do you have?</label>
+            <input class="field" id="no-of-pets-input" type="text" formControlName="noOfPets" (change)="onChangePets($event)">
+          </div>
+
+          <div *ngFor="let pets of pe.controls; let i = index" class="pet-info" formArrayName="petInfo">
+            <br><br><mat-divider></mat-divider>
+            <p style="font-size: 17px; font-weight: 400; margin-bottom: 5px;">Pet {{i + 1}}</p>
+            <label class="first-label" for="name">Name</label>
+            <input class="field" id="name" type="text" formControlName="name">
+
+            <label>Select pet category of pet</label>
+            <div><i>~ insert a dropdown here~</i></div><br/>
+
+            <label>Special requirements</label>
+            <textarea class="field" style="resize: vertical;"></textarea>
+          </div>
+        </div>
+        
         <input class="button" type="submit" value="Sign up">
         <div class="terms">
           By signing up, I agree to PoochFriendly's <u>Terms of Service and Privacy Policy</u>,
