@@ -15,7 +15,7 @@ enum USER_TYPES {
  *
  * /api/user/create-account:
  *   post:
- *     description: Creates a new user account
+ *     description: Creates a new user account for EITHER PET_OWNER OR PART_TIME_CARETAKER
  *     produces:
  *       - application/json
  *     consumes:
@@ -40,12 +40,21 @@ enum USER_TYPES {
  *               type: string
  *               example: password
  *             userTypes:
- *               type: array
- *               items:
- *                 type: string
- *               example: [PET_OWNER, PART_TIME_CARETAKER]
+ *               type: string
+ *               example: PET_OWNER
+ *             petName:
+ *               type: string
+ *               example: petName
+ *             petSpecialReqs:
+ *               type: string
+ *               example: Allergic to dust
+ *             petCategory:
+ *               type: string
+ *               example: dog
  *           required:
  *             - username
+ *             - email
+ *             - name
  *             - password
  *             - userTypes
  *     responses:
@@ -61,15 +70,27 @@ userRoutes.post("/create-account", async (req, res) => {
     email,
     name,
     userTypes,
+    petName,
+    petSpecialReqs,
+    petCategory,
   }: {
     username: string;
     password: string;
     email: string;
     name: string;
-    userTypes: Array<USER_TYPES>;
+    userTypes: USER_TYPES;
+    petName: string;
+    petSpecialReqs: string;
+    petCategory: string;
   } = req.body;
 
   const errors: Array<string> = [];
+
+  if (userTypes == USER_TYPES.FULL_TIME_CARETAKER) {
+    return res.status(400).json({
+      msg: "Full-time caretaker must be manually added by admin",
+    });
+  }
 
   await pool
     .query("SELECT COUNT(*) FROM users WHERE username=$1", [username])
@@ -84,9 +105,27 @@ userRoutes.post("/create-account", async (req, res) => {
 
   let validCheck = errors.length == 0;
 
-  if (validCheck && userTypes.includes(USER_TYPES.PET_OWNER)) {
+  if (validCheck && userTypes == USER_TYPES.PET_OWNER) {
+    if (!petName && !petSpecialReqs && !petCategory) {
+      return res.status(400).json({
+        msg: "pet-name, pet-special-reqs and pet-category not found",
+      });
+    }
     await pool
-      .query("INSERT INTO pet_owners VALUES ($1, $2, $3, $4)", [
+      .query("CALL add_pet_owner($1, $2, $3, $4, $5, $6, $7)", [
+        username,
+        email,
+        name,
+        password,
+        petName,
+        petSpecialReqs,
+        petCategory,
+      ])
+      .then((result) => 1)
+      .catch((err) => errors.push(err));
+  } else if (validCheck && userTypes == USER_TYPES.PART_TIME_CARETAKER) {
+    await pool
+      .query("CALL add_part_time_caretaker($1, $2, $3, $4)", [
         username,
         email,
         name,
@@ -96,28 +135,8 @@ userRoutes.post("/create-account", async (req, res) => {
       .catch((err) => errors.push(err));
   }
 
-  if (validCheck && userTypes.includes(USER_TYPES.PART_TIME_CARETAKER)) {
-    await pool
-      .query("INSERT INTO part_time_caretakers VALUES ($1, $2, $3, $4)", [
-        username,
-        email,
-        name,
-        password,
-      ])
-      .then((result) => 1)
-      .catch((err) => errors.push(err));
-  }
-
-  if (validCheck && userTypes.includes(USER_TYPES.FULL_TIME_CARETAKER)) {
-    await pool
-      .query("INSERT INTO full_time_caretakers VALUES ($1, $2, $3, $4)", [
-        username,
-        email,
-        name,
-        password,
-      ])
-      .then((result) => 1)
-      .catch((err) => errors.push(err));
+  if (errors.length > 0) {
+    res.status(400);
   }
 
   res.json({
