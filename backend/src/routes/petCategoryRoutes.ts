@@ -34,7 +34,7 @@ const petCategoryRoutes = express.Router();
  *       400:
  *         description: Bad request
  */
-petCategoryRoutes.post("/", (req, res) => {
+petCategoryRoutes.post("/", async (req, res) => {
   const {
     pet_category_name,
     base_price,
@@ -45,7 +45,7 @@ petCategoryRoutes.post("/", (req, res) => {
 
   const { username } = req.user as any;
 
-  pool
+  await pool
     .query("INSERT INTO pet_categories VALUES ($1, $2, $3)", [
       pet_category_name,
       username,
@@ -55,6 +55,27 @@ petCategoryRoutes.post("/", (req, res) => {
     .catch((err) =>
       res.status(400).json({ msg: "An error has occurred", err })
     );
+});
+
+/**
+ * @swagger
+ *
+ * /api/pet-category/:
+ *   get:
+ *     description: Gets ALL pet-categories and their associated base price
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: Get pet-categories OK.
+ *       400:
+ *         description: Bad request
+ */
+petCategoryRoutes.get("/", async (req, res) => {
+  await pool
+    .query("SELECT * FROM pet_categories")
+    .then((result) => res.json({ result: result.rows }))
+    .catch((err) => res.status(400).json({ msg: "An error has occured", err }));
 });
 
 export default petCategoryRoutes;
