@@ -151,43 +151,29 @@ userRoutes.post("/create-account", async (req, res) => {
 /**
  * @swagger
  *
- * /api/user/{username}:
+ * /api/user/user-details:
  *   get:
  *     description: Gets ALL user details
  *     produces:
  *       - application/json
- *     parameters:
- *       - in: path
- *         name: username
- *         schema:
- *           type: string
- *         required: true
  *     responses:
  *       200:
  *         description: Get user details OK
  *       400:
  *         description: Bad request
  */
-userRoutes.get("/:username", async (req, res) => {
-  const username: string = req.params.username;
-  pool
+userRoutes.get("/user-details", authMiddleware, async (req, res) => {
+  const { username } = req.user as any;
+  await pool
     .query(
-      `
-    SELECT 
-      u.username, 
-      u.email, 
-      u.name, 
-      o.pet_name, 
-      o.special_requirements, 
-      o.pet_category_name, 
-      p.set_by, 
-      p.base_price
-    FROM users u LEFT OUTER JOIN owned_pets o ON u.username = o.pet_owner_username 
-      LEFT OUTER JOIN pet_categories p ON o.pet_category_name = p.pet_category_name
-    WHERE u.username=$1`,
+      `SELECT u.username, u.email, u.name, 
+        EXISTS (SELECT * FROM pet_owners po WHERE po.username = $1) AS is_pet_owner,
+        EXISTS (SELECT * FROM part_time_caretakers ptc WHERE ptc.username = $1) AS is_pt_caretaker, 
+        EXISTS (SELECT * FROM full_time_caretakers ftc WHERE ftc.username = $1) AS is_ft_caretaker 
+      FROM users u WHERE u.username=$1`,
       [username]
     )
-    .then((result) => res.json({ result: result.rows }))
+    .then((result) => res.json({ result: result.rows[0] }))
     .catch((err) => res.status(400).json({ msg: "An error has occured" }));
 });
 
