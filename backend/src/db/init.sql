@@ -74,8 +74,9 @@ CREATE TABLE Bid (
     payment_method VARCHAR,
     transfer_method VARCHAR,
     rating INTEGER,
-    review VARCHAR
-)
+    review VARCHAR,
+    PRIMARY KEY (bid_start_period, bid_end_period)
+);
 
 CREATE VIEW users AS (
     SELECT * FROM pet_owners
