@@ -36,6 +36,26 @@ CREATE TABLE owned_pets (
     pet_category_name VARCHAR NOT NULL REFERENCES pet_categories(pet_category_name),
     PRIMARY KEY(pet_owner_username, pet_name)
 );
+
+-- enforces each pet owner must own at least 1 pet
+CREATE OR REPLACE PROCEDURE add_pet_owner(
+    username VARCHAR, 
+    email VARCHAR,
+    name VARCHAR,
+    password VARCHAR,
+    po_pet_name VARCHAR,
+    po_special_requirements VARCHAR,
+    po_pet_category_name VARCHAR) AS
+'BEGIN
+  IF NOT EXISTS (
+      SELECT 1
+      FROM pet_categories pc
+      WHERE pc.pet_category_name = po_pet_category_name
+  ) THEN RETURN; END IF;
+  INSERT INTO pet_owners VALUES (username, email, name, password);
+  INSERT INTO owned_pets VALUES (username, po_pet_name, po_special_requirements, po_pet_category_name);
+END;'
+LANGUAGE plpgsql;
 -- ======================
 
 -- ======================
@@ -175,7 +195,10 @@ CREATE VIEW users AS (
 INSERT INTO pcs_admins VALUES ('admin', 'password');
 INSERT INTO pet_categories VALUES ('dog', 'admin', 10);
 --CALL add_full_time_caretaker('micky', 'mick@hotmail.com', 'micky mouse', 'password', 'admin', 'dog', 9); -- should not insert
+--CALL add_full_time_caretaker('micky', 'mick@hotmail.com', 'micky mouse', 'password', 'admin', 'cat', 10); -- should not insert
 CALL add_full_time_caretaker('micky', 'mick@hotmail.com', 'micky mouse', 'password', 'admin', 'dog', 10); -- should insert
+CALL add_pet_owner('sallyPO', 'sally@gmail.com', 'sally chan', 'password', 'petName', 'likes something', 'dog'); -- should insert
+--CALL add_pet_owner('sallyPO', 'sally@gmail.com', 'sally chan', 'password', 'petName', 'likes something', 'cat'); -- should not insert
 /*
 INSERT INTO pet_owners VALUES ('sallyPO', 'sally@gmail.com', 'sally chan', 'password');
 INSERT INTO pet_categories VALUES ('dog', 'admin', 10);
