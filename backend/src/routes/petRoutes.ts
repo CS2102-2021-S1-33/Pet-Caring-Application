@@ -48,24 +48,44 @@ petRoutes.post("/", (req, res) => {
     pet_category_name: string;
   } = req.body;
 
-  if (req.user) {
-    const { username } = req.user as any;
-    pool
-      .query("INSERT INTO owned_pets VALUES ($1, $2, $3, $4)", [
-        username,
-        pet_name,
-        special_requirements,
-        pet_category_name,
-      ])
-      .then((result) => res.json({ msg: "Successfully added pet" }))
-      .catch((err) =>
-        res.status(400).json({ msg: "An error has occurred", err })
-      );
-  } else {
-    res.status(400).json({
-      msg: "No user object found in request",
-    });
-  }
+  const { username } = req.user as any; //pet owner username
+  pool
+    .query("INSERT INTO owned_pets VALUES ($1, $2, $3, $4)", [
+      username,
+      pet_name,
+      special_requirements,
+      pet_category_name,
+    ])
+    .then((result) => res.json({ msg: "Successfully added pet" }))
+    .catch((err) =>
+      res.status(400).json({ msg: "An error has occurred", err })
+    );
+});
+
+/**
+ * @swagger
+ *
+ * /api/pet/:
+ *   get:
+ *     description: Gets ALL pets belonging to the pet owner
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: Get pets OK.
+ *       400:
+ *         description: Bad request
+ */
+petRoutes.get("/", async (req, res) => {
+  const { username } = req.user as any; // pet owner username
+  await pool
+    .query("SELECT * FROM owned_pets op WHERE op.pet_owner_username = $1", [
+      username,
+    ])
+    .then((result) => res.json({ result: result.rows }))
+    .catch((err) =>
+      res.status(400).json({ msg: "An error has occurred", err })
+    );
 });
 
 export default petRoutes;
