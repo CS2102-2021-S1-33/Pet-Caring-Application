@@ -189,22 +189,37 @@ CREATE TABLE makes (
 
 -- enforces total participation in (Advertises == For -- Pet_categories)
 CREATE OR REPLACE PROCEDURE advertise_availability(
-    ct_username VARCHAR,
-    availability_start_date DATE,
-    availability_end_date DATE,
+    ct_ct_username VARCHAR,
+    ct_availability_start_date DATE,
+    ct_availability_end_date DATE,
     ct_pet_category_name VARCHAR, 
     daily_price INTEGER) AS
 $$
 BEGIN
+   
   -- checks if daily_price > base_price for given pet category
   IF EXISTS (
     SELECT *
     FROM pet_categories pc 
     WHERE ct_pet_category_name = pc.pet_category_name AND pc.base_price <= daily_price) THEN
 
-  INSERT INTO advertise_availabilities VALUES (ct_username, availability_start_date, availability_end_date);
-  INSERT INTO advertise_for_pet_categories VALUES (ct_username, availability_start_date, availability_end_date, ct_pet_category_name, daily_price);
+    -- checks if there already exists the same availability slot for this caretaker, if yes then just add additional pet category
+    IF EXISTS (
+      SELECT *
+      FROM advertise_availabilities aa
+      WHERE aa.ct_username = ct_ct_username 
+      AND aa.availability_start_date = ct_availability_start_date 
+      AND aa.availability_end_date = ct_availability_end_date
+    ) THEN
 
+      INSERT INTO advertise_for_pet_categories VALUES (ct_ct_username, ct_availability_start_date, ct_availability_end_date, ct_pet_category_name, daily_price);
+
+    ELSE
+
+      INSERT INTO advertise_availabilities VALUES (ct_ct_username, ct_availability_start_date, ct_availability_end_date);
+      INSERT INTO advertise_for_pet_categories VALUES (ct_ct_username, ct_availability_start_date, ct_availability_end_date, ct_pet_category_name, daily_price);
+
+    END IF;
   END IF;
 END;
 $$
@@ -273,6 +288,7 @@ CALL add_pet_owner('sallyPO', 'sally@gmail.com', 'sally chan', 'password', 'petN
 INSERT INTO owned_pets VALUES ('sallyPO', 'testName', 'special', 'test'); -- now sallyPO has a dog and a test pet
 
 CALL advertise_availability('john', DATE '2020-12-01', DATE '2020-12-20', 'dog', 10); -- should insert
+CALL advertise_availability('john', DATE '2020-12-01', DATE '2020-12-20', 'test', 20); -- should insert
 --CALL advertise_availability('john', DATE '2020-12-01', DATE '2020-12-20', 'dog', 9); -- should NOT insert as daily_price < base_price
 --CALL advertise_availability('john', DATE '2020-12-01', DATE '2020-12-20', 'cat', 10); -- should NOT insert as 'cat' does not exist as a pet category
 --CALL advertise_availability('random', DATE '2020-12-01', DATE '2020-12-20', 'cat', 10); -- should NOT insert as 'random' is not a username of a verified caretaker
