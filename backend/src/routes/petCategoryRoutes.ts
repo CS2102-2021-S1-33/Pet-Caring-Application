@@ -1,6 +1,5 @@
 import express from "express";
 import pool from "../db/init";
-import Admin from "../models/Admin";
 
 const petCategoryRoutes = express.Router();
 
@@ -44,12 +43,12 @@ petCategoryRoutes.post("/", (req, res) => {
     base_price: string;
   } = req.body;
 
-  const admin: Admin = req.user as Admin;
+  const { username } = req.user as any;
 
   pool
     .query("INSERT INTO pet_categories VALUES ($1, $2, $3)", [
       pet_category_name,
-      admin.username,
+      username,
       base_price,
     ])
     .then((result) => res.json({ msg: "Successfully added new pet category" }))

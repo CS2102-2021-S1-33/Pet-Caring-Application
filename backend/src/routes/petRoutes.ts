@@ -1,6 +1,5 @@
 import express from "express";
 import pool from "../db/init";
-import User from "../models/User";
 
 const petRoutes = express.Router();
 
@@ -50,10 +49,10 @@ petRoutes.post("/", (req, res) => {
   } = req.body;
 
   if (req.user) {
-    const user = req.user as User;
+    const { username } = req.user as any;
     pool
       .query("INSERT INTO owned_pets VALUES ($1, $2, $3, $4)", [
-        user.username,
+        username,
         pet_name,
         special_requirements,
         pet_category_name,
