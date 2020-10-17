@@ -1,6 +1,5 @@
 import express from "express";
 import pool from "../db/init";
-import authMiddleware from "../middlewares/authMiddleware";
 import User from "../models/User";
 
 const petRoutes = express.Router();
@@ -39,7 +38,7 @@ const petRoutes = express.Router();
  *       400:
  *         description: Bad request
  */
-petRoutes.post("/", authMiddleware, (req, res) => {
+petRoutes.post("/", (req, res) => {
   const {
     pet_name,
     special_requirements,

@@ -1,6 +1,5 @@
 import express from "express";
 import pool from "../db/init";
-import authMiddleware from "../middlewares/authMiddleware";
 
 const availabilityRoutes = express.Router();
 
@@ -27,7 +26,7 @@ const availabilityRoutes = express.Router();
  *       400:
  *         description: Bad request
  */
-availabilityRoutes.get("/", authMiddleware, async (req, res) => {
+availabilityRoutes.get("/", async (req, res) => {
   const { username } = req.user as any;
 
   const {

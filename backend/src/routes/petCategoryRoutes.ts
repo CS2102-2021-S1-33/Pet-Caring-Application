@@ -1,6 +1,5 @@
 import express from "express";
 import pool from "../db/init";
-import authMiddleware from "../middlewares/authMiddleware";
 import Admin from "../models/Admin";
 
 const petCategoryRoutes = express.Router();
@@ -36,7 +35,7 @@ const petCategoryRoutes = express.Router();
  *       400:
  *         description: Bad request
  */
-petCategoryRoutes.post("/", authMiddleware, (req, res) => {
+petCategoryRoutes.post("/", (req, res) => {
   const {
     pet_category_name,
     base_price,

@@ -13,6 +13,7 @@ import petRoutes from "./routes/petRoutes";
 import petCategoryRoutes from "./routes/petCategoryRoutes";
 import bidRoutes from "./routes/bidRoutes";
 import availabilityRoutes from "./routes/availabilityRoutes";
+import authMiddleware from "./middlewares/authMiddleware";
 
 const app = express();
 app.use(
@@ -41,10 +42,10 @@ if (process.env.NODE_ENV == "production") {
 
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
-app.use("/api/pet", petRoutes);
-app.use("/api/pet-category", petCategoryRoutes);
-app.use("/api/availability", availabilityRoutes);
-app.use("/api/bid", bidRoutes);
+app.use("/api/pet", authMiddleware, petRoutes);
+app.use("/api/pet-category", authMiddleware, petCategoryRoutes);
+app.use("/api/availability", authMiddleware, availabilityRoutes);
+app.use("/api/bid", authMiddleware, bidRoutes);
 
 const options = {
   definition: {
