@@ -288,7 +288,7 @@ CALL add_pet_owner('sallyPO', 'sally@gmail.com', 'sally chan', 'password', 'petN
 INSERT INTO owned_pets VALUES ('sallyPO', 'testName', 'special', 'test'); -- now sallyPO has a dog and a test pet
 
 CALL advertise_availability('john', DATE '2020-12-01', DATE '2020-12-20', 'dog', 10); -- should insert
-CALL advertise_availability('john', DATE '2020-12-01', DATE '2020-12-20', 'test', 20); -- should insert
+--CALL advertise_availability('john', DATE '2020-12-01', DATE '2020-12-20', 'test', 20); -- should insert
 --CALL advertise_availability('john', DATE '2020-12-01', DATE '2020-12-20', 'dog', 9); -- should NOT insert as daily_price < base_price
 --CALL advertise_availability('john', DATE '2020-12-01', DATE '2020-12-20', 'cat', 10); -- should NOT insert as 'cat' does not exist as a pet category
 --CALL advertise_availability('random', DATE '2020-12-01', DATE '2020-12-20', 'cat', 10); -- should NOT insert as 'random' is not a username of a verified caretaker

@@ -63,4 +63,72 @@ availabilityRoutes.get("/", async (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ *
+ * /api/availability/:
+ *   post:
+ *     description: Adds an availability with daily price for a particular pet category. If availability exists then just add the pet category with given daily price.
+ *     produces:
+ *       - application/json
+ *     consumes:
+ *       - application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         description: Date is always YYYY-MM-DD
+ *         schema:
+ *           type: object
+ *           properties:
+ *             availabilityStartDate:
+ *               type: string
+ *               example: 2020-12-01
+ *             availabilityEndDate:
+ *               type: string
+ *               example: 2020-12-20
+ *             petCategory:
+ *               type: string
+ *               example: test
+ *             dailyPrice:
+ *               type: number
+ *               example: 20
+ *           required:
+ *             - availabilityStartDate
+ *             - availabilityEndDate
+ *             - petCategory
+ *             - dailyPrice
+ *     responses:
+ *       200:
+ *         description: Add availability OK
+ *       400:
+ *         description: Bad request
+ */
+availabilityRoutes.post("/", async (req, res) => {
+  const { username } = req.user as any; // caretaker username
+  const {
+    availabilityStartDate,
+    availabilityEndDate,
+    petCategory,
+    dailyPrice,
+  }: {
+    availabilityStartDate: string;
+    availabilityEndDate: string;
+    petCategory: string;
+    dailyPrice: number;
+  } = req.body;
+
+  await pool
+    .query("CALL advertise_availability($1, $2, $3, $4, $5)", [
+      username,
+      availabilityStartDate,
+      availabilityEndDate,
+      petCategory,
+      dailyPrice,
+    ])
+    .then((result) => res.json({ result: result.rows }))
+    .catch((err) =>
+      res.status(400).json({ msg: "An error has occurred", err })
+    );
+});
+
 export default availabilityRoutes;
