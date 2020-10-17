@@ -1,16 +1,10 @@
-DROP TABLE IF EXISTS owned_pets;
-DROP TABLE IF EXISTS pet_categories;
-
-DROP TABLE IF EXISTS advertise_availabilities;
-DROP TABLE IF EXISTS verified_caretakers;
-
-DROP VIEW IF EXISTS users;
-
-DROP TABLE IF EXISTS part_time_caretakers;
-DROP TABLE IF EXISTS full_time_caretakers;
-DROP TABLE IF EXISTS pcs_admins;
-DROP TABLE IF EXISTS pet_owners;
-DROP TABLE IF EXISTS caretakers;
+-- ======================
+-- RESET ALL schemas in public
+DROP SCHEMA public CASCADE;
+CREATE SCHEMA public;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO public;
+-- ======================
 
 CREATE TABLE pcs_admins (
     username VARCHAR PRIMARY KEY,
@@ -66,17 +60,28 @@ CREATE TABLE advertise_availabilities (
     FOREIGN KEY (ct_username) REFERENCES verified_caretakers(ct_username) ON DELETE CASCADE
 );
 
-CREATE TABLE Bid (
-    bid_start_period DATE NOT NULL,
-    bid_end_period DATE NOT NULL,
+CREATE TABLE bid_period (
+    bid_start_period DATE, 
+    bid_end_period DATE, 
+    PRIMARY KEY (bid_start_period, bid_end_period)
+);
+
+CREATE TABLE makes (
+    pet_owner_username VARCHAR,
+    pet_name VARCHAR,
+    bid_start_period DATE, 
+    bid_end_period DATE,
+    ct_username VARCHAR,
+    availability_start_date VARCHAR,
+    availability_end_date VARCHAR,
     bid_price INTEGER NOT NULL,
-    is_successful BOOLEAN,
+    is_successful BOOLEAN DEFAULT FALSE,
     payment_method VARCHAR,
     transfer_method VARCHAR,
     rating INTEGER,
     review VARCHAR,
-    PRIMARY KEY (bid_start_period, bid_end_period)
-);
+    PRIMARY KEY (pet_owner_username, pet_name, bid_start_period, bid_end_period, ct_username, availability_start_date, availability_end_date)
+)
 
 CREATE VIEW users AS (
     SELECT * FROM pet_owners
