@@ -1,4 +1,8 @@
 -- ======================
+-- TODO: FORMAT INDENTATION OMG THIS FILE IS A MESS -- RAY
+-- ======================
+
+-- ======================
 -- RESET ALL schemas in public
 DROP SCHEMA public CASCADE;
 CREATE SCHEMA public;
@@ -37,7 +41,7 @@ CREATE TABLE owned_pets (
     PRIMARY KEY(pet_owner_username, pet_name)
 );
 
--- enforces each pet owner must own at least 1 pet
+-- enforces total participation in (Pet owner == Own <== Pet) 
 CREATE OR REPLACE PROCEDURE add_pet_owner(
     username VARCHAR, 
     email VARCHAR,
@@ -140,16 +144,16 @@ LANGUAGE plpgsql;
 -- ADVERTISE AVAILABILITIES AND BIDS 
 CREATE TABLE advertise_availabilities (
     ct_username VARCHAR,
-    availability_start_date VARCHAR,
-    availability_end_date VARCHAR,
+    availability_start_date DATE,
+    availability_end_date DATE,
     PRIMARY KEY (ct_username, availability_start_date, availability_end_date),
     FOREIGN KEY (ct_username) REFERENCES verified_caretakers(ct_username) ON DELETE CASCADE
 );
 
 CREATE TABLE advertise_for_pet_categories (
     ct_username VARCHAR,
-    availability_start_date VARCHAR,
-    availability_end_date VARCHAR,
+    availability_start_date DATE,
+    availability_end_date DATE,
     pet_category_name VARCHAR, 
     daily_price INTEGER NOT NULL, 
     PRIMARY KEY (ct_username, availability_start_date, availability_end_date, pet_category_name),
@@ -169,16 +173,74 @@ CREATE TABLE makes (
     bid_start_period DATE, 
     bid_end_period DATE,
     ct_username VARCHAR,
-    availability_start_date VARCHAR,
-    availability_end_date VARCHAR,
+    availability_start_date DATE,
+    availability_end_date DATE,
     bid_price INTEGER NOT NULL,
     is_successful BOOLEAN DEFAULT FALSE,
     payment_method VARCHAR,
     transfer_method VARCHAR,
     rating INTEGER,
     review VARCHAR,
+    FOREIGN KEY (pet_owner_username, pet_name) REFERENCES owned_pets(pet_owner_username, pet_name),
+    FOREIGN KEY (bid_start_period, bid_end_period) REFERENCES bid_period(bid_start_period, bid_end_period),
+    FOREIGN KEY (ct_username, availability_start_date, availability_end_date) REFERENCES advertise_availabilities(ct_username, availability_start_date, availability_end_date),
     PRIMARY KEY (pet_owner_username, pet_name, bid_start_period, bid_end_period, ct_username, availability_start_date, availability_end_date)
 );
+
+-- enforces total participation in (Advertises == For -- Pet_categories)
+CREATE OR REPLACE PROCEDURE advertise_availability(
+    ct_username VARCHAR,
+    availability_start_date DATE,
+    availability_end_date DATE,
+    ct_pet_category_name VARCHAR, 
+    daily_price INTEGER) AS
+$$
+BEGIN
+  -- checks if daily_price > base_price for given pet category
+  IF EXISTS (
+    SELECT *
+    FROM pet_categories pc 
+    WHERE ct_pet_category_name = pc.pet_category_name AND pc.base_price <= daily_price) THEN
+
+  INSERT INTO advertise_availabilities VALUES (ct_username, availability_start_date, availability_end_date);
+  INSERT INTO advertise_for_pet_categories VALUES (ct_username, availability_start_date, availability_end_date, ct_pet_category_name, daily_price);
+
+  END IF;
+END;
+$$
+LANGUAGE plpgsql;
+
+-- INSERTS into Bid first, then insert into Makes
+CREATE OR REPLACE PROCEDURE make_bid(
+  po_username VARCHAR,
+  po_pet_name VARCHAR,
+  bid_start_period DATE, 
+  bid_end_period DATE,
+  ct_username VARCHAR,
+  availability_start_date DATE,
+  availability_end_date DATE,
+  bid_price INTEGER) AS
+$$
+DECLARE bid_pet_category VARCHAR; 
+BEGIN
+  -- determine pet category
+  SELECT op.pet_category_name INTO bid_pet_category
+  FROM owned_pets op
+  WHERE op.pet_name = po_pet_name AND op.pet_owner_username = po_username;
+
+  -- check whether bid_price >= daily_price
+  IF EXISTS (
+    SELECT *
+    FROM advertise_for_pet_categories a 
+    WHERE bid_pet_category = a.pet_category_name AND bid_price >= a.daily_price) THEN
+
+  INSERT INTO bid_period VALUES (bid_start_period, bid_end_period);
+  INSERT INTO makes VALUES (po_username, po_pet_name, bid_start_period, bid_end_period, ct_username, availability_start_date, availability_end_date, bid_price);
+
+  END IF;
+END;
+$$
+LANGUAGE plpgsql;
 -- ======================
 
 -- ======================
@@ -194,11 +256,28 @@ CREATE VIEW users AS (
 -- SAMPLE DATA (FOR TESTING)
 INSERT INTO pcs_admins VALUES ('admin', 'password');
 INSERT INTO pet_categories VALUES ('dog', 'admin', 10);
---CALL add_full_time_caretaker('micky', 'mick@hotmail.com', 'micky mouse', 'password', 'admin', 'dog', 9); -- should not insert
---CALL add_full_time_caretaker('micky', 'mick@hotmail.com', 'micky mouse', 'password', 'admin', 'cat', 10); -- should not insert
+INSERT INTO pet_categories VALUES ('test', 'admin', 10);
+
+CALL add_part_time_caretaker('john', 'john@yahoo.com', 'john tan', 'password');
+INSERT INTO verified_caretakers VALUES ('john', 'admin'); -- verify John as a PT-CT
+
+--CALL add_full_time_caretaker('micky', 'mick@hotmail.com', 'micky mouse', 'password', 'admin', 'dog', 9); -- should NOT insert
+--CALL add_full_time_caretaker('micky', 'mick@hotmail.com', 'micky mouse', 'password', 'admin', 'cat', 10); -- should NOT insert
 CALL add_full_time_caretaker('micky', 'mick@hotmail.com', 'micky mouse', 'password', 'admin', 'dog', 10); -- should insert
+
 CALL add_pet_owner('sallyPO', 'sally@gmail.com', 'sally chan', 'password', 'petName', 'likes something', 'dog'); -- should insert
---CALL add_pet_owner('sallyPO', 'sally@gmail.com', 'sally chan', 'password', 'petName', 'likes something', 'cat'); -- should not insert
+--CALL add_pet_owner('sallyPO', 'sally@gmail.com', 'sally chan', 'password', 'petName', 'likes something', 'cat'); -- should NOT insert
+
+INSERT INTO owned_pets VALUES ('sallyPO', 'testName', 'special', 'test'); -- now sallyPO has a dog and a test pet
+
+CALL advertise_availability('john', DATE '2020-12-01', DATE '2020-12-20', 'dog', 10); -- should insert
+--CALL advertise_availability('john', DATE '2020-12-01', DATE '2020-12-20', 'dog', 9); -- should NOT insert
+--CALL advertise_availability('john', DATE '2020-12-01', DATE '2020-12-20', 'cat', 10); -- should NOT insert
+--CALL advertise_availability('random', DATE '2020-12-01', DATE '2020-12-20', 'cat', 10); -- should NOT insert
+
+CALL make_bid('sallyPO', 'petName', DATE '2020-12-01', DATE '2020-12-10', 'john', DATE '2020-12-01', DATE '2020-12-20', 10); -- should insert
+--CALL make_bid('sallyPO', 'petName', DATE '2020-12-01', DATE '2020-12-10', 'john', DATE '2020-12-01', DATE '2020-12-20', 9); -- should insert
+--CALL make_bid('sallyPO', 'testName', DATE '2020-12-01', DATE '2020-12-10', 'john', DATE '2020-12-01', DATE '2020-12-20', 10); -- should NOT insert
 /*
 INSERT INTO pet_owners VALUES ('sallyPO', 'sally@gmail.com', 'sally chan', 'password');
 INSERT INTO pet_categories VALUES ('dog', 'admin', 10);
