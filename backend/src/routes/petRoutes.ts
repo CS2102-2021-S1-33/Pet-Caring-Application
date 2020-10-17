@@ -37,7 +37,7 @@ const petRoutes = express.Router();
  *       400:
  *         description: Bad request
  */
-petRoutes.post("/", (req, res) => {
+petRoutes.post("/", async (req, res) => {
   const {
     pet_name,
     special_requirements,
@@ -49,7 +49,7 @@ petRoutes.post("/", (req, res) => {
   } = req.body;
 
   const { username } = req.user as any; //pet owner username
-  pool
+  await pool
     .query("INSERT INTO owned_pets VALUES ($1, $2, $3, $4)", [
       username,
       pet_name,
