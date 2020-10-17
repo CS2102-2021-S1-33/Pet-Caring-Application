@@ -82,15 +82,37 @@ CREATE OR REPLACE PROCEDURE add_part_time_caretaker(
 END;'
 LANGUAGE plpgsql;
 
+-- THIS WILL NOT BE CALLED, FULL-TIME CARETAKERS WILL BE ADDED ON THE BACKEND MANUALLY BY PCS_ADMIN
+-- AS SUCH, FULL-TIME CARETAKERS THAT ARE IN THE TABLE ARE ALREADY VERIFIED
 CREATE OR REPLACE PROCEDURE add_full_time_caretaker(
     username VARCHAR, 
     email VARCHAR,
     name VARCHAR,
-    password VARCHAR) AS
-'BEGIN
+    password VARCHAR,
+    admin_username VARCHAR,
+    ct_pet_category_name VARCHAR,
+    daily_price INTEGER) AS
+$$
+DECLARE start_availability_date DATE;
+DECLARE end_availability_date DATE;
+BEGIN
+  -- checks if daily_price > base_price for given pet category
+  IF EXISTS (
+    SELECT *
+    FROM pet_categories pc 
+    WHERE ct_pet_category_name = pc.pet_category_name AND pc.base_price <= daily_price) THEN
+
+  SELECT CURRENT_DATE INTO start_availability_date;
+  SELECT start_availability_date + INTERVAL '1 year' INTO end_availability_date;
   INSERT INTO caretakers VALUES (username, email, name, password);
   INSERT INTO full_time_caretakers VALUES (username);
-END;'
+  INSERT INTO verified_caretakers VALUES (username, admin_username);
+  INSERT INTO advertise_availabilities VALUES (username, start_availability_date, end_availability_date);
+  INSERT INTO advertise_for_pet_categories VALUES (username, start_availability_date, end_availability_date, ct_pet_category_name, daily_price);
+
+  END IF;
+END;
+$$
 LANGUAGE plpgsql;
 -- ======================
 
@@ -151,10 +173,15 @@ CREATE VIEW users AS (
 -- ======================
 -- SAMPLE DATA (FOR TESTING)
 INSERT INTO pcs_admins VALUES ('admin', 'password');
+INSERT INTO pet_categories VALUES ('dog', 'admin', 10);
+--CALL add_full_time_caretaker('micky', 'mick@hotmail.com', 'micky mouse', 'password', 'admin', 'dog', 9); -- should not insert
+CALL add_full_time_caretaker('micky', 'mick@hotmail.com', 'micky mouse', 'password', 'admin', 'dog', 10); -- should insert
+/*
 INSERT INTO pet_owners VALUES ('sallyPO', 'sally@gmail.com', 'sally chan', 'password');
 INSERT INTO pet_categories VALUES ('dog', 'admin', 10);
 INSERT INTO owned_pets VALUES ('sallyPO', 'doggy', 'cannot eat sweet things', 'dog');
 CALL add_part_time_caretaker('john', 'john@yahoo.com', 'john tan', 'password');
 CALL add_full_time_caretaker('micky', 'mick@hotmail.com', 'micky mouse', 'password');
 INSERT INTO verified_caretakers VALUES ('micky', 'admin');
+*/
 -- ======================
