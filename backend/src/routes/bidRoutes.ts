@@ -18,6 +18,33 @@ enum TRANSFER_METHOD {
  * @swagger
  *
  * /api/bid:
+ *   get:
+ *     description: Gets ALL BIDS where the user participates as either pet owner or caretaker
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: Get all bids OK.
+ *       400:
+ *         description: Bad request
+ */
+bidRoutes.get("/", async (req, res) => {
+  const { username }: { username: string } = req.user as any;
+  await pool
+    .query(
+      "SELECT * FROM makes m WHERE m.pet_owner_username=$1 OR m.ct_username=$1",
+      [username]
+    )
+    .then((result) => res.json({ result: result.rows }))
+    .catch((err) =>
+      res.status(400).json({ msg: "An error has occurred", err })
+    );
+});
+
+/**
+ * @swagger
+ *
+ * /api/bid:
  *   post:
  *     description: Makes a bid
  *     produces:
