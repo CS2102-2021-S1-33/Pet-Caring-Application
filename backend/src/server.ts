@@ -7,13 +7,13 @@ import passport from "passport";
 import path from "path";
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUI from "swagger-ui-express";
+import authMiddleware from "./middlewares/authMiddleware";
 import authRoutes from "./routes/authRoutes";
 import userRoutes from "./routes/userRoutes";
 import petRoutes from "./routes/petRoutes";
 import petCategoryRoutes from "./routes/petCategoryRoutes";
 import bidRoutes from "./routes/bidRoutes";
 import availabilityRoutes from "./routes/availabilityRoutes";
-import authMiddleware from "./middlewares/authMiddleware";
 import godRoutes from "./routes/godRoutes";
 
 const app = express();
