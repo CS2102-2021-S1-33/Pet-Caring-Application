@@ -277,7 +277,7 @@ CALL advertise_availability('john', DATE '2020-12-01', DATE '2020-12-20', 'dog',
 --CALL advertise_availability('john', DATE '2020-12-01', DATE '2020-12-20', 'cat', 10); -- should NOT insert as 'cat' does not exist as a pet category
 --CALL advertise_availability('random', DATE '2020-12-01', DATE '2020-12-20', 'cat', 10); -- should NOT insert as 'random' is not a username of a verified caretaker
 
-CALL make_bid('sallyPO', 'petName', DATE '2020-12-01', DATE '2020-12-10', 'john', DATE '2020-12-01', DATE '2020-12-20', 10); -- should insert
+--CALL make_bid('sallyPO', 'petName', DATE '2020-12-01', DATE '2020-12-10', 'john', DATE '2020-12-01', DATE '2020-12-20', 10); -- should insert
 --CALL make_bid('sallyPO', 'petName', DATE '2020-12-01', DATE '2020-12-10', 'john', DATE '2020-12-01', DATE '2020-12-20', 9); -- should NOT insert as bid_price < daily_price
 --CALL make_bid('sallyPO', 'testName', DATE '2020-12-01', DATE '2020-12-10', 'john', DATE '2020-12-01', DATE '2020-12-20', 10); -- should NOT insert as john did not advertise to take care of 'test' pet category
 --CALL make_bid('sallyPO', 'petName', DATE '2020-11-01', DATE '2020-12-25', 'john', DATE '2020-12-01', DATE '2020-12-20', 10); -- should NOT insert as bid period is not subset of availability period

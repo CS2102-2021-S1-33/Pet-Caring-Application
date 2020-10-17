@@ -11,6 +11,7 @@ import authRoutes from "./routes/authRoutes";
 import userRoutes from "./routes/userRoutes";
 import petRoutes from "./routes/petRoutes";
 import petCategoryRoutes from "./routes/petCategoryRoutes";
+import bidRoutes from "./routes/bidRoutes";
 
 const app = express();
 app.use(
@@ -41,6 +42,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/pet", petRoutes);
 app.use("/api/pet-category", petCategoryRoutes);
+app.use("/api/bid", bidRoutes);
 
 const options = {
   definition: {
