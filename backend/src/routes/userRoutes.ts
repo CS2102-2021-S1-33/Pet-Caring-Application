@@ -23,7 +23,7 @@ enum USER_TYPES {
  *     parameters:
  *       - in: body
  *         name: body
- *         description: userTypes can take in PET_OWNER, PART_TIME_CARETAKER, FULL_TIME_CARETAKER
+ *         description: userTypes can be PET_OWNER, PART_TIME_CARETAKER, FULL_TIME_CARETAKER
  *         schema:
  *           type: object
  *           properties:
