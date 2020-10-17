@@ -177,4 +177,43 @@ userRoutes.get("/user-details", authMiddleware, async (req, res) => {
     .catch((err) => res.status(400).json({ msg: "An error has occured" }));
 });
 
+/**
+ * @swagger
+ *
+ * /api/user/verify-pt-caretaker:
+ *   post:
+ *     description: Verifies a part-time caretaker so that he can advertise his availability and accept bids from pet owners
+ *     produces:
+ *       - application/json
+ *     consumes:
+ *       - application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         schema:
+ *           type: object
+ *           properties:
+ *             ct_username:
+ *               type: string
+ *               example: john2
+ *           required:
+ *             - ct_username
+ *     responses:
+ *       200:
+ *         description: Verify pt-caretaker OK
+ *       400:
+ *         description: Bad request
+ */
+userRoutes.post("/verify-pt-caretaker", authMiddleware, async (req, res) => {
+  const { username } = req.user as any; // admin username
+  const { ct_username }: { ct_username: string } = req.body;
+  await pool
+    .query("INSERT INTO verified_caretakers VALUES ($1, $2)", [
+      ct_username,
+      username,
+    ])
+    .then((result) => res.json({ result: result.rows }))
+    .catch((err) => res.status(400).json({ msg: "An error has occured", err }));
+});
+
 export default userRoutes;
