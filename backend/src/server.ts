@@ -14,6 +14,7 @@ import petCategoryRoutes from "./routes/petCategoryRoutes";
 import bidRoutes from "./routes/bidRoutes";
 import availabilityRoutes from "./routes/availabilityRoutes";
 import authMiddleware from "./middlewares/authMiddleware";
+import godRoutes from "./routes/godRoutes";
 
 const app = express();
 app.use(
@@ -46,6 +47,7 @@ app.use("/api/pet", authMiddleware, petRoutes);
 app.use("/api/pet-category", authMiddleware, petCategoryRoutes);
 app.use("/api/availability", authMiddleware, availabilityRoutes);
 app.use("/api/bid", authMiddleware, bidRoutes);
+app.use("/api/god", godRoutes);
 
 const options = {
   definition: {

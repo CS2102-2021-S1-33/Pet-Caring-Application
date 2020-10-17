@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon src/server.ts",
     "start": "NODE_ENV=production ts-node dist/server.js",
-    "build": "tsc -p ."
+    "build": "tsc -p . && cp -r ./src/db/*.sql ./dist/db/"
   },
   "author": "Rayson Koh",
   "license": "ISC",
