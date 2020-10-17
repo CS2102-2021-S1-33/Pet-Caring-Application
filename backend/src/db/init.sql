@@ -39,7 +39,7 @@ CREATE TABLE owned_pets (
 -- ======================
 
 -- ======================
--- CARETAKERS AND AVAILABILITIES AND LEAVES (FULL-TIME ONLY)
+-- CARETAKERS AND LEAVES (FULL-TIME ONLY)
 CREATE TABLE caretakers (
     username VARCHAR PRIMARY KEY,
     email VARCHAR UNIQUE NOT NULL,
@@ -58,14 +58,6 @@ CREATE TABLE full_time_caretakers (
 CREATE TABLE verified_caretakers (
     ct_username VARCHAR PRIMARY KEY REFERENCES caretakers(username),
     admin_username VARCHAR NOT NULL REFERENCES pcs_admins(username)
-);
-
-CREATE TABLE advertise_availabilities (
-    ct_username VARCHAR,
-    availability_start_date VARCHAR,
-    availability_end_date VARCHAR,
-    PRIMARY KEY (ct_username, availability_start_date, availability_end_date),
-    FOREIGN KEY (ct_username) REFERENCES verified_caretakers(ct_username) ON DELETE CASCADE
 );
 
 CREATE TABLE apply_leaves (
@@ -103,7 +95,26 @@ LANGUAGE plpgsql;
 -- ======================
 
 -- ======================
--- BIDS AND TRANSACTIONS
+-- ADVERTISE AVAILABILITIES AND BIDS 
+CREATE TABLE advertise_availabilities (
+    ct_username VARCHAR,
+    availability_start_date VARCHAR,
+    availability_end_date VARCHAR,
+    PRIMARY KEY (ct_username, availability_start_date, availability_end_date),
+    FOREIGN KEY (ct_username) REFERENCES verified_caretakers(ct_username) ON DELETE CASCADE
+);
+
+CREATE TABLE advertise_for_pet_categories (
+    ct_username VARCHAR,
+    availability_start_date VARCHAR,
+    availability_end_date VARCHAR,
+    pet_category_name VARCHAR, 
+    daily_price INTEGER NOT NULL, 
+    PRIMARY KEY (ct_username, availability_start_date, availability_end_date, pet_category_name),
+    FOREIGN KEY (ct_username, availability_start_date, availability_end_date) REFERENCES advertise_availabilities(ct_username, availability_start_date, availability_end_date),
+    FOREIGN KEY (pet_category_name) REFERENCES pet_categories(pet_category_name) 
+);
+
 CREATE TABLE bid_period (
     bid_start_period DATE, 
     bid_end_period DATE, 
