@@ -8,37 +8,53 @@ Comments
 --> since it is not stated, would email be a candidate key?
     if so, please implement it properly
 
+SOLUTION: EMAIL UNIQUE NOT NULL
+
 2. Instead of removing the record of the user when deleting the user, his/her recordwill be marked as "deleted" in their accountstatus attribute.(Not captured in ER diagram)
 --> why not?  can have an attribute..
     as something to ponder about, there is a law in Europe about the right to be forgotten
     https://en.wikipedia.org/wiki/Right_to_be_forgotten
     may want to consider the implication on your ER diagram, but no need to change if you wish to
 
+SOLUTION: TEAM DECIDED NOT TO CHANGE
+
 5. A caretaker must be verified by a PCS Administrator before advertising their availabilities and taking on any caretaking jobs
 ==> what happen to unverified care taker?  not inside the table at all?
     so here, there is no difference between "caretaker" and "verified caretaker"
     I think the arrow is wrong here...
 
+SOLUTION: KEY CONSTRAINT BETWEEN CARETAKER AND VERIFY. UNVERIFIED CARETAKERS WILL NOT BE IN VERIFY TABLE. 
+
 --> still on "verify", but less troublesome
     why the need for status?
     they must be verified, so the status is always verified?
+
+SOLUTION: REMOVED STATUS ATTRIBUTE.
 
 6. Each pet owner must own 1 or more pets.
 --> nothing serious but just note that it may be temporarily unsatisfied during creation of pet owner
     in which case, need to make sure that eventually it will be consistent
     (e.g., remove pet owner if he/she does not add pet?)
 
+SOLUTION: ADD PROCEDURE TO INSERT INTO BOTH PETS AND PET_OWNERS DURING ACCOUNT CREATION.
+
 13. A caretaker can advertise their availability
 --> do you mean a "verified caretaker"?
+
+SOLUTION: YES.
 
 14. ... (not captured in ER diagram)
 --> this is ok, just note that there are ways to make "availability" more uniform
     one is automated update through triggers
     in any case, the automatic update is probably easier on "advertise"
 
+SOLUTION: TRIGGER ON FULL-TIME CARETAKER SUCH THAT THEY WILL BE MADE AVAILABLE AFTER ACCOUNT CREATION.
+
 24. A pet owner can bid for the services of a caretaker for the same availability period, but with a different start and end period of the caretaking service.
 ==> but the identities are <datetime_of_bid, bidder_phone_number> and does not contain <start_period, end_period>
     which is needed for this constraint to work
+
+SOLUTION: CHANGE PK TO <START_PERIOD, END_PERIOD>.
 
 26. The part-time caretaker can choose to acceptor not acceptbids for their service from pet owners.
 ==> here, "proceed" simply means "successful bids"
@@ -49,8 +65,12 @@ Comments
     so we need it to be an entity set
     here, "proceed" is not involved in any other relationship
 
+SOLUTION: REMOVED PROCEEDS AND TRANSACTION. THEIR ATTRIBUTES NOW BECOME NULLABLE ATTRIBUTES IN MAKES.
+
 30. Transactions are identified by their receipt number. For each transaction, thepayment method, pet transfer method and price must be recorded.
 ==> can be simplified since it is not needed but just get attached to above
+
+SOLUTION: NOT NEEDED ANYMORE SINCE PROCEEDS AND TRANSACTION WILL BE REMOVED.
 
 ** overall, good job
 
