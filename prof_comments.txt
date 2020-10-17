@@ -1,0 +1,60 @@
+
+Hi Group 33,
+
+The comment for your group is given below:
+Comments
+
+1. Users are identified by their username. For each user, their name, password, address, email address and account status must be recorded.
+--> since it is not stated, would email be a candidate key?
+    if so, please implement it properly
+
+2. Instead of removing the record of the user when deleting the user, his/her recordwill be marked as "deleted" in their accountstatus attribute.(Not captured in ER diagram)
+--> why not?  can have an attribute..
+    as something to ponder about, there is a law in Europe about the right to be forgotten
+    https://en.wikipedia.org/wiki/Right_to_be_forgotten
+    may want to consider the implication on your ER diagram, but no need to change if you wish to
+
+5. A caretaker must be verified by a PCS Administrator before advertising their availabilities and taking on any caretaking jobs
+==> what happen to unverified care taker?  not inside the table at all?
+    so here, there is no difference between "caretaker" and "verified caretaker"
+    I think the arrow is wrong here...
+
+--> still on "verify", but less troublesome
+    why the need for status?
+    they must be verified, so the status is always verified?
+
+6. Each pet owner must own 1 or more pets.
+--> nothing serious but just note that it may be temporarily unsatisfied during creation of pet owner
+    in which case, need to make sure that eventually it will be consistent
+    (e.g., remove pet owner if he/she does not add pet?)
+
+13. A caretaker can advertise their availability
+--> do you mean a "verified caretaker"?
+
+14. ... (not captured in ER diagram)
+--> this is ok, just note that there are ways to make "availability" more uniform
+    one is automated update through triggers
+    in any case, the automatic update is probably easier on "advertise"
+
+24. A pet owner can bid for the services of a caretaker for the same availability period, but with a different start and end period of the caretaking service.
+==> but the identities are <datetime_of_bid, bidder_phone_number> and does not contain <start_period, end_period>
+    which is needed for this constraint to work
+
+26. The part-time caretaker can choose to acceptor not acceptbids for their service from pet owners.
+==> here, "proceed" simply means "successful bids"
+    note how the transaction has key+total and makes only has key
+    this means, at most there is one pair <makes, transaction>
+    in which case, it simply means that anything in the transaction is a nullable attributes
+    contrast with "pet categories", pet categories is involved in another relationship
+    so we need it to be an entity set
+    here, "proceed" is not involved in any other relationship
+
+30. Transactions are identified by their receipt number. For each transaction, thepayment method, pet transfer method and price must be recorded.
+==> can be simplified since it is not needed but just get attached to above
+
+** overall, good job
+
+[5 marks]
+
+Cheers,
+Adi
