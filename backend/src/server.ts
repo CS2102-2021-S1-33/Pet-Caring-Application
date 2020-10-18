@@ -7,10 +7,14 @@ import passport from "passport";
 import path from "path";
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUI from "swagger-ui-express";
+import authMiddleware from "./middlewares/authMiddleware";
 import authRoutes from "./routes/authRoutes";
 import userRoutes from "./routes/userRoutes";
 import petRoutes from "./routes/petRoutes";
 import petCategoryRoutes from "./routes/petCategoryRoutes";
+import bidRoutes from "./routes/bidRoutes";
+import availabilityRoutes from "./routes/availabilityRoutes";
+import godRoutes from "./routes/godRoutes";
 
 const app = express();
 app.use(
@@ -39,8 +43,11 @@ if (process.env.NODE_ENV == "production") {
 
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
-app.use("/api/pet", petRoutes);
-app.use("/api/pet-category", petCategoryRoutes);
+app.use("/api/pet", authMiddleware, petRoutes);
+app.use("/api/pet-category", authMiddleware, petCategoryRoutes);
+app.use("/api/availability", authMiddleware, availabilityRoutes);
+app.use("/api/bid", authMiddleware, bidRoutes);
+app.use("/api/god", godRoutes);
 
 const options = {
   definition: {

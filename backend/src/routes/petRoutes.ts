@@ -1,7 +1,5 @@
 import express from "express";
 import pool from "../db/init";
-import authMiddleware from "../middlewares/authMiddleware";
-import User from "../models/User";
 
 const petRoutes = express.Router();
 
@@ -39,7 +37,7 @@ const petRoutes = express.Router();
  *       400:
  *         description: Bad request
  */
-petRoutes.post("/", authMiddleware, (req, res) => {
+petRoutes.post("/", async (req, res) => {
   const {
     pet_name,
     special_requirements,
@@ -50,24 +48,44 @@ petRoutes.post("/", authMiddleware, (req, res) => {
     pet_category_name: string;
   } = req.body;
 
-  if (req.user) {
-    const user = req.user as User;
-    pool
-      .query("INSERT INTO owned_pets VALUES ($1, $2, $3, $4)", [
-        user.username,
-        pet_name,
-        special_requirements,
-        pet_category_name,
-      ])
-      .then((result) => res.json({ msg: "Successfully added pet" }))
-      .catch((err) =>
-        res.status(400).json({ msg: "An error has occurred", err })
-      );
-  } else {
-    res.status(400).json({
-      msg: "No user object found in request",
-    });
-  }
+  const { username } = req.user as any; //pet owner username
+  await pool
+    .query("INSERT INTO owned_pets VALUES ($1, $2, $3, $4)", [
+      username,
+      pet_name,
+      special_requirements,
+      pet_category_name,
+    ])
+    .then((result) => res.json({ msg: "Successfully added pet" }))
+    .catch((err) =>
+      res.status(400).json({ msg: "An error has occurred", err })
+    );
+});
+
+/**
+ * @swagger
+ *
+ * /api/pet/:
+ *   get:
+ *     description: Gets ALL pets belonging to the pet owner
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: Get pets OK.
+ *       400:
+ *         description: Bad request
+ */
+petRoutes.get("/", async (req, res) => {
+  const { username } = req.user as any; // pet owner username
+  await pool
+    .query("SELECT * FROM owned_pets op WHERE op.pet_owner_username = $1", [
+      username,
+    ])
+    .then((result) => res.json({ result: result.rows }))
+    .catch((err) =>
+      res.status(400).json({ msg: "An error has occurred", err })
+    );
 });
 
 export default petRoutes;
