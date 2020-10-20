@@ -216,4 +216,49 @@ userRoutes.post("/verify-pt-caretaker", authMiddleware, async (req, res) => {
     .catch((err) => res.status(400).json({ msg: "An error has occured", err }));
 });
 
+/**
+ * @swagger
+ *
+ * /api/user/check-pet-owner:
+ *   get:
+ *     description: check if user is a pet-owner
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         schema:
+ *           type: object
+ *           properties:
+ *             username:
+ *               type: string
+ *               example: test
+ *           required:
+ *             - username
+ *     responses:
+ *       200:
+ *         description: pet owner has a pet registered 
+ *       306:
+ *         description: pet owner does not have any pet registered
+ *       400:
+ *         description: Bad request
+ */
+userRoutes.get("/check-pet-owner", async (req,res) => {
+  const { username } = req.user as any;
+  await pool
+  .query(
+    `SELECT coalesce(count(*), 0) as result
+      FROM owned_pets op 
+      WHERE op.pet_owner_username = $1`,
+    [username]
+  )
+  .then((result) => {
+    if(result.rows[0]["result"] > 1) {
+      res.json({ result: result.rows[0] })
+    } else {
+      res.status(306).json({msg : "This pet owner does not have any pet"});
+    }
+  }).catch((err) => res.status(400).json({ msg: "An error has occured" }));
+});
+
 export default userRoutes;
