@@ -1,0 +1,56 @@
+<div class="page">  
+  <div class="actual-content">
+    <div class="header">
+      <div class="header-logo">
+        <img src="assets/logo.svg" height="28px">
+      </div>
+      <div class="options">
+        <ul class="header-list">
+          <li><a href="http://localhost:4200/find-caretaker">Find a caretaker</a></li>
+          <!-- <li><a href="http://localhost:4200/login">Login</a></li>
+          <li><a href="http://localhost:4200/signup">Sign Up</a></li> -->
+          <li><a href="">Your jobs</a></li>
+          <li><a href="">Your bids</a></li>
+          <li><a href="">Profile</a></li>
+
+        </ul>
+      </div>
+    </div>
+
+    <div class="search-bar">
+      <form [formGroup]="searchForm">
+          <div class="input-field">
+              <i class="fas fa-search"></i>
+              <input class="field" type="text" id="search-keyword" formControlName="keyword">
+          </div>
+
+          <div class="input-field">
+              <i class="fas fa-paw"></i>
+              <input class="field" type="text" id="search-pet-category" formControlName="pet">
+              <!-- replace input with the angular mat select dropdown hahahaha-->
+          </div>
+
+          <div class="input-field">
+              <i class="fas fa-map-marker-alt"></i>
+              <input class="field" type="text" id="search-location" formControlName="location">
+              <!-- might want to use google places api? not sure i'll try this later-->
+          </div>
+
+          <div class="input-field" id="date-field">
+              <i class="far fa-calendar-alt"></i>
+              <input class="field" type="text" id="search-start-date" formControlName="startDate">
+              <!-- replace input with the angular mat datepicker hahahaha-->
+          </div>
+
+          <i class="fas fa-long-arrow-alt-right"></i>
+
+          <div class="input-field" id="date-field">
+              <i class="far fa-calendar-alt"></i>
+              <input class="field" type="text" id="search-end-date" formControlName="endDate">
+              <!-- replace input with the angular mat datepicker hahahaha-->
+          </div>
+      </form>
+    </div>
+  </div>
+</div>
+  

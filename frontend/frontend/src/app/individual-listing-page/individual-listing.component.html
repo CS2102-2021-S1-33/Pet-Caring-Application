@@ -1,0 +1,43 @@
+<div class="page">  
+    <div class="header">
+        <div class="header-logo">
+        <img src="assets/logo.svg" height="28px">
+        </div>
+        <div class="options">
+        <ul class="header-list">
+            <li><a href="http://localhost:4200/find-caretaker">Find a caretaker</a></li>
+            <!-- <li><a href="http://localhost:4200/login">Login</a></li>
+            <li><a href="http://localhost:4200/signup">Sign Up</a></li> -->
+            <li><a href="">Your jobs</a></li>
+            <li><a href="">Your bids</a></li>
+            <li><a href="">Profile</a></li>
+        </ul>
+        </div>
+    </div>
+    <div class="actual-content">
+        <div class="listing"></div>
+
+
+
+        <div class="bid-window">
+            <form [formGroup]="bidForm">
+                <label for="bid-pets">Pet for caretaking</label>
+                <!-- insert the angular multiselect dropdown pls -->
+
+                <label>Caretaking period</label>
+                <label for="bid-start-date">Start date</label>
+                <!-- insert the angular datetime picker-->
+                <label for="bid-end-date">End date</label>
+                <!-- insert the angular datetime picker-->
+
+                <label for="bid-phone">Phone number</label>
+                <input class="field" id="bid-phone" type="text" formControlName="phone">
+
+                <label for="bid-price">Bid price</label>
+                <input class="field" id="bid-price" type="text" formControlName="price">
+
+                <input class="button" type="submit" value="Bid for service">
+            </form>
+        </div>
+    </div>
+</div>
