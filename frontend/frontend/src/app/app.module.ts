@@ -12,11 +12,10 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { RegisterLoginPageComponent } from './login-page/register-login-page/register-login-page/register-login-page.component';
-import { SignUpPageComponent } from './login-page/register-login-page/sign-up-page/sign-up-page.component';
-import { AboutPageComponent } from './login-page/register-login-page/about-page/about-page.component';
-import { FindCaretakerComponent } from './login-page/find-caretaker/find-caretaker/find-caretaker.component';
-
-
+import { SignUpPageComponent } from './login-page/sign-up-page/sign-up-page.component';
+import { AboutPageComponent } from './about-page/about-page.component';
+import { FindCaretakerComponent } from './find-caretaker-page/find-caretaker.component';
+import { IndividualListingComponent } from './individual-listing-page/individual-listing.component';
 
 
 @NgModule({
@@ -25,7 +24,8 @@ import { FindCaretakerComponent } from './login-page/find-caretaker/find-caretak
     RegisterLoginPageComponent,
     SignUpPageComponent,
     AboutPageComponent,
-    FindCaretakerComponent
+    FindCaretakerComponent,
+    IndividualListingComponent,
   ],
   imports: [
     BrowserModule,
