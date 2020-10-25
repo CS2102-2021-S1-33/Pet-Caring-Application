@@ -24,7 +24,8 @@ CREATE TABLE pet_owners (
     username VARCHAR PRIMARY KEY,
     email VARCHAR UNIQUE NOT NULL,
     name VARCHAR NOT NULL,
-    password VARCHAR NOT NULL
+    password VARCHAR NOT NULL,
+    is_deleted BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE pet_categories (
@@ -68,7 +69,8 @@ CREATE TABLE caretakers (
     username VARCHAR PRIMARY KEY,
     email VARCHAR UNIQUE NOT NULL,
     name VARCHAR NOT NULL,
-    password VARCHAR NOT NULL
+    password VARCHAR NOT NULL,
+    is_deleted BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE part_time_caretakers (
@@ -137,6 +139,13 @@ BEGIN
   END IF;
 END;
 $$
+LANGUAGE plpgsql;
+
+CREATE OR REPLACE PROCEDURE delete_user(username_to_be_deleted VARCHAR) AS
+$$BEGIN
+  UPDATE caretakers SET is_deleted=TRUE WHERE username=username_to_be_deleted; 
+  UPDATE pet_owners SET is_deleted=TRUE WHERE username=username_to_be_deleted; 
+END;$$
 LANGUAGE plpgsql;
 -- ======================
 

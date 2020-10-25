@@ -180,6 +180,44 @@ userRoutes.get("/user-details", authMiddleware, async (req, res) => {
 /**
  * @swagger
  *
+ * /api/user/:
+ *   delete:
+ *     description: Deletes a user. Must be logged in as admin to use this route.
+ *     produces:
+ *       - application/json
+ *     consumes:
+ *       - application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         schema:
+ *           type: object
+ *           properties:
+ *             user_username:
+ *               type: string
+ *               example: sallyPO
+ *           required:
+ *             - user_username
+ *     responses:
+ *       200:
+ *         description: Delete user OK
+ *       400:
+ *         description: Bad request
+ */
+userRoutes.delete("/", authMiddleware, async (req, res) => {
+  const { username } = req.user as any; // ADMIN username
+  const { user_username }: { user_username: string } = req.body; // user to be deleted
+  await pool
+    .query("CALL delete_user($1)", [user_username])
+    .then((result) =>
+      res.json({ msg: "Successfully deleted user", result: result.rows[0] })
+    )
+    .catch((err) => res.status(400).json({ msg: "An error has occured", err }));
+});
+
+/**
+ * @swagger
+ *
  * /api/user/verify-pt-caretaker:
  *   post:
  *     description: Verifies a part-time caretaker so that he can advertise his availability and accept bids from pet owners
