@@ -224,6 +224,17 @@ userRoutes.post("/verify-pt-caretaker", authMiddleware, async (req, res) => {
  *     description: check if user is a pet-owner
  *     produces:
  *       - application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         schema:
+ *           type: object
+ *           properties:
+ *             username:
+ *               type: string
+ *               example: test
+ *           required:
+ *             - username
  *     responses:
  *       200:
  *         description: pet owner has a pet registered 
@@ -232,7 +243,7 @@ userRoutes.post("/verify-pt-caretaker", authMiddleware, async (req, res) => {
  *       400:
  *         description: Bad request
  */
-userRoutes.get("/check-pet-owner", authMiddleware, async (req,res) => {
+userRoutes.get("/check-pet-owner", async (req,res) => {
   const { username } = req.user as any;
   await pool
   .query(
