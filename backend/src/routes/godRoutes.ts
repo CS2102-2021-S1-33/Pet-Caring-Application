@@ -15,7 +15,7 @@ const sessions_sql = fs
   .readFileSync(path.join(__dirname, "../db/sessions.sql"))
   .toString();
 
-godRoutes.get("/", async (req, res) => {
+godRoutes.post("/", async (req, res) => {
   await pool
     .query(init_sql + sessions_sql)
     .then((result) => res.json({ result: result.rows }))
