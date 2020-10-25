@@ -9,7 +9,7 @@ passport.use(
   "local-user",
   new passportLocal.Strategy((username: string, password: string, done) => {
     pool.query(
-      "SELECT * FROM users WHERE username=$1 AND password=$2",
+      "SELECT * FROM users WHERE username=$1 AND password=$2 AND is_deleted=FALSE",
       [username, password],
       (error, result) => {
         if (error) {
