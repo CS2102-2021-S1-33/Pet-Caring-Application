@@ -2,10 +2,18 @@
 
 All notable changes to the API routes or the Database Schema will be documented in this file.
 
+## PoochFriendly API [v1.2.0] - 2020-10-27
+
+- Add route to soft delete pets. Must be logged in as pet owner to use this route.
+- Add route to soft delete pet categories. Must be logged in as admin to use this route.
+- Add route to soft delete advertised availabilities. Must be logged in as caretaker to use this route.
+- Add route to delete bids. Must be logged in as pet owner to use this route.
+- Standardise json response for all routes: {msg, error, isSuccess, result}
+
 ## PoochFriendly API [v1.1.0] - 2020-10-26
 
 - Add POST /bid/submit-rating-review route to add rating and review for a transaction.
-- Add DELETE /user/ route to delete users (Must be logged in as Admin to use this route).
+- Add DELETE /user/ route to soft delete users (Must be logged in as Admin to use this route).
 - Make bid and choose bid to first check whether caretaker is actually available for period: [bidStartPeriod, bidEndPeriod] before making changes (can be potential trigger)
 - Update comments to include WHO calls the route.
 
