@@ -211,23 +211,17 @@ bidRoutes.post("/choose_bid", async (req, res) => {
   const { username }: { username: string } = req.user as any; // PET OWNER USERNAME
 
   await pool
-    .query(
-      `
-      UPDATE makes SET is_successful=TRUE, payment_method=$8, transfer_method=$9 
-      WHERE pet_owner_username=$1 AND pet_name=$2 AND bid_start_period=$3 AND bid_end_period=$4 AND ct_username=$5 AND availability_start_date=$6 AND availability_end_date=$7
-      `,
-      [
-        username,
-        poPetName,
-        bidStartPeriod,
-        bidEndPeriod,
-        ctUsername,
-        availabilityStartDate,
-        availabilityEndDate,
-        paymentMtd,
-        petTransferMtd,
-      ]
-    )
+    .query("CALL choose_bid($1, $2, $3, $4, $5, $6, $7, $8, $9)", [
+      username,
+      poPetName,
+      bidStartPeriod,
+      bidEndPeriod,
+      ctUsername,
+      availabilityStartDate,
+      availabilityEndDate,
+      paymentMtd,
+      petTransferMtd,
+    ])
     .then((result) =>
       res.json({
         msg: "Successfully made update call",

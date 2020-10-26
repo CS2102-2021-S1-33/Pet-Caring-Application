@@ -236,34 +236,70 @@ LANGUAGE plpgsql;
 
 -- INSERTS into Bid first, then insert into Makes
 CREATE OR REPLACE PROCEDURE make_bid(
-  po_username VARCHAR,
-  po_pet_name VARCHAR,
-  bid_start_period DATE, 
-  bid_end_period DATE,
-  ct_username VARCHAR,
-  availability_start_date DATE,
-  availability_end_date DATE,
-  bid_price INTEGER) AS
+  poUsername VARCHAR,
+  poPetName VARCHAR,
+  bidStartPeriod VARCHAR,
+  bidEndPeriod VARCHAR,
+  ctUsername VARCHAR,
+  availabilityStartDate VARCHAR,
+  availabilityEndDate VARCHAR,
+  bidPrice INTEGER) AS
 $$
 DECLARE bid_pet_category VARCHAR; 
 BEGIN
-  IF (bid_start_period >= availability_start_date AND bid_end_period <= availability_end_date) THEN
+  IF (date(bidStartPeriod) >= date(availabilityStartDate) AND date(bidEndPeriod) <= date(availabilityEndDate)) THEN
     -- determine pet category
     SELECT op.pet_category_name INTO bid_pet_category
     FROM owned_pets op
-    WHERE op.pet_name = po_pet_name AND op.pet_owner_username = po_username;
+    WHERE op.pet_name = poPetName AND op.pet_owner_username = poUsername;
 
-    -- check whether bid_price >= daily_price
+    -- check whether bid_price >= daily_price AND does not conflict with existing caretaker jobs
+    -- Good cases:
+    -- newBidStart newBidEnd oldBidStart oldBidEnd
+    -- oldBidStart oldBidEnd newBidStart newBidEnd
     IF EXISTS (
       SELECT *
       FROM advertise_for_pet_categories a 
-      WHERE bid_pet_category = a.pet_category_name AND bid_price >= a.daily_price) THEN
+      WHERE bid_pet_category = a.pet_category_name AND bidPrice >= a.daily_price) AND NOT EXISTS (
+      SELECT 1 FROM makes m 
+      WHERE m.ct_username=ctUsername AND m.is_successful=TRUE AND NOT (m.bid_start_period - date(bidEndPeriod) > 0 OR date(bidStartPeriod) - m.bid_end_period > 0)
+      ) THEN
 
-    INSERT INTO bid_period VALUES (bid_start_period, bid_end_period);
-    INSERT INTO makes VALUES (po_username, po_pet_name, bid_start_period, bid_end_period, ct_username, availability_start_date, availability_end_date, bid_price);
+      INSERT INTO bid_period VALUES (date(bidStartPeriod), date(bidEndPeriod));
+      INSERT INTO makes VALUES (poUsername, poPetName, date(bidStartPeriod), date(bidEndPeriod), ctUsername, date(availabilityStartDate), date(availabilityEndDate), bidPrice);
 
     END IF;
   END IF;
+END;
+$$
+LANGUAGE plpgsql;
+
+-- Sets Bid as successful, checks caretaker is actually available
+CREATE OR REPLACE PROCEDURE choose_bid(
+  poUsername VARCHAR,
+  poPetName VARCHAR,
+  bidStartPeriod VARCHAR,
+  bidEndPeriod VARCHAR,
+  ctUsername VARCHAR,
+  availabilityStartDate VARCHAR,
+  availabilityEndDate VARCHAR,
+  paymentMtd VARCHAR,
+  petTransferMtd VARCHAR
+  ) AS
+$$
+-- Good cases:
+-- newBidStart newBidEnd oldBidStart oldBidEnd
+-- oldBidStart oldBidEnd newBidStart newBidEnd
+BEGIN
+  IF NOT EXISTS (
+    SELECT * FROM makes m 
+    WHERE m.ct_username=ctUsername AND m.is_successful=TRUE AND m.bid_start_period - date(bidEndPeriod) < 0 AND date(bidStartPeriod) - m.bid_end_period < 0
+  ) THEN 
+    UPDATE makes SET is_successful=TRUE, payment_method=paymentMtd, transfer_method=petTransferMtd 
+    WHERE pet_owner_username=poUsername AND pet_name=poPetName AND bid_start_period=date(bidStartPeriod) AND bid_end_period=date(bidEndPeriod) 
+    AND ct_username=ctUsername AND availability_start_date=date(availabilityStartDate) AND availability_end_date=date(availabilityEndDate);
+  END IF;
+
 END;
 $$
 LANGUAGE plpgsql;
