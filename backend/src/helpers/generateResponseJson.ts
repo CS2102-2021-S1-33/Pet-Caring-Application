@@ -13,3 +13,7 @@ export const generateResponseJson = (
 export const generateDefaultErrorJson = (err: any) => {
   return generateResponseJson("An error has occured", err, false);
 };
+
+export const generateDefaultSuccessJson = (msg: any) => {
+  return generateResponseJson(msg, "", true);
+};

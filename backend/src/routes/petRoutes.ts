@@ -2,7 +2,7 @@ import express from "express";
 import pool from "../db/init";
 import {
   generateDefaultErrorJson,
-  generateResponseJson,
+  generateDefaultSuccessJson,
 } from "../helpers/generateResponseJson";
 
 const petRoutes = express.Router();
@@ -62,7 +62,7 @@ petRoutes.post("/", async (req, res) => {
     ])
     .then((result) =>
       res.json({
-        ...generateResponseJson("Successfully added pet", "", true),
+        ...generateDefaultSuccessJson("Successfully added pet"),
         result,
       })
     )
@@ -91,7 +91,7 @@ petRoutes.get("/", async (req, res) => {
     ])
     .then((result) =>
       res.json({
-        ...generateResponseJson("Successfully fetched all pets", "", true),
+        ...generateDefaultSuccessJson("Successfully fetched all pets"),
         result: result.rows,
       })
     )
@@ -141,7 +141,7 @@ petRoutes.delete("/", async (req, res) => {
     )
     .then((result) =>
       res.json({
-        ...generateResponseJson("Successfully deleted pet", "", true),
+        ...generateDefaultSuccessJson("Successfully deleted pet"),
         result: result.rows,
       })
     )

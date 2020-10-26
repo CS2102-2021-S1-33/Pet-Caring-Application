@@ -1,5 +1,9 @@
 import express from "express";
 import pool from "../db/init";
+import {
+  generateDefaultErrorJson,
+  generateDefaultSuccessJson,
+} from "../helpers/generateResponseJson";
 
 const bidRoutes = express.Router();
 
@@ -35,10 +39,13 @@ bidRoutes.get("/", async (req, res) => {
       "SELECT * FROM makes m WHERE m.pet_owner_username=$1 OR m.ct_username=$1",
       [username]
     )
-    .then((result) => res.json({ result: result.rows }))
-    .catch((err) =>
-      res.status(400).json({ msg: "An error has occurred", err })
-    );
+    .then((result) =>
+      res.json({
+        ...generateDefaultSuccessJson("Successfully get all user's bids"),
+        result: result.rows,
+      })
+    )
+    .catch((err) => res.status(400).json(generateDefaultErrorJson(err)));
 });
 
 /**
@@ -126,10 +133,11 @@ bidRoutes.post("/", async (req, res) => {
     ])
     .then((result) =>
       res.json({
-        msg: "successfully made call to make_bid",
+        ...generateDefaultSuccessJson("Successfully made call to make_bid"),
+        result: result.rows,
       })
     )
-    .catch((err) => res.status(400).json({ msg: err }));
+    .catch((err) => res.status(400).json(generateDefaultErrorJson(err)));
 });
 
 /**
@@ -227,13 +235,11 @@ bidRoutes.post("/choose_bid", async (req, res) => {
     ])
     .then((result) =>
       res.json({
-        msg: "Successfully made update call",
-        res: result.rows,
+        ...generateDefaultSuccessJson("Successfully made update call"),
+        result: result.rows,
       })
     )
-    .catch((err) =>
-      res.status(400).json({ msg: "An error has occurred!", err })
-    );
+    .catch((err) => res.status(400).json(generateDefaultErrorJson(err)));
 });
 
 /**
@@ -334,13 +340,11 @@ bidRoutes.post("/submit-rating-review", async (req, res) => {
     )
     .then((result) =>
       res.json({
-        msg: "Successfully made update call",
-        res: result.rows,
+        ...generateDefaultSuccessJson("Successfully made update call"),
+        result: result.rows,
       })
     )
-    .catch((err) =>
-      res.status(400).json({ msg: "An error has occurred!", err })
-    );
+    .catch((err) => res.status(400).json(generateDefaultErrorJson(err)));
 });
 
 /**
@@ -427,13 +431,11 @@ bidRoutes.delete("/", async (req, res) => {
     )
     .then((result) =>
       res.json({
-        msg: "Successfully made update call",
-        res: result.rows,
+        ...generateDefaultSuccessJson("Successfully made update call"),
+        result: result.rows,
       })
     )
-    .catch((err) =>
-      res.status(400).json({ msg: "An error has occurred!", err })
-    );
+    .catch((err) => res.status(400).json(generateDefaultErrorJson(err)));
 });
 
 export default bidRoutes;

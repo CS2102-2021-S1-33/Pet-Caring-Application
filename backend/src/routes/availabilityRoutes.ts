@@ -2,7 +2,7 @@ import express from "express";
 import pool from "../db/init";
 import {
   generateDefaultErrorJson,
-  generateResponseJson,
+  generateDefaultSuccessJson,
 } from "../helpers/generateResponseJson";
 
 const availabilityRoutes = express.Router();
@@ -51,10 +51,8 @@ availabilityRoutes.get("/", async (req, res) => {
       )
       .then((result) =>
         res.json({
-          ...generateResponseJson(
-            "Successfully fetched all availabilities within given period",
-            "",
-            true
+          ...generateDefaultSuccessJson(
+            "Successfully fetched all availabilities within given period"
           ),
           result: result.rows,
         })
@@ -71,10 +69,8 @@ availabilityRoutes.get("/", async (req, res) => {
       )
       .then((result) =>
         res.json({
-          ...generateResponseJson(
-            "Successfully fetched all availabilities",
-            "",
-            true
+          ...generateDefaultSuccessJson(
+            "Successfully fetched all availabilities"
           ),
           result: result.rows,
         })
@@ -147,7 +143,7 @@ availabilityRoutes.post("/", async (req, res) => {
     ])
     .then((result) =>
       res.json({
-        ...generateResponseJson("Successfully added availability", "", true),
+        ...generateDefaultSuccessJson("Successfully added availability"),
         result: result.rows,
       })
     )
@@ -203,7 +199,7 @@ availabilityRoutes.delete("/", async (req, res) => {
     )
     .then((result) =>
       res.json({
-        ...generateResponseJson("Successfully deleted availability", "", true),
+        ...generateDefaultSuccessJson("Successfully deleted availability"),
         result: result.rows,
       })
     )

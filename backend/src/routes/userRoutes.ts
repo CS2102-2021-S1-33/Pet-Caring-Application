@@ -3,6 +3,7 @@ import pool from "../db/init";
 import {
   generateResponseJson,
   generateDefaultErrorJson,
+  generateDefaultSuccessJson,
 } from "../helpers/generateResponseJson";
 import authMiddleware from "../middlewares/authMiddleware";
 
@@ -197,7 +198,7 @@ userRoutes.get("/user-details", authMiddleware, async (req, res) => {
     )
     .then((result) =>
       res.json({
-        ...generateResponseJson("Selected user details", "", true),
+        ...generateDefaultSuccessJson("Selected user details"),
         result: result.rows[0],
       })
     )
@@ -237,7 +238,7 @@ userRoutes.delete("/", authMiddleware, async (req, res) => {
     .query("CALL delete_user($1)", [username])
     .then((result) =>
       res.json({
-        ...generateResponseJson("Successfully deleted user", "", true),
+        ...generateDefaultSuccessJson("Successfully deleted user"),
         result: result.rows[0],
       })
     )
@@ -281,7 +282,7 @@ userRoutes.post("/verify-pt-caretaker", authMiddleware, async (req, res) => {
     ])
     .then((result) =>
       res.json({
-        ...generateResponseJson("Successfully verified caretaker", "", true),
+        ...generateDefaultSuccessJson("Successfully verified caretaker"),
         result: result.rows,
       })
     )

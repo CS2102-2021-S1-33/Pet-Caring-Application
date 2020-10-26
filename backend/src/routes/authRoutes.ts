@@ -4,7 +4,7 @@ import passportLocal from "passport-local";
 import pool from "../db/init";
 import {
   generateDefaultErrorJson,
-  generateResponseJson,
+  generateDefaultSuccessJson,
 } from "../helpers/generateResponseJson";
 
 const authRoutes = express.Router();
@@ -91,7 +91,7 @@ passport.deserializeUser(function (username, cb) {
  *         description: Login successful
  */
 authRoutes.post("/login", passport.authenticate("local-user"), (req, res) => {
-  res.json(generateResponseJson("Found user", "", true));
+  res.json(generateDefaultSuccessJson("Found user"));
 });
 
 /**
@@ -127,7 +127,7 @@ authRoutes.post(
   "/login-admin",
   passport.authenticate("local-admin"),
   (req, res) => {
-    res.json(generateResponseJson("Found admin", "", true));
+    res.json(generateDefaultSuccessJson("Found admin"));
   }
 );
 
@@ -150,7 +150,7 @@ authRoutes.post("/logout", (req, res) => {
   if (req.isAuthenticated()) {
     res.status(400).json(generateDefaultErrorJson("User is still logged in"));
   } else {
-    res.status(400).json(generateResponseJson("Logout successful", "", true));
+    res.json(generateDefaultSuccessJson("Logout successful"));
   }
 });
 
