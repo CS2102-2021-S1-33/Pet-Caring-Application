@@ -1,5 +1,9 @@
 import express from "express";
 import pool from "../db/init";
+import {
+  generateDefaultErrorJson,
+  generateResponseJson,
+} from "../helpers/generateResponseJson";
 
 const petRoutes = express.Router();
 
@@ -56,10 +60,13 @@ petRoutes.post("/", async (req, res) => {
       special_requirements,
       pet_category_name,
     ])
-    .then((result) => res.json({ msg: "Successfully added pet" }))
-    .catch((err) =>
-      res.status(400).json({ msg: "An error has occurred", err })
-    );
+    .then((result) =>
+      res.json({
+        ...generateResponseJson("Successfully added pet", "", true),
+        result,
+      })
+    )
+    .catch((err) => res.status(400).json(generateDefaultErrorJson(err)));
 });
 
 /**
@@ -82,10 +89,13 @@ petRoutes.get("/", async (req, res) => {
     .query("SELECT * FROM owned_pets op WHERE op.pet_owner_username = $1", [
       username,
     ])
-    .then((result) => res.json({ result: result.rows }))
-    .catch((err) =>
-      res.status(400).json({ msg: "An error has occurred", err })
-    );
+    .then((result) =>
+      res.json({
+        ...generateResponseJson("Successfully fetched all pets", "", true),
+        result: result.rows,
+      })
+    )
+    .catch((err) => res.status(400).json(generateDefaultErrorJson(err)));
 });
 
 /**
@@ -129,10 +139,13 @@ petRoutes.delete("/", async (req, res) => {
       "UPDATE owned_pets SET is_deleted=TRUE WHERE pet_owner_username = $1 AND pet_name = $2",
       [username, pet_name]
     )
-    .then((result) => res.json({ result: result.rows }))
-    .catch((err) =>
-      res.status(400).json({ msg: "An error has occurred", err })
-    );
+    .then((result) =>
+      res.json({
+        ...generateResponseJson("Successfully deleted pet", "", true),
+        result: result.rows,
+      })
+    )
+    .catch((err) => res.status(400).json(generateDefaultErrorJson(err)));
 });
 
 export default petRoutes;
