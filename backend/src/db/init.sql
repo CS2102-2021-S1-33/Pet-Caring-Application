@@ -35,10 +35,11 @@ CREATE TABLE pet_categories (
 );
 
 CREATE TABLE owned_pets (
-    pet_owner_username VARCHAR REFERENCES pet_owners(username) ON DELETE CASCADE,
+    pet_owner_username VARCHAR REFERENCES pet_owners(username),
     pet_name VARCHAR,
     special_requirements VARCHAR,
     pet_category_name VARCHAR NOT NULL REFERENCES pet_categories(pet_category_name),
+    is_deleted BOOLEAN DEFAULT FALSE,
     PRIMARY KEY(pet_owner_username, pet_name)
 );
 
