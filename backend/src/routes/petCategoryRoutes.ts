@@ -1,5 +1,9 @@
 import express from "express";
 import pool from "../db/init";
+import {
+  generateDefaultErrorJson,
+  generateResponseJson,
+} from "../helpers/generateResponseJson";
 
 const petCategoryRoutes = express.Router();
 
@@ -51,10 +55,17 @@ petCategoryRoutes.post("/", async (req, res) => {
       username,
       base_price,
     ])
-    .then((result) => res.json({ msg: "Successfully added new pet category" }))
-    .catch((err) =>
-      res.status(400).json({ msg: "An error has occurred", err })
-    );
+    .then((result) =>
+      res.json({
+        ...generateResponseJson(
+          "Successfully added new pet category",
+          "",
+          true
+        ),
+        result: result.rows,
+      })
+    )
+    .catch((err) => res.status(400).json(generateDefaultErrorJson(err)));
 });
 
 /**
@@ -74,8 +85,17 @@ petCategoryRoutes.post("/", async (req, res) => {
 petCategoryRoutes.get("/", async (req, res) => {
   await pool
     .query("SELECT * FROM pet_categories")
-    .then((result) => res.json({ result: result.rows }))
-    .catch((err) => res.status(400).json({ msg: "An error has occured", err }));
+    .then((result) =>
+      res.json({
+        ...generateResponseJson(
+          "Successfully fetched all pet categories and their corresponding base price",
+          "",
+          true
+        ),
+        result: result.rows,
+      })
+    )
+    .catch((err) => res.status(400).json(generateDefaultErrorJson(err)));
 });
 
 /**
@@ -116,10 +136,13 @@ petCategoryRoutes.delete("/", async (req, res) => {
       `UPDATE pet_categories SET is_deleted=TRUE WHERE pet_category_name=$1`,
       [pet_category_name]
     )
-    .then((result) => res.json({ result: result.rows }))
-    .catch((err) =>
-      res.status(400).json({ msg: "An error has occurred", err })
-    );
+    .then((result) =>
+      res.json({
+        ...generateResponseJson("Successfully deleted pet category", "", true),
+        result: result.rows,
+      })
+    )
+    .catch((err) => res.status(400).json(generateDefaultErrorJson(err)));
 });
 
 export default petCategoryRoutes;
