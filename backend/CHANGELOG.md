@@ -8,7 +8,8 @@ All notable changes to the API routes or the Database Schema will be documented 
 - Add route to soft delete pet categories. Must be logged in as admin to use this route.
 - Add route to soft delete advertised availabilities. Must be logged in as caretaker to use this route.
 - Add route to delete bids. Must be logged in as pet owner to use this route.
-- Standardise json response for all routes: {msg, error, isSuccess, result}
+- Standardise json response for all routes: {msg, error, isSuccess, result}.
+- Remove status 400 to allow for more verbose error msg.
 
 ## PoochFriendly API [v1.1.0] - 2020-10-26
 
@@ -19,5 +20,5 @@ All notable changes to the API routes or the Database Schema will be documented 
 
 ## PoochFriendly API [v1.0.0] - 2020-10-18
 
-- Basic routes based on ER diagram and Project Spec (left DELETE routes and APPLYING FOR LEAVES routes)
-- Update DB Schema based on Prof's comments
+- Basic routes based on ER diagram and Project Spec (left DELETE routes and APPLYING FOR LEAVES routes).
+- Update DB Schema based on Prof's comments.
