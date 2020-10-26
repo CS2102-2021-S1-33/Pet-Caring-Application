@@ -1,4 +1,4 @@
-const generateResponseJson = (
+export const generateResponseJson = (
   msg: string,
   error: string,
   isSuccess: boolean
@@ -10,4 +10,6 @@ const generateResponseJson = (
   };
 };
 
-export default generateResponseJson;
+export const generateDefaultErrorJson = (err: any) => {
+  return generateResponseJson("An error has occured", err, false);
+};

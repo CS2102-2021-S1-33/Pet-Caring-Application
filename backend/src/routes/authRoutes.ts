@@ -2,7 +2,10 @@ import express from "express";
 import passport from "passport";
 import passportLocal from "passport-local";
 import pool from "../db/init";
-import generateResponseJson from "../helpers/generateResponseJson";
+import {
+  generateDefaultErrorJson,
+  generateResponseJson,
+} from "../helpers/generateResponseJson";
 
 const authRoutes = express.Router();
 
@@ -46,7 +49,7 @@ passport.serializeUser(({ username }, cb) => {
 
 passport.deserializeUser(function (username, cb) {
   pool.query(
-    "SELECT * FROM (SELECT username FROM users WHERE is_deleted=FALSE UNION SELECT username FROM pcs_admins) AS t WHERE username=$1",
+    "SELECT * FROM (SELECT username FROM users UNION SELECT username FROM pcs_admins) AS t WHERE username=$1",
     [username],
     (error, result) => {
       if (error) {
@@ -145,15 +148,7 @@ authRoutes.post(
 authRoutes.post("/logout", (req, res) => {
   req.logout();
   if (req.isAuthenticated()) {
-    res
-      .status(400)
-      .json(
-        generateResponseJson(
-          "Logout unsuccessful",
-          "User is still logged in",
-          false
-        )
-      );
+    res.status(400).json(generateDefaultErrorJson("User is still logged in"));
   } else {
     res.status(400).json(generateResponseJson("Logout successful", "", true));
   }
