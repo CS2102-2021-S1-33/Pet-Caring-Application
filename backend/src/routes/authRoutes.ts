@@ -2,6 +2,7 @@ import express from "express";
 import passport from "passport";
 import passportLocal from "passport-local";
 import pool from "../db/init";
+import generateResponseJson from "../helpers/generateResponseJson";
 
 const authRoutes = express.Router();
 
@@ -45,7 +46,7 @@ passport.serializeUser(({ username }, cb) => {
 
 passport.deserializeUser(function (username, cb) {
   pool.query(
-    "SELECT * FROM (SELECT username FROM users UNION SELECT username FROM pcs_admins) AS t WHERE username=$1",
+    "SELECT * FROM (SELECT username FROM users WHERE is_deleted=FALSE UNION SELECT username FROM pcs_admins) AS t WHERE username=$1",
     [username],
     (error, result) => {
       if (error) {
@@ -87,10 +88,7 @@ passport.deserializeUser(function (username, cb) {
  *         description: Login successful
  */
 authRoutes.post("/login", passport.authenticate("local-user"), (req, res) => {
-  res.json({
-    msg: "Found user",
-    isAuthenticated: true,
-  });
+  res.json(generateResponseJson("Found user", "", true));
 });
 
 /**
@@ -126,10 +124,7 @@ authRoutes.post(
   "/login-admin",
   passport.authenticate("local-admin"),
   (req, res) => {
-    res.json({
-      msg: "Found admin",
-      isAuthenticated: true,
-    });
+    res.json(generateResponseJson("Found admin", "", true));
   }
 );
 
@@ -150,13 +145,17 @@ authRoutes.post(
 authRoutes.post("/logout", (req, res) => {
   req.logout();
   if (req.isAuthenticated()) {
-    res.status(400).json({
-      msg: "Logout unsuccessful",
-    });
+    res
+      .status(400)
+      .json(
+        generateResponseJson(
+          "Logout unsuccessful",
+          "User is still logged in",
+          false
+        )
+      );
   } else {
-    res.json({
-      msg: "Logout successful",
-    });
+    res.status(400).json(generateResponseJson("Logout successful", "", true));
   }
 });
 
