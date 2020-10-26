@@ -157,6 +157,7 @@ CREATE TABLE advertise_availabilities (
     ct_username VARCHAR,
     availability_start_date DATE,
     availability_end_date DATE,
+    is_deleted BOOLEAN DEFAULT FALSE,
     PRIMARY KEY (ct_username, availability_start_date, availability_end_date),
     FOREIGN KEY (ct_username) REFERENCES verified_caretakers(ct_username) ON DELETE CASCADE
 );

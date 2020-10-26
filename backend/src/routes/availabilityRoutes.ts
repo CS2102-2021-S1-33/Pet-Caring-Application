@@ -133,4 +133,57 @@ availabilityRoutes.post("/", async (req, res) => {
     );
 });
 
+/**
+ * @swagger
+ *
+ * /api/availability/:
+ *   delete:
+ *     description: Caretaker uses this route. Deletes a availability period.
+ *     produces:
+ *       - application/json
+ *     consumes:
+ *       - application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         description: Date is always YYYY-MM-DD
+ *         schema:
+ *           type: object
+ *           properties:
+ *             availabilityStartDate:
+ *               type: string
+ *               example: 2020-12-01
+ *             availabilityEndDate:
+ *               type: string
+ *               example: 2020-12-20
+ *           required:
+ *             - availabilityStartDate
+ *             - availabilityEndDate
+ *     responses:
+ *       200:
+ *         description: Delete availability OK
+ *       400:
+ *         description: Bad request
+ */
+availabilityRoutes.delete("/", async (req, res) => {
+  const { username } = req.user as any; // caretaker username
+  const {
+    availabilityStartDate,
+    availabilityEndDate,
+  }: {
+    availabilityStartDate: string;
+    availabilityEndDate: string;
+  } = req.body;
+
+  await pool
+    .query(
+      "UPDATE advertise_availabilities SET is_deleted=TRUE WHERE ct_username=$1 AND availability_start_date=$2 AND availability_end_date=$3",
+      [username, availabilityStartDate, availabilityEndDate]
+    )
+    .then((result) => res.json({ result: result.rows }))
+    .catch((err) =>
+      res.status(400).json({ msg: "An error has occurred", err })
+    );
+});
+
 export default availabilityRoutes;

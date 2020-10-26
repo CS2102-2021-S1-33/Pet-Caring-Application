@@ -1,6 +1,5 @@
 import express from "express";
 import pool from "../db/init";
-import authMiddleware from "../middlewares/authMiddleware";
 
 const petRoutes = express.Router();
 
@@ -38,7 +37,7 @@ const petRoutes = express.Router();
  *       400:
  *         description: Bad request
  */
-petRoutes.post("/", authMiddleware, async (req, res) => {
+petRoutes.post("/", async (req, res) => {
   const {
     pet_name,
     special_requirements,
@@ -77,7 +76,7 @@ petRoutes.post("/", authMiddleware, async (req, res) => {
  *       400:
  *         description: Bad request
  */
-petRoutes.get("/", authMiddleware, async (req, res) => {
+petRoutes.get("/", async (req, res) => {
   const { username } = req.user as any; // pet owner username
   await pool
     .query("SELECT * FROM owned_pets op WHERE op.pet_owner_username = $1", [
@@ -116,7 +115,7 @@ petRoutes.get("/", authMiddleware, async (req, res) => {
  *       400:
  *         description: Bad request
  */
-petRoutes.delete("/", authMiddleware, async (req, res) => {
+petRoutes.delete("/", async (req, res) => {
   const {
     pet_name,
   }: {
