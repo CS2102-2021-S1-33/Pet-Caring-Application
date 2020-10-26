@@ -343,4 +343,97 @@ bidRoutes.post("/submit-rating-review", async (req, res) => {
     );
 });
 
+/**
+ * @swagger
+ *
+ * /api/bid/:
+ *   delete:
+ *     description: Deletes a bid that was made. Called by the pet owner.
+ *     produces:
+ *       - application/json
+ *     consumes:
+ *       - application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         schema:
+ *           type: object
+ *           properties:
+ *             poPetName:
+ *               type: string
+ *               example: petName
+ *             bidStartPeriod:
+ *               type: string
+ *               example: 2020-12-01
+ *             bidEndPeriod:
+ *               type: string
+ *               example: 2020-12-10
+ *             ctUsername:
+ *               type: string
+ *               example: john
+ *             availabilityStartDate:
+ *               type: string
+ *               example: 2020-12-01
+ *             availabilityEndDate:
+ *               type: string
+ *               example: 2020-12-20
+ *           required:
+ *             - poPetName
+ *             - bidStartPeriod
+ *             - bidEndPeriod
+ *             - ctUsername
+ *             - availabilityStartDate
+ *             - availabilityEndDate
+ *     responses:
+ *       200:
+ *         description: Delete bid OK
+ *       400:
+ *         description: Bad request
+ */
+bidRoutes.delete("/", async (req, res) => {
+  const {
+    poPetName,
+    bidStartPeriod,
+    bidEndPeriod,
+    ctUsername,
+    availabilityStartDate,
+    availabilityEndDate,
+  }: {
+    poPetName: string;
+    bidStartPeriod: string;
+    bidEndPeriod: string;
+    ctUsername: string;
+    availabilityStartDate: string;
+    availabilityEndDate: string;
+  } = req.body;
+
+  const { username }: { username: string } = req.user as any; // PET OWNER USERNAME
+
+  await pool
+    .query(
+      `
+      DELETE FROM makes 
+      WHERE pet_owner_username=$1 AND pet_name=$2 AND bid_start_period=$3 AND bid_end_period=$4 AND ct_username=$5 AND availability_start_date=$6 AND availability_end_date=$7 
+      `,
+      [
+        username,
+        poPetName,
+        bidStartPeriod,
+        bidEndPeriod,
+        ctUsername,
+        availabilityStartDate,
+        availabilityEndDate,
+      ]
+    )
+    .then((result) =>
+      res.json({
+        msg: "Successfully made update call",
+        res: result.rows,
+      })
+    )
+    .catch((err) =>
+      res.status(400).json({ msg: "An error has occurred!", err })
+    );
+});
+
 export default bidRoutes;
