@@ -143,7 +143,7 @@ bidRoutes.post("/", async (req, res) => {
 /**
  * @swagger
  *
- * /api/bid/choose_bid:
+ * /api/bid/choose-bid:
  *   post:
  *     description: Chooses a successful bid. Called by the caretaker.
  *     produces:
@@ -168,9 +168,6 @@ bidRoutes.post("/", async (req, res) => {
  *             bidEndPeriod:
  *               type: string
  *               example: 2020-12-10
- *             ctUsername:
- *               type: string
- *               example: john
  *             availabilityStartDate:
  *               type: string
  *               example: 2020-12-01
@@ -198,7 +195,7 @@ bidRoutes.post("/", async (req, res) => {
  *       400:
  *         description: Bad request
  */
-bidRoutes.post("/choose_bid", async (req, res) => {
+bidRoutes.post("/choose-bid", async (req, res) => {
   const {
     poUsername,
     poPetName,
