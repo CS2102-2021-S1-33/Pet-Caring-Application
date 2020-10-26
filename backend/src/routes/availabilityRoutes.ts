@@ -1,5 +1,9 @@
 import express from "express";
 import pool from "../db/init";
+import {
+  generateDefaultErrorJson,
+  generateResponseJson,
+} from "../helpers/generateResponseJson";
 
 const availabilityRoutes = express.Router();
 
@@ -45,10 +49,17 @@ availabilityRoutes.get("/", async (req, res) => {
     WHERE aa.ct_username=$1 AND aa.availability_start_date >= date($2) AND aa.availability_end_date <= date($3)`,
         [username, startPeriod, endPeriod]
       )
-      .then((result) => res.json({ result: result.rows }))
-      .catch((err) =>
-        res.status(400).json({ msg: "An error has occured", err })
-      );
+      .then((result) =>
+        res.json({
+          ...generateResponseJson(
+            "Successfully fetched all availabilities within given period",
+            "",
+            true
+          ),
+          result: result.rows,
+        })
+      )
+      .catch((err) => res.status(400).json(generateDefaultErrorJson(err)));
   } else {
     await pool
       .query(
@@ -58,10 +69,17 @@ availabilityRoutes.get("/", async (req, res) => {
     WHERE aa.ct_username=$1`,
         [username]
       )
-      .then((result) => res.json({ result: result.rows }))
-      .catch((err) =>
-        res.status(400).json({ msg: "An error has occured", err })
-      );
+      .then((result) =>
+        res.json({
+          ...generateResponseJson(
+            "Successfully fetched all availabilities",
+            "",
+            true
+          ),
+          result: result.rows,
+        })
+      )
+      .catch((err) => res.status(400).json(generateDefaultErrorJson(err)));
   }
 });
 
@@ -127,10 +145,13 @@ availabilityRoutes.post("/", async (req, res) => {
       petCategory,
       dailyPrice,
     ])
-    .then((result) => res.json({ result: result.rows }))
-    .catch((err) =>
-      res.status(400).json({ msg: "An error has occurred", err })
-    );
+    .then((result) =>
+      res.json({
+        ...generateResponseJson("Successfully added availability", "", true),
+        result: result.rows,
+      })
+    )
+    .catch((err) => res.status(400).json(generateDefaultErrorJson(err)));
 });
 
 /**
@@ -180,10 +201,13 @@ availabilityRoutes.delete("/", async (req, res) => {
       "UPDATE advertise_availabilities SET is_deleted=TRUE WHERE ct_username=$1 AND availability_start_date=$2 AND availability_end_date=$3",
       [username, availabilityStartDate, availabilityEndDate]
     )
-    .then((result) => res.json({ result: result.rows }))
-    .catch((err) =>
-      res.status(400).json({ msg: "An error has occurred", err })
-    );
+    .then((result) =>
+      res.json({
+        ...generateResponseJson("Successfully deleted availability", "", true),
+        result: result.rows,
+      })
+    )
+    .catch((err) => res.status(400).json(generateDefaultErrorJson(err)));
 });
 
 export default availabilityRoutes;
