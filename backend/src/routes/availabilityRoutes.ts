@@ -57,7 +57,7 @@ availabilityRoutes.get("/", async (req, res) => {
           result: result.rows,
         })
       )
-      .catch((err) => res.status(400).json(generateDefaultErrorJson(err)));
+      .catch((err) => res.json(generateDefaultErrorJson(err)));
   } else {
     await pool
       .query(
@@ -75,7 +75,7 @@ availabilityRoutes.get("/", async (req, res) => {
           result: result.rows,
         })
       )
-      .catch((err) => res.status(400).json(generateDefaultErrorJson(err)));
+      .catch((err) => res.json(generateDefaultErrorJson(err)));
   }
 });
 
@@ -147,7 +147,7 @@ availabilityRoutes.post("/", async (req, res) => {
         result: result.rows,
       })
     )
-    .catch((err) => res.status(400).json(generateDefaultErrorJson(err)));
+    .catch((err) => res.json(generateDefaultErrorJson(err)));
 });
 
 /**
@@ -203,7 +203,7 @@ availabilityRoutes.delete("/", async (req, res) => {
         result: result.rows,
       })
     )
-    .catch((err) => res.status(400).json(generateDefaultErrorJson(err)));
+    .catch((err) => res.json(generateDefaultErrorJson(err)));
 });
 
 export default availabilityRoutes;

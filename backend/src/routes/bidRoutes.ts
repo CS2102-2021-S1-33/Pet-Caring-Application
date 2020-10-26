@@ -45,7 +45,7 @@ bidRoutes.get("/", async (req, res) => {
         result: result.rows,
       })
     )
-    .catch((err) => res.status(400).json(generateDefaultErrorJson(err)));
+    .catch((err) => res.json(generateDefaultErrorJson(err)));
 });
 
 /**
@@ -137,7 +137,7 @@ bidRoutes.post("/", async (req, res) => {
         result: result.rows,
       })
     )
-    .catch((err) => res.status(400).json(generateDefaultErrorJson(err)));
+    .catch((err) => res.json(generateDefaultErrorJson(err)));
 });
 
 /**
@@ -239,7 +239,7 @@ bidRoutes.post("/choose_bid", async (req, res) => {
         result: result.rows,
       })
     )
-    .catch((err) => res.status(400).json(generateDefaultErrorJson(err)));
+    .catch((err) => res.json(generateDefaultErrorJson(err)));
 });
 
 /**
@@ -344,7 +344,7 @@ bidRoutes.post("/submit-rating-review", async (req, res) => {
         result: result.rows,
       })
     )
-    .catch((err) => res.status(400).json(generateDefaultErrorJson(err)));
+    .catch((err) => res.json(generateDefaultErrorJson(err)));
 });
 
 /**
@@ -435,7 +435,7 @@ bidRoutes.delete("/", async (req, res) => {
         result: result.rows,
       })
     )
-    .catch((err) => res.status(400).json(generateDefaultErrorJson(err)));
+    .catch((err) => res.json(generateDefaultErrorJson(err)));
 });
 
 export default bidRoutes;

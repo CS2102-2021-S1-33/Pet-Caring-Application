@@ -61,7 +61,7 @@ petCategoryRoutes.post("/", async (req, res) => {
         result: result.rows,
       })
     )
-    .catch((err) => res.status(400).json(generateDefaultErrorJson(err)));
+    .catch((err) => res.json(generateDefaultErrorJson(err)));
 });
 
 /**
@@ -89,7 +89,7 @@ petCategoryRoutes.get("/", async (req, res) => {
         result: result.rows,
       })
     )
-    .catch((err) => res.status(400).json(generateDefaultErrorJson(err)));
+    .catch((err) => res.json(generateDefaultErrorJson(err)));
 });
 
 /**
@@ -136,7 +136,7 @@ petCategoryRoutes.delete("/", async (req, res) => {
         result: result.rows,
       })
     )
-    .catch((err) => res.status(400).json(generateDefaultErrorJson(err)));
+    .catch((err) => res.json(generateDefaultErrorJson(err)));
 });
 
 export default petCategoryRoutes;

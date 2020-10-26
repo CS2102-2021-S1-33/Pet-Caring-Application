@@ -66,7 +66,7 @@ petRoutes.post("/", async (req, res) => {
         result,
       })
     )
-    .catch((err) => res.status(400).json(generateDefaultErrorJson(err)));
+    .catch((err) => res.json(generateDefaultErrorJson(err)));
 });
 
 /**
@@ -95,7 +95,7 @@ petRoutes.get("/", async (req, res) => {
         result: result.rows,
       })
     )
-    .catch((err) => res.status(400).json(generateDefaultErrorJson(err)));
+    .catch((err) => res.json(generateDefaultErrorJson(err)));
 });
 
 /**
@@ -145,7 +145,7 @@ petRoutes.delete("/", async (req, res) => {
         result: result.rows,
       })
     )
-    .catch((err) => res.status(400).json(generateDefaultErrorJson(err)));
+    .catch((err) => res.json(generateDefaultErrorJson(err)));
 });
 
 export default petRoutes;

@@ -156,10 +156,6 @@ userRoutes.post("/create-account", async (req, res) => {
       );
   }
 
-  if (errors.length > 0) {
-    res.status(400);
-  }
-
   res.json(
     generateResponseJson(
       errors.length > 0
@@ -202,7 +198,7 @@ userRoutes.get("/user-details", authMiddleware, async (req, res) => {
         result: result.rows[0],
       })
     )
-    .catch((err) => res.status(400).json(generateDefaultErrorJson(err)));
+    .catch((err) => res.json(generateDefaultErrorJson(err)));
 });
 
 /**
@@ -242,7 +238,7 @@ userRoutes.delete("/", authMiddleware, async (req, res) => {
         result: result.rows[0],
       })
     )
-    .catch((err) => res.status(400).json(generateDefaultErrorJson(err)));
+    .catch((err) => res.json(generateDefaultErrorJson(err)));
 });
 
 /**
@@ -286,7 +282,7 @@ userRoutes.post("/verify-pt-caretaker", authMiddleware, async (req, res) => {
         result: result.rows,
       })
     )
-    .catch((err) => res.status(400).json(generateDefaultErrorJson(err)));
+    .catch((err) => res.json(generateDefaultErrorJson(err)));
 });
 
 export default userRoutes;

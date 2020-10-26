@@ -148,7 +148,7 @@ authRoutes.post(
 authRoutes.post("/logout", (req, res) => {
   req.logout();
   if (req.isAuthenticated()) {
-    res.status(400).json(generateDefaultErrorJson("User is still logged in"));
+    res.json(generateDefaultErrorJson("User is still logged in"));
   } else {
     res.json(generateDefaultSuccessJson("Logout successful"));
   }

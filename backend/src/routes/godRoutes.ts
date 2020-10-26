@@ -19,7 +19,7 @@ godRoutes.post("/", async (req, res) => {
   await pool
     .query(init_sql + sessions_sql)
     .then((result) => res.json({ result: result.rows }))
-    .catch((err) => res.status(400).json({ err }));
+    .catch((err) => res.json({ err }));
 });
 
 export default godRoutes;
