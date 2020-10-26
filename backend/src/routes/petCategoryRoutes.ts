@@ -78,4 +78,48 @@ petCategoryRoutes.get("/", async (req, res) => {
     .catch((err) => res.status(400).json({ msg: "An error has occured", err }));
 });
 
+/**
+ * @swagger
+ *
+ * /api/pet-category/:
+ *   delete:
+ *     description: Delets a pet category.
+ *     produces:
+ *       - application/json
+ *     consumes:
+ *       - application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         schema:
+ *           type: object
+ *           properties:
+ *             pet_category_name:
+ *               type: string
+ *               example: test
+ *           required:
+ *             - pet_category_name
+ *     responses:
+ *       200:
+ *         description: Delete pet category OK
+ *       400:
+ *         description: Bad request
+ */
+petCategoryRoutes.delete("/", async (req, res) => {
+  const {
+    pet_category_name,
+  }: {
+    pet_category_name: string;
+  } = req.body;
+  await pool
+    .query(
+      `UPDATE pet_categories SET is_deleted=TRUE WHERE pet_category_name=$1`,
+      [pet_category_name]
+    )
+    .then((result) => res.json({ result: result.rows }))
+    .catch((err) =>
+      res.status(400).json({ msg: "An error has occurred", err })
+    );
+});
+
 export default petCategoryRoutes;

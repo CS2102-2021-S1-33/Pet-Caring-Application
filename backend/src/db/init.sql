@@ -31,7 +31,8 @@ CREATE TABLE pet_owners (
 CREATE TABLE pet_categories (
     pet_category_name VARCHAR PRIMARY KEY,
     set_by VARCHAR NOT NULL REFERENCES pcs_admins(username),
-    base_price INTEGER NOT NULL
+    base_price INTEGER NOT NULL,
+    is_deleted BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE owned_pets (
