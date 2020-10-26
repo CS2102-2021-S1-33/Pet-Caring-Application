@@ -8,7 +8,7 @@ const petCategoryRoutes = express.Router();
  *
  * /api/pet-category/:
  *   post:
- *     description: Adds a pet category with a corresponding base price
+ *     description: Adds a pet category with a corresponding base price. Called by the PCS Admin.
  *     produces:
  *       - application/json
  *     consumes:

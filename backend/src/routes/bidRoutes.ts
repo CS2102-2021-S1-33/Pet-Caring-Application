@@ -46,7 +46,7 @@ bidRoutes.get("/", async (req, res) => {
  *
  * /api/bid:
  *   post:
- *     description: Makes a bid
+ *     description: Makes a bid. Called by the pet owner.
  *     produces:
  *       - application/json
  *     consumes:
@@ -137,7 +137,7 @@ bidRoutes.post("/", async (req, res) => {
  *
  * /api/bid/choose_bid:
  *   post:
- *     description: Chooses a successful bid
+ *     description: Chooses a successful bid. Called by the caretaker.
  *     produces:
  *       - application/json
  *     consumes:
@@ -148,6 +148,9 @@ bidRoutes.post("/", async (req, res) => {
  *         schema:
  *           type: object
  *           properties:
+ *             poUsername:
+ *               type: string
+ *               example: sallyPO
  *             poPetName:
  *               type: string
  *               example: petName
@@ -173,10 +176,10 @@ bidRoutes.post("/", async (req, res) => {
  *               type: string
  *               example: PET_OWNER_DELIVERS
  *           required:
+ *             - poUsername
  *             - poPetName
  *             - bidStartPeriod
  *             - bidEndPeriod
- *             - ctUsername
  *             - availabilityStartDate
  *             - availabilityEndDate
  *             - paymentMtd
@@ -189,34 +192,34 @@ bidRoutes.post("/", async (req, res) => {
  */
 bidRoutes.post("/choose_bid", async (req, res) => {
   const {
+    poUsername,
     poPetName,
     bidStartPeriod,
     bidEndPeriod,
-    ctUsername,
     availabilityStartDate,
     availabilityEndDate,
     paymentMtd,
     petTransferMtd,
   }: {
+    poUsername: string;
     poPetName: string;
     bidStartPeriod: string;
     bidEndPeriod: string;
-    ctUsername: string;
     availabilityStartDate: string;
     availabilityEndDate: string;
     paymentMtd: PAYMENT_METHOD;
     petTransferMtd: TRANSFER_METHOD;
   } = req.body;
 
-  const { username }: { username: string } = req.user as any; // PET OWNER USERNAME
+  const { username }: { username: string } = req.user as any; // CARETAKER USERNAME
 
   await pool
     .query("CALL choose_bid($1, $2, $3, $4, $5, $6, $7, $8, $9)", [
-      username,
+      poUsername,
       poPetName,
       bidStartPeriod,
       bidEndPeriod,
-      ctUsername,
+      username,
       availabilityStartDate,
       availabilityEndDate,
       paymentMtd,
@@ -238,7 +241,7 @@ bidRoutes.post("/choose_bid", async (req, res) => {
  *
  * /api/bid/submit-rating-review:
  *   post:
- *     description: Submits a rating and review for a transaction
+ *     description: Submits a rating and review for a transaction. Called by the pet owner.
  *     produces:
  *       - application/json
  *     consumes:
@@ -274,7 +277,6 @@ bidRoutes.post("/choose_bid", async (req, res) => {
  *               type: string
  *               example: Very good experience!
  *           required:
- *             - poUsername
  *             - poPetName
  *             - bidStartPeriod
  *             - bidEndPeriod

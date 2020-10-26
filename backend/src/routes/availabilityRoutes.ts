@@ -8,7 +8,7 @@ const availabilityRoutes = express.Router();
  *
  * /api/availability:
  *   get:
- *     description: Gets ALL availability that fits within startPeriod and endPeriod. If start and end period not given, then gets ALL availability made by the user.
+ *     description: Caretaker uses this route. Gets ALL availability that fits within startPeriod and endPeriod (YYYY-MM-DD). If start and end period not given, then gets ALL availability made by the caretaker.
  *     produces:
  *       - application/json
  *     parameters:
@@ -16,10 +16,12 @@ const availabilityRoutes = express.Router();
  *         name: startPeriod
  *         schema:
  *           type: string
+ *           example: 2020-10-05
  *       - in: query
  *         name: endPeriod
  *         schema:
  *           type: string
+ *           example: 2020-10-10
  *     responses:
  *       200:
  *         description: Get availabilities OK.
@@ -68,7 +70,7 @@ availabilityRoutes.get("/", async (req, res) => {
  *
  * /api/availability/:
  *   post:
- *     description: Adds an availability with daily price for a particular pet category. If availability exists then just add the pet category with given daily price.
+ *     description: Caretaker uses this route. Adds an availability with daily price for a particular pet category. If availability exists then just add the pet category with given daily price.
  *     produces:
  *       - application/json
  *     consumes:
