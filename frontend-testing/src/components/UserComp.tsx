@@ -78,6 +78,19 @@ const UserComp = () => {
         </button>
       </div>
       <div>
+        <div>Get all users</div>
+        <button
+          onClick={(e) =>
+            axios
+              .get("/api/user/")
+              .then((res) => console.log(res.data))
+              .catch((err) => console.log(err))
+          }
+        >
+          Get all users
+        </button>
+      </div>
+      <div>
         <div>Get user details</div>
         <button
           onClick={(e) =>

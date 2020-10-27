@@ -80,7 +80,7 @@ petCategoryRoutes.post("/", async (req, res) => {
  */
 petCategoryRoutes.get("/", async (req, res) => {
   await pool
-    .query("SELECT * FROM pet_categories")
+    .query("SELECT * FROM pet_categories WHERE is_deleted = FALSE")
     .then((result) =>
       res.json({
         ...generateDefaultSuccessJson(

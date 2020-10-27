@@ -86,9 +86,7 @@ petRoutes.post("/", async (req, res) => {
 petRoutes.get("/", async (req, res) => {
   const { username } = req.user as any; // pet owner username
   await pool
-    .query("SELECT * FROM owned_pets op WHERE op.pet_owner_username = $1", [
-      username,
-    ])
+    .query("SELECT * FROM owned_pets WHERE is_deleted = FALSE")
     .then((result) =>
       res.json({
         ...generateDefaultSuccessJson("Successfully fetched all pets"),

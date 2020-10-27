@@ -35,10 +35,7 @@ enum TRANSFER_METHOD {
 bidRoutes.get("/", async (req, res) => {
   const { username }: { username: string } = req.user as any;
   await pool
-    .query(
-      "SELECT * FROM makes m WHERE m.pet_owner_username=$1 OR m.ct_username=$1",
-      [username]
-    )
+    .query("SELECT * FROM makes m")
     .then((result) =>
       res.json({
         ...generateDefaultSuccessJson("Successfully get all user's bids"),

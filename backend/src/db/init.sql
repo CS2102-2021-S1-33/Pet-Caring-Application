@@ -313,9 +313,11 @@ LANGUAGE plpgsql;
 -- ======================
 -- USEFUL VIEWS
 CREATE VIEW users AS (
-  SELECT * FROM pet_owners
-  UNION
-  SELECT * FROM caretakers
+  SELECT *, 'PET_OWNER' AS user_type FROM pet_owners
+  UNION ALL
+  SELECT *, 'PART_TIME_CARETAKER' AS user_type FROM part_time_caretakers NATURAL JOIN caretakers
+  UNION ALL
+  SELECT *, 'FULL_TIME_CARETAKER' AS user_type FROM full_time_caretakers NATURAL JOIN caretakers
 );
 -- ======================
 

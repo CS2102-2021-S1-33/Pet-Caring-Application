@@ -285,4 +285,30 @@ userRoutes.post("/verify-pt-caretaker", authMiddleware, async (req, res) => {
     .catch((err) => res.json(generateDefaultErrorJson(err)));
 });
 
+/**
+ * @swagger
+ *
+ * /api/user/:
+ *   get:
+ *     description: Gets ALL user. Must be logged in to use this route.
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: Get all users OK
+ *       400:
+ *         description: Bad request
+ */
+userRoutes.get("/", authMiddleware, async (req, res) => {
+  await pool
+    .query("SELECT * FROM users WHERE is_deleted = FALSE")
+    .then((result) =>
+      res.json({
+        ...generateDefaultSuccessJson("Successfully get all users"),
+        result: result.rows,
+      })
+    )
+    .catch((err) => generateDefaultErrorJson(err));
+});
+
 export default userRoutes;
