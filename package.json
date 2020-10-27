@@ -1,6 +1,6 @@
 {
   "name": "poochfriendly",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "A pet-caring application that matches pet caretakers to pet owners.",
   "main": "index.js",
   "scripts": {
