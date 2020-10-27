@@ -54,6 +54,7 @@ export class IndividualListingComponent implements OnInit, OnDestroy {
   location = "Around 1.2km away from you"
   avgRating = "4.5"
   totalReviews = "30"
+  minPrice = "17"
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   obs: Observable<any>;

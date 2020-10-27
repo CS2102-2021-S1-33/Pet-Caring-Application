@@ -5,14 +5,13 @@
         </div>
         <div class="options">
         <ul class="header-list">
-            <li><a href="http://localhost:4200/find-caretaker">Find a caretaker</a></li>
-            <!-- <li><a href="http://localhost:4200/login">Login</a></li>
-            <li><a href="http://localhost:4200/signup">Sign Up</a></li> -->
-            <li><a href="">Your jobs</a></li>
-            <li><a href="">Your bids</a></li>
-            <li><a href="">Profile</a></li>
+          <li><a href="http://localhost:4200/find-caretaker">Find a caretaker</a></li>
+          <li><a href="">Your jobs</a></li>
+          <li><a href="">Your bids</a></li>
+          <li><a href="">Profile</a></li>
+          <li><a href=""><i class="fas fa-sign-out-alt"></i></a></li>
         </ul>
-        </div>
+      </div>
     </div>
     <div class="actual-content">
         <div class="listing">
@@ -88,7 +87,7 @@
                     <input class="field" id="bid-phone" type="text" formControlName="phone">
 
                     <label for="bid-price">Bid price</label>
-                    <input class="field" id="bid-price" type="text" formControlName="price">
+                    <input class="field" id="bid-price" placeholder="${ review.minPrice } minimum"type="text" formControlName="price">
 
                     <input class="button" type="submit" value="Bid for service">
                 </form>
