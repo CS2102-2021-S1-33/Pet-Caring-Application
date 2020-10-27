@@ -8,7 +8,11 @@ import PetComp from "./components/PetComp";
 import UserComp from "./components/UserComp";
 
 function App() {
-  axios.defaults.baseURL = "http://localhost:5000";
+  if (process.env.NODE_ENV === "production") {
+    axios.defaults.baseURL = "https://poochfriendly.herokuapp.com";
+  } else {
+    axios.defaults.baseURL = "http://localhost:5000";
+  }
   axios.defaults.withCredentials = true;
   return (
     <div>
