@@ -69,42 +69,6 @@ const DATA: Listing[] = [
     rating: 4,
     review: 89
   },
-  {
-    name: 'Priscilla Lim',
-    address: 'Bukit Batok, Singapore',
-    relativeLocation: 1.2,
-    petCategories: ['Cat', 'Dog'],
-    price: 17,
-    rating: 4,
-    review: 82
-  }, 
-  {
-    name: 'Joel Lim',
-    address: 'Bukit Batok, Singapore',
-    relativeLocation: 1.4,
-    petCategories: ['Cat'],
-    price: 15,
-    rating: 4,
-    review: 89
-  },
-  {
-    name: 'Priscilla Lim',
-    address: 'Bukit Batok, Singapore',
-    relativeLocation: 1.2,
-    petCategories: ['Cat', 'Dog'],
-    price: 17,
-    rating: 4,
-    review: 82
-  }, 
-  {
-    name: 'Joel Lim',
-    address: 'Bukit Batok, Singapore',
-    relativeLocation: 1.4,
-    petCategories: ['Cat'],
-    price: 15,
-    rating: 4,
-    review: 89
-  },
 ];
 
 @Component({
@@ -130,6 +94,7 @@ export class FindCaretakerComponent implements OnInit {
   constructor(private changeDetectorRef: ChangeDetectorRef) {
 
   };
+
 
   ngOnInit() {
     this.changeDetectorRef.detectChanges();

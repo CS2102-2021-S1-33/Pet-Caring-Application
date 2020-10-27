@@ -141,7 +141,9 @@ input {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     margin-top: 40px;
+    margin-bottom: 40px;
     width: 80vw;
 }
 
@@ -152,9 +154,11 @@ input {
 @media screen and (max-width: 1919px) {
     .table {
         width: 100%;
-        display: flex;
-        flex-flow: row wrap;
-        justify-content: space-evenly;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: auto;
+        row-gap: 30px;
+        justify-items: center;
     }
 
     .mat-card {
@@ -173,16 +177,17 @@ input {
 @media screen and (max-width: 2560px) and (min-width: 1920px) {
     .table {
         width: 80%;
-        display: flex;
-        flex-flow: row wrap;
-        justify-content: space-evenly;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: auto;
+        row-gap: 30px;
+        justify-items: center;
     }
 
     .mat-card {
         width: 10vw;
         height: 230px;  
         padding: 30px;
-        margin: 20px;
     }
 
     .mat-paginator {
