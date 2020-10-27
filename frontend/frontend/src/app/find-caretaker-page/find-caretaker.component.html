@@ -7,49 +7,74 @@
       <div class="options">
         <ul class="header-list">
           <li><a href="http://localhost:4200/find-caretaker">Find a caretaker</a></li>
-          <!-- <li><a href="http://localhost:4200/login">Login</a></li>
-          <li><a href="http://localhost:4200/signup">Sign Up</a></li> -->
           <li><a href="">Your jobs</a></li>
           <li><a href="">Your bids</a></li>
           <li><a href="">Profile</a></li>
-
+          <li><a href=""><i class="fas fa-sign-out-alt"></i></a></li>
         </ul>
       </div>
     </div>
 
     <div class="search-bar">
-      <form [formGroup]="searchForm">
-          <div class="input-field">
-              <i class="fas fa-search"></i>
-              <input class="field" type="text" id="search-keyword" formControlName="keyword">
-          </div>
+      <form [formGroup]="searchForm" class="form">
+        <div class="field-container">
+          <i class="fas fa-search"></i>
+          <input class="field" type="text" id="search-keyword" placeholder="Search keyword..." formControlName="keyword">
+        </div>
 
-          <div class="input-field">
-              <i class="fas fa-paw"></i>
-              <input class="field" type="text" id="search-pet-category" formControlName="pet">
-              <!-- replace input with the angular mat select dropdown hahahaha-->
-          </div>
+        <div class="field-container">
+          <i class="fas fa-paw"></i>
+          <input class="field" type="text" id="search-pet-category" placeholder="Select pet categories" formControlName="pet">
+        </div>
 
-          <div class="input-field">
-              <i class="fas fa-map-marker-alt"></i>
-              <input class="field" type="text" id="search-location" formControlName="location">
-              <!-- might want to use google places api? not sure i'll try this later-->
-          </div>
+        <div class="field-container">
+          <i class="fas fa-map-marker-alt"></i>
+          <input class="field" type="text" id="search-location" placeholder="Enter address" formControlName="location">
+        </div>
 
-          <div class="input-field" id="date-field">
-              <i class="far fa-calendar-alt"></i>
-              <input class="field" type="text" id="search-start-date" formControlName="startDate">
-              <!-- replace input with the angular mat datepicker hahahaha-->
-          </div>
+        <div class="field-container date-container">
+          <i class="fas fa-calendar-alt"></i>
+          <input class="field date-field" type="text" id="search-start-date" placeholder="Start date" formControlName="startDate">
+        </div>
 
-          <i class="fas fa-long-arrow-alt-right"></i>
+        <i class="fas fa-long-arrow-alt-right"></i>
 
-          <div class="input-field" id="date-field">
-              <i class="far fa-calendar-alt"></i>
-              <input class="field" type="text" id="search-end-date" formControlName="endDate">
-              <!-- replace input with the angular mat datepicker hahahaha-->
-          </div>
+        <div class="field-container date-container">
+          <i class="fas fa-calendar-alt"></i>
+          <input class="field date-field" type="text" id="search-end-date" placeholder="End date" formControlName="endDate">
+        </div>
       </form>
+    </div>
+
+    <div class="search-result">
+      <div class="table">
+        <mat-card  *ngFor="let listing of obs | async">
+          <div class="listing">
+            <div class="list-name">Priscilla Lim</div>
+          
+            <div class="list-address">Bukit Batok, Singapore</div>
+          
+            <div class="list-relative-location">1.2km away</div>
+          
+            <div class="list-pet-categories"> 
+              <mat-chip-list>
+                <mat-chip disableRipple *ngFor="let pets of listing.petCategories">{{ pets }}</mat-chip>
+              </mat-chip-list>
+            </div>
+          
+            <div class="list-price">
+              <div id="price">$17</div> per day
+            </div>
+          
+            <div class="list-rating">
+                <div class="stars">
+                    <i *ngFor="let i of [].constructor(5)" class="fas fa-star"></i>
+                </div> 82 reviews
+            </div>
+          </div>
+        </mat-card>
+      </div>
+      <mat-paginator [pageSize]="8"></mat-paginator>
     </div>
   </div>
 </div>

@@ -1,5 +1,111 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder,Validators,FormArray, ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
+import { Component, Input, Output, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import { Observable } from 'rxjs';
+
+export interface Listing {
+  name: string;
+  address: string;
+  relativeLocation: number;
+  petCategories: string[];
+  price: number;
+  rating: number;
+  review: number;
+}
+
+const DATA: Listing[] = [
+  {
+    name: 'Priscilla Lim',
+    address: 'Bukit Batok, Singapore',
+    relativeLocation: 1.2,
+    petCategories: ['Cat', 'Dog'],
+    price: 17,
+    rating: 4,
+    review: 82
+  }, 
+  {
+    name: 'Joel Lim',
+    address: 'Bukit Batok, Singapore',
+    relativeLocation: 1.4,
+    petCategories: ['Cat'],
+    price: 15,
+    rating: 4,
+    review: 89
+  },
+  {
+    name: 'Priscilla Lim',
+    address: 'Bukit Batok, Singapore',
+    relativeLocation: 1.2,
+    petCategories: ['Cat', 'Dog'],
+    price: 17,
+    rating: 4,
+    review: 82
+  }, 
+  {
+    name: 'Joel Lim',
+    address: 'Bukit Batok, Singapore',
+    relativeLocation: 1.4,
+    petCategories: ['Cat'],
+    price: 15,
+    rating: 4,
+    review: 89
+  },
+  {
+    name: 'Priscilla Lim',
+    address: 'Bukit Batok, Singapore',
+    relativeLocation: 1.2,
+    petCategories: ['Cat', 'Dog'],
+    price: 17,
+    rating: 4,
+    review: 82
+  }, 
+  {
+    name: 'Joel Lim',
+    address: 'Bukit Batok, Singapore',
+    relativeLocation: 1.4,
+    petCategories: ['Cat'],
+    price: 15,
+    rating: 4,
+    review: 89
+  },
+  {
+    name: 'Priscilla Lim',
+    address: 'Bukit Batok, Singapore',
+    relativeLocation: 1.2,
+    petCategories: ['Cat', 'Dog'],
+    price: 17,
+    rating: 4,
+    review: 82
+  }, 
+  {
+    name: 'Joel Lim',
+    address: 'Bukit Batok, Singapore',
+    relativeLocation: 1.4,
+    petCategories: ['Cat'],
+    price: 15,
+    rating: 4,
+    review: 89
+  },
+  {
+    name: 'Priscilla Lim',
+    address: 'Bukit Batok, Singapore',
+    relativeLocation: 1.2,
+    petCategories: ['Cat', 'Dog'],
+    price: 17,
+    rating: 4,
+    review: 82
+  }, 
+  {
+    name: 'Joel Lim',
+    address: 'Bukit Batok, Singapore',
+    relativeLocation: 1.4,
+    petCategories: ['Cat'],
+    price: 15,
+    rating: 4,
+    review: 89
+  },
+];
 
 @Component({
   selector: 'app-find-caretaker',
@@ -9,8 +115,6 @@ import { FormBuilder,Validators,FormArray, ReactiveFormsModule, FormGroup, FormC
 
 export class FindCaretakerComponent implements OnInit {
 
-  constructor() { }
-
   searchForm = new FormGroup({
     keyword: new FormControl(''),
     pet: new FormControl(''),
@@ -19,7 +123,23 @@ export class FindCaretakerComponent implements OnInit {
     endDate: new FormControl('')
   });
 
-  ngOnInit(): void {
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  obs: Observable<any>;
+  dataSource: MatTableDataSource<Listing> = new MatTableDataSource<Listing>(DATA);
+
+  constructor(private changeDetectorRef: ChangeDetectorRef) {
+
+  };
+
+  ngOnInit() {
+    this.changeDetectorRef.detectChanges();
+    this.dataSource.paginator = this.paginator;
+    this.obs = this.dataSource.connect();
   }
 
+  ngOnDestroy() {
+    if (this.dataSource) { 
+      this.dataSource.disconnect(); 
+    }
+  }
 }

@@ -6,7 +6,9 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatCardModule } from '@angular/material/card';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatTableModule } from '@angular/material/table';
+import { MatTableModule } from '@angular/material/table'
+import { MatChipsModule } from '@angular/material/chips';
+import { MatGridListModule } from '@angular/material/grid-list';
 
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
@@ -19,7 +21,6 @@ import { SignUpPageComponent } from './login-page/sign-up-page/sign-up-page.comp
 import { AboutPageComponent } from './about-page/about-page.component';
 import { FindCaretakerComponent } from './find-caretaker-page/find-caretaker.component';
 import { IndividualListingComponent } from './individual-listing-page/individual-listing.component';
-import { ListingCardComponent } from './find-caretaker-page/listing-card/listing-card.component';
 
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
@@ -33,7 +34,6 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
     AboutPageComponent,
     FindCaretakerComponent,
     IndividualListingComponent,
-    ListingCardComponent
   ],
   imports: [
     BrowserModule,
@@ -46,6 +46,8 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
     MatCardModule,
     MatPaginatorModule,
     MatTableModule,
+    MatChipsModule,
+    MatGridListModule,
     FormsModule,
     ReactiveFormsModule,
     CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory }),

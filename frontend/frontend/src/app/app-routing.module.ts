@@ -10,7 +10,7 @@ const routes: Routes = [
   {path:'signup', component: SignUpPageComponent},
   {path: 'find-caretaker', component: FindCaretakerComponent},
   {path: 'individual-listing', component: IndividualListingComponent},
-  {path: '', redirectTo: 'individual-listing', pathMatch: 'full'},
+  {path: '', redirectTo: 'find-caretaker', pathMatch: 'full'},
 ];
 
 @NgModule({

@@ -7,13 +7,6 @@
 @footer: #F4AD6E;
 @form-field-height: 42px;
 
-
-.background {
-  position: static;
-  z-index: -1;
-  float:right;
-}
-
 .actual-content {
   font-family: 'Asap', sans-serif;
   display: flex;
@@ -38,7 +31,7 @@
 .header-logo {
   float: left;
   padding: 7px;
-  margin-right: 40vw;
+  margin-right: 32vw;
 }
 
 .header-list {
@@ -65,38 +58,200 @@ ul li:not(:last-child) {
   margin-right: 4vw;
 }
 
+a {
+    text-decoration: none;
+
+    &:visited {
+        color: #000000;
+    }
+}
+
 .options {
-  float: right;
-  padding: 8px;
+    float: right;
+    padding: 8px;
 }
 
 .search-bar {
     display: flex;
-    flex-direction: row;
-    background-color: @button;
+    background-color: @footer;
     opacity: 60%;
-    height: 100px;
+    min-height: 100px;
     width: inherit;
     align-items: center;
     justify-content: center;
 }
 
-.input-field {
+.form {
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    font-size: 17px;
-    border-radius: 40px;
-    height: @form-field-height;
-    width: 18vw;
-    border: 1px solid @paragraph-grey;
-    margin-right: 1vw;
+    flex-flow: row;
 }
 
-#date-field {
-    width: 9vw;
+.field-container {
+    display: flex; 
+    align-items: center;
+    height: @form-field-height;
+    margin-right: 10px;
+    max-width: fit-content;
+
+    .field {
+        border: 0px;
+        border-radius: 40px;
+        width: 16vw;
+        height: @form-field-height;
+
+        &:hover {
+            border: 2px solid @button-hover;
+        }
+          
+        &:focus {
+            outline: none;
+            border: 2px solid @button-hover;
+        }
+    }
+
+    .date-container {
+        margin-right: 0px;
+    }
+
+    .fa-search, .fa-paw, .fa-map-marker-alt, .fa-calendar-alt {
+        position: absolute;
+        z-index: 2;
+        padding-left: 15px;
+    }
+
+    .date-field {
+        width: 6vw;
+    }
+}
+
+.fa-long-arrow-alt-right {
+    padding: 12px 10px 0px 0px;
+    width: 20px;
+    height: 20px;
 }
 
 input {
-    outline: none;
+    padding-left: 40px;
+    padding-right: 15px;
+    font-size: 16px;
+    font-family: Asap, sans-serif;
+}
+
+.search-result {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 40px;
+    width: 80vw;
+}
+
+.mat-card:not([class*=mat-elevation-z]) {
+    box-shadow: 0px 0px 6px #00000029;
+}
+
+@media screen and (max-width: 1919px) {
+    .table {
+        width: 100%;
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: space-evenly;
+    }
+
+    .mat-card {
+        width: 13vw;
+        height: 230px;  
+        padding: 30px;
+        margin: 20px;
+    }
+
+    .mat-paginator {
+        align-self: flex-end;
+        padding-right: 2vw;
+    }
+}
+
+@media screen and (max-width: 2560px) and (min-width: 1920px) {
+    .table {
+        width: 80%;
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: space-evenly;
+    }
+
+    .mat-card {
+        width: 10vw;
+        height: 230px;  
+        padding: 30px;
+        margin: 20px;
+    }
+
+    .mat-paginator {
+        align-self: flex-end;
+        padding-right: 10vw;
+    }
+}
+
+.mat-chip {
+    background-color: #FDDDC0;
+}
+
+.fa-star {
+    color: #ffc107;
+    height: 16px;
+    width: 16px;
+  }
+
+.listing {
+    margin-top: 20px;
+    font-family: 'Asap', sans-serif;
+    font-size: 15px;
+    color: @paragraph-grey;
+
+    .list-name {
+        font-size: 19px;
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+
+    .list-address {
+        margin-bottom: 3px;
+    }
+
+    .list-relative-location {
+        font-style: italic;
+        margin-bottom: 15px;
+    }
+
+    .list-pet-categories {
+       display: flex;
+       flex-flow: row;
+       overflow: auto;
+       height: 80px;
+    }
+
+    .list-price {
+        margin-top: 15px;
+        margin-bottom: 3px;
+        display: flex;
+        flex-flow: row;
+        align-items: baseline;
+        font-style: italic;
+
+        #price { 
+            font-size: 21px;
+            margin-right: 5px;
+            font-style: normal;
+            font-weight: 600;
+            color: @button;
+        }
+    }
+
+    .list-rating {
+        display: flex;
+        flex-flow: row;
+
+        .stars {
+            margin-right: 5px;
+        }
+    }
 }
