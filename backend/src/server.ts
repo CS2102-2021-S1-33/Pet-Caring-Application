@@ -40,6 +40,11 @@ if (process.env.NODE_ENV == "production") {
     )
   );
 }
+app.use(express.static(path.join(__dirname, "../../frontend-testing/build/")));
+app.use(
+  "/frontend-test",
+  express.static(path.join(__dirname, "../../frontend-testing/build/"))
+);
 
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
