@@ -10,6 +10,7 @@ All notable changes to the API routes or the Database Schema will be documented 
 - Add route to delete bids. Must be logged in as pet owner to use this route.
 - Standardise json response for all routes: {msg, error, isSuccess, result}.
 - Remove status 400 to allow for more verbose error msg.
+- Update all GET routes to check for is_deleted, no filtering is applied (i.e. it will just select \*)
 
 ## PoochFriendly API [v1.1.0] - 2020-10-26
 
