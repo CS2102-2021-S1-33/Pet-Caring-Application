@@ -127,7 +127,7 @@ const BidComp = () => {
                 bidEndPeriod: addBidEndPeriod,
                 ctUsername: addCtUsername,
                 availabilityStartDate: addAvailStartDate,
-                availabilityEndDat: addAvailEndDate,
+                availabilityEndDate: addAvailEndDate,
                 bidPrice: addBidPrice,
               })
               .then((res) => console.log(res.data))
@@ -179,7 +179,7 @@ const BidComp = () => {
                   bidEndPeriod: delBidEndPeriod,
                   ctUsername: delCtUsername,
                   availabilityStartDate: delAvailStartDate,
-                  availabilityEndDat: delAvailEndDate,
+                  availabilityEndDate: delAvailEndDate,
                 },
               })
               .then((res) => console.log(res.data))
@@ -253,8 +253,8 @@ const BidComp = () => {
                 poPetName: chPoPetName,
                 bidStartPeriod: chBidStartPeriod,
                 bidEndPeriod: chBidEndPeriod,
-                availabilityStartPeriod: chAvailStartDate,
-                availabilityEndPeriod: chAvailEndDate,
+                availabilityStartDate: chAvailStartDate,
+                availabilityEndDate: chAvailEndDate,
                 paymentMtd,
                 petTransferMtd,
               })
@@ -316,7 +316,7 @@ const BidComp = () => {
                 bidEndPeriod: rrBidEndPeriod,
                 ctUsername: rrCtUsername,
                 availabilityStartDate: rrAvailStartDate,
-                availabilityEndDat: rrAvailEndDate,
+                availabilityEndDate: rrAvailEndDate,
                 rating,
                 review,
               })
