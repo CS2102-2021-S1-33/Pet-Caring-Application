@@ -16,11 +16,13 @@ CREATE TABLE pcs_admins (
   username VARCHAR PRIMARY KEY,
   password VARCHAR NOT NULL
 );
+
 -- ======================
 
 -- ======================
--- PET OWNERS AND PETS
-CREATE TABLE pet_owners (
+-- User
+-- ISA is with covering constraint 
+CREATE TABLE pcs_user (
   username VARCHAR PRIMARY KEY,
   email VARCHAR UNIQUE NOT NULL,
   name VARCHAR NOT NULL,
@@ -28,6 +30,18 @@ CREATE TABLE pet_owners (
   is_deleted BOOLEAN DEFAULT FALSE
 );
 
+-- ======================
+
+-- ======================
+-- PET OWNERS AND PETS
+CREATE TABLE pet_owners (
+  username VARCHAR PRIMARY KEY,
+  FOREIGN KEY (username) REFERENCES pcs_user(username) 
+);
+
+-- pet_categories should not have is_deleted field 
+-- what happens if the admins wants to update the price for a category?
+-- do we do an update or ???? 
 CREATE TABLE pet_categories (
   pet_category_name VARCHAR PRIMARY KEY,
   set_by VARCHAR NOT NULL REFERENCES pcs_admins(username),
@@ -35,8 +49,9 @@ CREATE TABLE pet_categories (
   is_deleted BOOLEAN DEFAULT FALSE
 );
 
+-- pet_owner_username has to be not null due pet => Own = Pet Owner 
 CREATE TABLE owned_pets (
-  pet_owner_username VARCHAR REFERENCES pet_owners(username),
+  pet_owner_username VARCHAR NOT NULL REFERENCES pet_owners(username),
   pet_name VARCHAR,
   special_requirements VARCHAR,
   pet_category_name VARCHAR NOT NULL REFERENCES pet_categories(pet_category_name),
@@ -59,7 +74,7 @@ CREATE OR REPLACE PROCEDURE add_pet_owner(
       FROM pet_categories pc
       WHERE pc.pet_category_name = po_pet_category_name
     ) THEN RETURN; END IF;
-    INSERT INTO pet_owners VALUES (username, email, name, password);
+    INSERT INTO pcs_user VALUES (username, email, name, password);
     INSERT INTO owned_pets VALUES (username, po_pet_name, po_special_requirements, po_pet_category_name);
   END;'
 LANGUAGE plpgsql;
@@ -69,10 +84,7 @@ LANGUAGE plpgsql;
 -- CARETAKERS AND LEAVES (FULL-TIME ONLY)
 CREATE TABLE caretakers (
   username VARCHAR PRIMARY KEY,
-  email VARCHAR UNIQUE NOT NULL,
-  name VARCHAR NOT NULL,
-  password VARCHAR NOT NULL,
-  is_deleted BOOLEAN DEFAULT FALSE
+  FOREIGN KEY (username) REFERENCES pcs_user(username)
 );
 
 CREATE TABLE part_time_caretakers (
@@ -105,7 +117,8 @@ CREATE OR REPLACE PROCEDURE add_part_time_caretaker(
   name VARCHAR,
   password VARCHAR) AS
   'BEGIN
-    INSERT INTO caretakers VALUES (username, email, name, password);
+    INSERT INTO pcs_user VALUES (username, email, name, password);
+    INSERT INTO caretakers VALUES (username); 
     INSERT INTO part_time_caretakers VALUES (username);
   END;'
 LANGUAGE plpgsql;
@@ -131,12 +144,17 @@ CREATE OR REPLACE PROCEDURE add_full_time_caretaker(
       WHERE ct_pet_category_name = pc.pet_category_name AND pc.base_price <= daily_price) THEN
   
     SELECT CURRENT_DATE INTO start_availability_date;
+    -- From project brief (Full time care taker is treated as avaliable until they apply leave) 
+    -- We have a problem here 
     SELECT start_availability_date + INTERVAL '1 year' INTO end_availability_date;
-    INSERT INTO caretakers VALUES (username, email, name, password);
+    INSERT INTO pcs_user VALUES (username, email, name, password);
+    INSERT INTO caretakers VALUES (username);
     INSERT INTO full_time_caretakers VALUES (username);
     INSERT INTO verified_caretakers VALUES (username, admin_username);
     INSERT INTO advertise_availabilities VALUES (username, start_availability_date, end_availability_date);
-    INSERT INTO advertise_for_pet_categories VALUES (username, start_availability_date, end_availability_date, ct_pet_category_name, daily_price);
+    -- We should`t be inserting into advertise_for_pet_categories
+    -- Reason is that we have to check that the daily price cannot be lower than the pet_category price set by admin 
+    INSERT INTO advertise_for_pet_categories VALUES (username, start_availability_date, end_availability_date , ct_pet_category_name, daily_price);
   
     END IF;
   END;
@@ -146,8 +164,9 @@ LANGUAGE plpgsql;
 CREATE OR REPLACE PROCEDURE delete_user(username_to_be_deleted VARCHAR) AS
   $$
   BEGIN
-    UPDATE caretakers SET is_deleted=TRUE WHERE username=username_to_be_deleted; 
-    UPDATE pet_owners SET is_deleted=TRUE WHERE username=username_to_be_deleted; 
+    UPDATE pcs_user SET is_deleted=TRUE WHERE username=username_to_be_deleted; 
+    -- We have to remove from verified careTakers since if user is deleted
+    -- it is no longer verified to take up jobs. 
   END;
   $$
 LANGUAGE plpgsql;
@@ -160,7 +179,9 @@ CREATE TABLE advertise_availabilities (
   availability_start_date DATE,
   availability_end_date DATE,
   is_deleted BOOLEAN DEFAULT FALSE,
+  -- I would not recommend primary key to be avaliability_end_date 
   PRIMARY KEY (ct_username, availability_start_date, availability_end_date),
+  -- Do we really need on DELETE CASCADE since we are not doing any deleting 
   FOREIGN KEY (ct_username) REFERENCES verified_caretakers(ct_username) ON DELETE CASCADE
 );
 
@@ -170,7 +191,9 @@ CREATE TABLE advertise_for_pet_categories (
   availability_end_date DATE,
   pet_category_name VARCHAR, 
   daily_price INTEGER NOT NULL, 
+  -- Refer to comments in advertise_availabilities and in add_full_time_caretaker
   PRIMARY KEY (ct_username, availability_start_date, availability_end_date, pet_category_name),
+  -- Likewise ^ 
   FOREIGN KEY (ct_username, availability_start_date, availability_end_date) REFERENCES advertise_availabilities(ct_username, availability_start_date, availability_end_date),
   FOREIGN KEY (pet_category_name) REFERENCES pet_categories(pet_category_name) 
 );
@@ -211,13 +234,14 @@ CREATE OR REPLACE PROCEDURE advertise_availability(
   $$
   BEGIN
      
-    -- checks if daily_price > base_price for given pet category
+    -- checks if daily_price >= base_price for given pet category
     IF EXISTS (
       SELECT *
       FROM pet_categories pc 
       WHERE ct_pet_category_name = pc.pet_category_name AND pc.base_price <= daily_price) THEN
   
       -- checks if there already exists the same availability slot for this caretaker, if yes then just add additional pet category
+      -- TODO will have to update this after discussion about availability_end_date
       IF EXISTS (
         SELECT *
         FROM advertise_availabilities aa
@@ -259,6 +283,10 @@ CREATE OR REPLACE PROCEDURE make_bid(
       WHERE op.pet_name = poPetName AND op.pet_owner_username = poUsername;
   
       -- check whether bid_price >= daily_price AND does not conflict with existing caretaker jobs
+      -- TODO update after dicussion if its based on advertise_for_pet_categories daily price 
+            -- or pet_categories table daily price 
+            -- this check of bid_price should only affect full-time care taker 
+            -- if the care taker choosen is full-time , the bid is marked successful immediately 
       -- Good cases:
       -- newBidStart newBidEnd oldBidStart oldBidEnd
       -- oldBidStart oldBidEnd newBidStart newBidEnd
@@ -278,6 +306,11 @@ CREATE OR REPLACE PROCEDURE make_bid(
   END;
   $$
 LANGUAGE plpgsql;
+
+-- TODO include constraint that part time care taker 
+-- cannot take care of more than 2 pets unless they have a good rating.
+-- cannot have more than 5 pet regardless of rating 
+-- choose_bid should be only for part time 
 
 -- Sets Bid as successful, checks caretaker is actually available
 CREATE OR REPLACE PROCEDURE choose_bid(
@@ -308,6 +341,18 @@ CREATE OR REPLACE PROCEDURE choose_bid(
   END;
   $$
 LANGUAGE plpgsql;
+
+-- TODO have a procedure to check 
+-- that care taker works for a minimum of 2 x 150 consecutive days a year. 
+-- Before the leave application can be made. 
+
+
+-- TODO when inserting a review , have a procedure to update 
+-- the daily price of the care taker since the price increases with the rating. 
+
+-- TODO a view for Full-time care taker salary 
+-- TODO a view for part time care taker salary
+
 -- ======================
 
 -- ======================
