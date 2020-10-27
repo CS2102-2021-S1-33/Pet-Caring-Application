@@ -6,7 +6,8 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatCardModule } from '@angular/material/card';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatTableModule } from '@angular/material/table'
+import { MatTableModule } from '@angular/material/table';
+import { CdkTableModule } from '@angular/cdk/table';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatGridListModule } from '@angular/material/grid-list';
 
@@ -46,6 +47,7 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
     MatCardModule,
     MatPaginatorModule,
     MatTableModule,
+    CdkTableModule,
     MatChipsModule,
     MatGridListModule,
     FormsModule,

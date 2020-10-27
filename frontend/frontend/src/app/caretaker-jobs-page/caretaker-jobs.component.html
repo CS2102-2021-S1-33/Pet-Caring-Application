@@ -1,0 +1,70 @@
+<div class="page">  
+    <div class="header">
+        <div class="header-logo">
+        <img src="assets/logo.svg" height="28px">
+        </div>
+        <div class="options">
+        <ul class="header-list">
+          <li><a href="http://localhost:4200/find-caretaker">Find a caretaker</a></li>
+          <li><a href="">Your jobs</a></li>
+          <li><a href="">Your bids</a></li>
+          <li><a href="">Profile</a></li>
+          <li><a href=""><i class="fas fa-sign-out-alt"></i></a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="actual-content">
+        <div class="pending-action-table">
+            <table mat-table [dataSource]="bidTableDataSource" class="bids-table">
+                <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef>Pet owner</th>
+                    <td mat-cell *matCellDef="let bid">{{ bid.name }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="position">
+                    <th mat-header-cell *matHeaderCellDef>Price</th>
+                    <td mat-cell *matCellDef="let bid">{{ bid.price }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="position">
+                    <th mat-header-cell *matHeaderCellDef>No. of pets</th>
+                    <td mat-cell *matCellDef="let bid">{{ bid.petCategories }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="position">
+                    <th mat-header-cell *matHeaderCellDef>Category of pets</th>
+                    <td mat-cell *matCellDef="let bid">{{ bid.noOfPets }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="position">
+                    <th mat-header-cell *matHeaderCellDef>Caretaking period</th>
+                    <td mat-cell *matCellDef="let bid">{{ bid.caretakingStart }} - {{ bid.caretakingEnd }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="position">
+                    <th mat-header-cell *matHeaderCellDef>Phone number</th>
+                    <td mat-cell *matCellDef="let bid">{{ bid.phone }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="position">
+                    <th mat-header-cell *matHeaderCellDef>Bid date</th>
+                    <td mat-cell *matCellDef="let bid">{{ bid.bidDate }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="position">
+                    <th mat-header-cell *matHeaderCellDef></th>
+                    <td mat-cell *matCellDef="let bid">
+                        <input class="button" id="accept-button" type="submit" value="Accept">
+                        <input class="button" id="reject-button" type="submit" value="Reject">
+                    </td>
+                </ng-container>
+            </table>
+        </div>
+        <div class="upcoming-jobs-table">
+            
+        </div>
+        <div class="past-jobs-table">
+            
+        </div>
+    </div>
+</div>

@@ -1,0 +1,117 @@
+@header-hover: #F95124;
+@paragraph-black: #000000;
+@paragraph-grey: #403F3F;
+@paragraph-white: #ffffff;
+@button: #F2994A;
+@button-hover: #EB7F20;
+@footer: #F4AD6E;
+@form-field-height: 42px;
+
+.header {
+  display: flex;
+  flex: 0 1 auto;
+  padding: 10px;
+  font-weight: 500;
+  height: 40px;
+}
+
+.header-logo {
+  float: left;
+  padding: 7px;
+  margin-right: 32vw;
+}
+
+.header-list {
+  list-style-type: none;
+  overflow: hidden;
+  display: flex;
+  margin: 2px 5px;
+  float: right;
+
+  li {
+    float: right;
+    color: #000000;
+    font-size: 16px;
+    text-align: center;
+    cursor: pointer;
+  }
+
+  li:hover {
+    color: @header-hover;
+  }
+}
+
+ul li:not(:last-child) {
+  margin-right: 4vw;
+}
+
+a {
+    text-decoration: none;
+
+    &:visited {
+        color: #000000;
+    }
+}
+
+.options {
+    float: right;
+    padding: 8px;
+}
+
+.actual-content {
+    font-family: 'Asap', sans-serif;
+    display: flex;
+    flex-flow: column;
+    flex-wrap: nowrap;
+    overflow-y: auto;
+    height: 100%;
+    width: 100%;
+    align-items: center;
+    position: fixed;
+    z-index: auto;
+}
+
+.bids-table {
+    box-shadow: 0px 0px 6px #00000029;
+}
+
+.mat-header-cell, .mat-cell {
+    font-style: 'Asap', sans-serif;
+    font-size: 18px;
+    color: @paragraph-grey;
+}
+
+.mat-cell {
+    color: #BEBEBE;
+}
+
+.button {
+    font-size: 14px;
+    border-radius: 20px;
+    height: 40px;
+    width: 100px;
+    border: none;
+    color: @paragraph-white;
+    font-family: 'Asap', sans-serif;
+    align-self: center;  
+  
+    &:focus {
+      outline: none;
+    }
+}
+
+#accept-button {
+    background-color: #48B943;
+
+    &:hover {
+        background-color: #399435;
+      }
+}
+
+#reject-button {
+    background-color: #DD3D12;
+
+    &:hover {
+        background-color: #bd320d;
+    }
+}
