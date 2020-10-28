@@ -36,16 +36,6 @@ CREATE OR REPLACE FUNCTION check_make_bid() RETURNS TRIGGER AS
       ) AND a.daily_price < NEW.bid_price
     ) THEN RETURN NULL; END IF;
 
-    -- checks if there is a conflicting caretaking job from bid_start_period to bid_end_period
-    -- newBidStart newBidEnd oldBidStart oldBidEnd
-    -- oldBidStart oldBidEnd newBidStart newBidEnd
-    IF EXISTS (
-      SELECT 1
-      FROM makes m
-      WHERE m.is_successful = TRUE AND m.caretaker_username = NEW.caretaker_username
-      AND NOT (m.bid_start_period > NEW.bid_end_period OR m.bid_end_period < NEW.bid_start_period) 
-    ) THEN RETURN NULL; END IF;
-
     -- checks if its full-time caretaker since ft ct will auto-accept any valid bids and num pets caring during that period < 5
     IF (EXISTS (
       SELECT 1

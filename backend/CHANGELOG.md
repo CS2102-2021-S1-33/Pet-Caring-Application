@@ -7,6 +7,7 @@ All notable changes to the API routes or the Database Schema will be documented 
 - Refactor sql into schema, procedures, triggers and sampleData.
 - Add trigger for checking advertise availability.
 - Add trigger for checking make bid.
+- Add trigger for checking choose bid (i.e. based on avg rating whether can take care of up to 5 or up to 2 pets).
 
 ## PoochFriendly API [v1.2.0] - 2020-10-27
 
