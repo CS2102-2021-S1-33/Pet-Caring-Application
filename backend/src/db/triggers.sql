@@ -5,7 +5,8 @@ CREATE OR REPLACE FUNCTION check_advertise_availability() RETURNS TRIGGER AS
     IF NOT EXISTS (
       SELECT 1
       FROM pet_categories pc
-      WHERE pc.pet_category_name = NEW.pet_category_name AND pc.base_price < NEW.daily_price 
+      WHERE pc.pet_category_name = NEW.pet_category_name 
+        AND pc.base_price < NEW.daily_price 
     ) THEN RETURN NULL; END IF;
 
     RETURN NEW;
@@ -28,12 +29,14 @@ CREATE OR REPLACE FUNCTION check_make_bid() RETURNS TRIGGER AS
     IF NOT EXISTS (
       SELECT 1
       FROM advertise_for_pet_categories a
-      WHERE a.availability_start_date = NEW.availability_start_date AND a.availability_end_date = NEW.availability_end_date
-      AND a.pet_category_name = (
-        SELECT op.pet_category_name
-        FROM owned_pets op
-        WHERE op.username = NEW.pet_owner_username AND op.pet_name = NEW.pet_name
-      ) AND a.daily_price < NEW.bid_price
+      WHERE a.availability_start_date = NEW.availability_start_date 
+        AND a.availability_end_date = NEW.availability_end_date
+        AND a.pet_category_name = (
+            SELECT op.pet_category_name
+            FROM owned_pets op
+            WHERE op.username = NEW.pet_owner_username 
+                AND op.pet_name = NEW.pet_name
+        ) AND a.daily_price < NEW.bid_price
     ) THEN RETURN NULL; END IF;
 
     -- checks if its full-time caretaker since ft ct will auto-accept any valid bids and num pets caring during that period < 5
@@ -46,10 +49,8 @@ CREATE OR REPLACE FUNCTION check_make_bid() RETURNS TRIGGER AS
       FROM makes m 
       WHERE m.caretaker_username = NEW.caretaker_username 
         AND is_successful = TRUE 
-        AND NOT (m.bid_start_period > NEW.bid_end_period OR m.bid_end_period < NEW.bid_start_period)) < 5) THEN
-
-        NEW.is_successful = TRUE; NEW.payment_method = 'CREDIT_CARD'; NEW.transfer_method = 'TRANSFER_THROUGH_PCS_BUILDING'; END IF;
-
+        AND (m.bid_start_period <= NEW.bid_end_period AND m.bid_end_period <= NEW.bid_start_period)) < 5) THEN NEW.is_successful = TRUE; 
+    END IF;
     RETURN NEW;
 
   END;
@@ -64,13 +65,12 @@ FOR EACH ROW EXECUTE PROCEDURE check_make_bid();
 CREATE OR REPLACE FUNCTION check_choose_bid() RETURNS TRIGGER AS
   $$
   BEGIN
-    -- check if pet category exists, and if it exists check whether daily_price > base_price
     IF ((SELECT AVG(rating) FROM makes m WHERE m.caretaker_username = NEW.caretaker_username) >= 4) THEN
       IF ((SELECT COUNT(*) 
       FROM makes m 
       WHERE m.caretaker_username = NEW.caretaker_username 
         AND is_successful = TRUE 
-        AND NOT (m.bid_start_period > NEW.bid_end_period OR m.bid_end_period < NEW.bid_start_period)) < 5) THEN
+        AND (m.bid_start_period <= NEW.bid_end_period AND m.bid_end_period <= NEW.bid_start_period)) < 5) THEN
       
       RETURN NEW;
       END IF;
@@ -79,7 +79,7 @@ CREATE OR REPLACE FUNCTION check_choose_bid() RETURNS TRIGGER AS
       FROM makes m 
       WHERE m.caretaker_username = NEW.caretaker_username 
         AND is_successful = TRUE 
-        AND NOT (m.bid_start_period > NEW.bid_end_period OR m.bid_end_period < NEW.bid_start_period)) < 5) THEN
+        AND (m.bid_start_period <= NEW.bid_end_period AND m.bid_end_period <= NEW.bid_start_period)) < 2) THEN
       
       RETURN NEW;
       END IF;

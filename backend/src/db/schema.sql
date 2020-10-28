@@ -16,11 +16,13 @@ CREATE TABLE pcs_admins (
   username VARCHAR PRIMARY KEY,
   password VARCHAR NOT NULL
 );
+
 -- ======================
 
 -- ======================
--- PET OWNERS AND PETS
-CREATE TABLE pet_owners (
+-- User
+-- ISA is with covering constraint 
+CREATE TABLE pcs_user (
   username VARCHAR PRIMARY KEY,
   email VARCHAR UNIQUE NOT NULL,
   name VARCHAR NOT NULL,
@@ -28,6 +30,18 @@ CREATE TABLE pet_owners (
   is_deleted BOOLEAN DEFAULT FALSE
 );
 
+-- ======================
+
+-- ======================
+-- PET OWNERS AND PETS
+CREATE TABLE pet_owners (
+  username VARCHAR PRIMARY KEY,
+  FOREIGN KEY (username) REFERENCES pcs_user(username) 
+);
+
+-- pet_categories should not have is_deleted field 
+-- what happens if the admins wants to update the price for a category?
+-- do we do an update or ???? 
 CREATE TABLE pet_categories (
   pet_category_name VARCHAR PRIMARY KEY,
   set_by VARCHAR NOT NULL REFERENCES pcs_admins(username),
@@ -36,7 +50,7 @@ CREATE TABLE pet_categories (
 );
 
 CREATE TABLE owned_pets (
-  username VARCHAR REFERENCES pet_owners(username),
+  username VARCHAR NOT NULL REFERENCES pet_owners(username),
   pet_name VARCHAR,
   special_requirements VARCHAR,
   pet_category_name VARCHAR NOT NULL REFERENCES pet_categories(pet_category_name),
@@ -49,10 +63,7 @@ CREATE TABLE owned_pets (
 -- CARETAKERS AND LEAVES (FULL-TIME ONLY)
 CREATE TABLE caretakers (
   username VARCHAR PRIMARY KEY,
-  email VARCHAR UNIQUE NOT NULL,
-  name VARCHAR NOT NULL,
-  password VARCHAR NOT NULL,
-  is_deleted BOOLEAN DEFAULT FALSE
+  FOREIGN KEY (username) REFERENCES pcs_user(username)
 );
 
 CREATE TABLE part_time_caretakers (
@@ -88,7 +99,8 @@ CREATE TABLE advertise_availabilities (
   availability_start_date DATE,
   availability_end_date DATE,
   is_deleted BOOLEAN DEFAULT FALSE,
-  FOREIGN KEY (username) REFERENCES verified_caretakers(username), 
+  -- I would not recommend primary key to be avaliability_end_date 
+  -- Do we really need on DELETE CASCADE since we are not doing any deleting 
   PRIMARY KEY (username, availability_start_date, availability_end_date)
 );
 
@@ -100,7 +112,9 @@ CREATE TABLE advertise_for_pet_categories (
   daily_price INTEGER NOT NULL CHECK (daily_price > 0), 
   FOREIGN KEY (username, availability_start_date, availability_end_date) REFERENCES advertise_availabilities(username, availability_start_date, availability_end_date),
   FOREIGN KEY (pet_category_name) REFERENCES pet_categories(pet_category_name),
+  -- Refer to comments in advertise_availabilities and in add_full_time_caretaker
   PRIMARY KEY (username, availability_start_date, availability_end_date, pet_category_name)
+  -- Likewise ^ 
 );
 
 CREATE TABLE bid_period (
@@ -133,9 +147,5 @@ CREATE TABLE makes (
 -- ======================
 -- USEFUL VIEWS
 CREATE VIEW users AS (
-  SELECT *, 'PET_OWNER' AS user_type FROM pet_owners
-  UNION ALL
-  SELECT *, 'PART_TIME_CARETAKER' AS user_type FROM part_time_caretakers NATURAL JOIN caretakers
-  UNION ALL
-  SELECT *, 'FULL_TIME_CARETAKER' AS user_type FROM full_time_caretakers NATURAL JOIN caretakers
+  SELECT * FROM pcs_user
 );

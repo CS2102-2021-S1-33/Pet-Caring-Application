@@ -23,7 +23,8 @@ CREATE OR REPLACE PROCEDURE add_pet_owner(
       WHERE pc.pet_category_name = pcn
     ) THEN RETURN; END IF;
 
-    INSERT INTO pet_owners VALUES (username, email, name, password);
+    INSERT INTO pcs_user VALUES (username, email, name, password);
+    INSERT INTO pet_owners VALUES (username);
     INSERT INTO owned_pets VALUES (username, pet_name, special_requirements, pcn);
   END;
   $$
@@ -40,7 +41,8 @@ CREATE OR REPLACE PROCEDURE add_part_time_caretaker(
   password VARCHAR) AS
   $$
   BEGIN
-    INSERT INTO caretakers VALUES (username, email, name, password);
+    INSERT INTO pcs_user VALUES (username, email, name, password);
+    INSERT INTO caretakers VALUES (username); 
     INSERT INTO part_time_caretakers VALUES (username);
   END;
   $$
@@ -69,8 +71,11 @@ CREATE OR REPLACE PROCEDURE add_full_time_caretaker(
       WHERE pc.pet_category_name = pcn AND pc.base_price <= daily_price) THEN
   
     SELECT CURRENT_DATE INTO start_availability_date;
+    -- From project brief (Full time care taker is treated as avaliable until they apply leave) 
+    -- We have a problem here 
     SELECT start_availability_date + INTERVAL '1 year' INTO end_availability_date;
-    INSERT INTO caretakers VALUES (username, email, name, password);
+    INSERT INTO pcs_user VALUES (username, email, name, password);
+    INSERT INTO caretakers VALUES (username);
     INSERT INTO full_time_caretakers VALUES (username);
     INSERT INTO verified_caretakers VALUES (username, admin_username, CURRENT_DATE);
     INSERT INTO advertise_availabilities VALUES (username, start_availability_date, end_availability_date);
@@ -84,8 +89,8 @@ LANGUAGE plpgsql;
 CREATE OR REPLACE PROCEDURE delete_user(username_to_be_deleted VARCHAR) AS
   $$
   BEGIN
-    UPDATE caretakers SET is_deleted = TRUE WHERE username = username_to_be_deleted; 
-    UPDATE pet_owners SET is_deleted = TRUE WHERE username = username_to_be_deleted; 
+    UPDATE pcs_user SET is_deleted = TRUE WHERE username = username_to_be_deleted;
+    DELETE FROM verified_caretakers WHERE ct_username = username_to_be_deleted;
 
     -- soft delete other entries
     UPDATE owned_pets SET is_deleted = TRUE where username = username_to_be_deleted;
@@ -117,26 +122,23 @@ CREATE OR REPLACE PROCEDURE advertise_availability(
     IF NOT EXISTS (
       SELECT 1
       FROM pet_categories pc
-      WHERE pc.pet_category_name = pcn AND pc.base_price < daily_price 
+      WHERE pc.pet_category_name = pcn 
+        AND pc.base_price < daily_price 
     ) THEN RETURN; END IF;
 
       -- checks if there already exists the same availability slot for this caretaker, if yes then just add additional pet category
-    IF EXISTS (
+      -- TODO will have to update this after discussion about availability_end_date
+
+    IF NOT EXISTS (
       SELECT *
       FROM advertise_availabilities aa
       WHERE aa.username = u 
-      AND aa.availability_start_date = asd 
-      AND aa.availability_end_date = aed
+        AND aa.availability_start_date = asd 
+        AND aa.availability_end_date = aed
     ) THEN
-  
-      INSERT INTO advertise_for_pet_categories VALUES (u, asd, aed, pet_category_name, daily_price);
-  
-    ELSE
-  
-      INSERT INTO advertise_availabilities VALUES (u, asd, aed);
-      INSERT INTO advertise_for_pet_categories VALUES (u, asd, aed, pet_category_name, daily_price);
-    
+        INSERT INTO advertise_availabilities VALUES (u, asd, aed);
     END IF;
+    INSERT INTO advertise_for_pet_categories VALUES (u, asd, aed, pet_category_name, daily_price);
   END;
   $$
 LANGUAGE plpgsql;
@@ -148,9 +150,13 @@ CREATE OR REPLACE PROCEDURE make_bid(
   bid_start_period VARCHAR,
   bid_end_period VARCHAR,
   caretaker_username VARCHAR,
+  -- Why does make_bid has to have availability_start_date and availability_end_date 
+  -- should`t it be our job to grab these data based on the caretaker_username and not the frontend provide us with it? 
   availability_start_date VARCHAR,
   availability_end_date VARCHAR,
-  bid_price INTEGER) AS
+  bid_price INTEGER, 
+  payment_method VARCHAR,
+  transfer_method VARCHAR) AS
   $$
   DECLARE bid_pet_category VARCHAR; 
   DECLARE pn VARCHAR; 
@@ -159,6 +165,8 @@ CREATE OR REPLACE PROCEDURE make_bid(
   DECLARE bep DATE; 
   DECLARE asd DATE; 
   DECLARE aed DATE; 
+  DECLARE pm VARCHAR;
+  DECLARE tm VARCHAR;
   BEGIN
     SELECT pet_name INTO pn;
     SELECT caretaker_username INTO cu;
@@ -166,7 +174,10 @@ CREATE OR REPLACE PROCEDURE make_bid(
     SELECT date(bid_end_period) INTO bep;
     SELECT date(availability_start_date) INTO asd;
     SELECT date(availability_end_date) INTO aed;
+    SELECT payment_method INTO pm;
+    SELECT transfer_method INTO tm;
 
+    -- We have to rewrite this part after the discussion
     IF (bsp >= asd AND bep <= aed) THEN
       -- determine pet category
       SELECT op.pet_category_name INTO bid_pet_category
@@ -174,19 +185,27 @@ CREATE OR REPLACE PROCEDURE make_bid(
       WHERE op.pet_name = pn AND op.username = pet_owner_username;
   
       -- check whether bid_price >= daily_price AND does not conflict with existing caretaker jobs
+            -- TODO update after discussion if its based on advertise_for_pet_categories daily price 
+            -- or pet_categories table daily price 
+            -- this check of bid_price should only affect full-time care taker 
+            -- if the care taker choosen is full-time , the bid is marked successful immediately 
       -- Good cases:
       -- newBidStart newBidEnd oldBidStart oldBidEnd
       -- oldBidStart oldBidEnd newBidStart newBidEnd
       IF EXISTS (
         SELECT *
         FROM advertise_for_pet_categories a 
-        WHERE a.pet_category_name = bid_pet_category AND bid_price >= a.daily_price) AND NOT EXISTS (
-        SELECT 1 FROM makes m 
-        WHERE m.caretaker_username = cu AND m.is_successful=TRUE AND NOT (m.bid_start_period > bep OR m.bid_end_period < bsp)
+        WHERE a.pet_category_name = bid_pet_category 
+            AND bid_price >= a.daily_price) 
+        AND NOT EXISTS (
+            SELECT 1 FROM makes m 
+            WHERE m.caretaker_username = cu 
+                AND m.is_successful = TRUE 
+                AND NOT (m.bid_start_period > bep OR m.bid_end_period < bsp)
         ) THEN
   
         INSERT INTO bid_period VALUES (bsp, bep);
-        INSERT INTO makes VALUES (pet_owner_username, pet_name, bsp, bep, caretaker_username, asd, aed, bid_price);
+        INSERT INTO makes VALUES (pet_owner_username, pet_name, bsp, bep, caretaker_username, asd, aed, bid_price, FALSE, pm, tm);
   
       END IF;
     END IF;
@@ -201,9 +220,8 @@ CREATE OR REPLACE PROCEDURE choose_bid(
   _bid_end_period VARCHAR,
   _caretaker_username VARCHAR,
   _availability_start_date VARCHAR,
-  _availability_end_date VARCHAR,
-  _payment_method VARCHAR,
-  _transfer_method VARCHAR
+  _availability_end_date VARCHAR
+  -- choose_bid should not have payment_method and transfer_method , these information should already be there when i create a bid
   ) AS
   $$
   DECLARE pou VARCHAR;
@@ -213,8 +231,6 @@ CREATE OR REPLACE PROCEDURE choose_bid(
   DECLARE cu VARCHAR;
   DECLARE asd DATE;
   DECLARE aed DATE;
-  DECLARE pm VARCHAR;
-  DECLARE tm VARCHAR;
   BEGIN
     SELECT _pet_owner_username INTO pou;
     SELECT _pet_name INTO pn;
@@ -223,20 +239,78 @@ CREATE OR REPLACE PROCEDURE choose_bid(
     SELECT _caretaker_username INTO cu;
     SELECT date(_availability_start_date) INTO asd;
     SELECT date(_availability_end_date) INTO aed;
-    SELECT _payment_method INTO pm;
-    SELECT _transfer_method INTO tm;
 
     IF NOT EXISTS (
       SELECT * FROM makes m 
-      WHERE m.caretaker_username = cu AND m.is_successful = TRUE AND NOT (m.bid_start_period > bep OR m.bid_end_period < bsp)
+      WHERE m.caretaker_username = cu 
+        AND m.is_successful = TRUE 
+        AND NOT (m.bid_start_period <> bep OR m.bid_end_period <> bsp)
     ) THEN 
-      UPDATE makes SET is_successful = TRUE, payment_method = pm, transfer_method = tm
-        WHERE pet_owner_username = pou AND pet_name = pn AND bid_start_period = bsp AND bid_end_period = bep 
-        AND caretaker_username = cu AND availability_start_date = asd AND availability_end_date = aed;
+      UPDATE makes SET is_successful = TRUE 
+        WHERE pet_owner_username = pou 
+            AND pet_name = pn 
+            AND bid_start_period = bsp 
+            AND bid_end_period = bep 
+            AND caretaker_username = cu 
+            AND availability_start_date = asd 
+            AND availability_end_date = aed;
     END IF;
   
   END;
   $$
 LANGUAGE plpgsql;
 
-CALL choose_bid('sallyPO', 'petName', '2020-12-01', '2020-12-10', 'john', '2020-12-01', '2020-12-20', 'CASH', 'PET_OWNER_DELIVERS');
+-- TODO have a procedure to check 
+-- that care taker works for a minimum of 2 x 150 consecutive days a year. 
+-- Before the leave application can be made. 
+
+
+-- TODO when inserting a review , have a procedure to update 
+-- the daily price of the care taker since the price increases with the rating.
+
+CREATE OR REPLACE PROCEDURE insert_review( 
+  _pet_owner_username VARCHAR,
+  _pet_name VARCHAR,
+  _bid_start_period VARCHAR,
+  _bid_end_period VARCHAR,
+  _caretaker_username VARCHAR,
+  _rating INTEGER,
+  _review VARCHAR
+) AS 
+  $$ 
+    DECLARE before NUMERIC;
+    DECLARE after NUMERIC;
+    DECLARE category VARCHAR;
+    DECLARE asd DATE;
+    DECLARE aed DATE;
+    BEGIN
+        SELECT AVG(rating) INTO before FROM makes m 
+        WHERE m.caretaker_username = caretaker_username;
+        
+        UPDATE makes SET rating = _rating , review = _review
+          WHERE is_successful = TRUE
+            AND pet_name = _pet_name
+            AND bid_start_period = _bid_start_period
+            AND bid_end_period = _bid_end_period
+            AND caretaker_username = _caretaker_username
+
+        SELECT AVG(rating) into after
+        FROM makes m 
+        WHERE m.caretaker_username = caretaker_username;
+
+        if (after - before >= 0.1) THEN 
+            SELECT pet_category_name into category
+            FROM owned_pets
+            WHERE pet_name = _pet_name
+              AND username = _pet_owner_username;
+            
+            SELECT max(availability_start_date) into a_start_date , max(availability_end_date) into a_end_date
+            FROM advertise_availabilities
+            WHERE username = _caretaker_username 
+            GROUP BY username; 
+        END IF;
+    END;
+  $$
+LANGUAGE plpgsql; 
+
+CALL choose_bid('sallyPO', 'petName', '2020-12-01', '2020-12-10', 'john', '2020-12-01', '2020-12-20');
