@@ -2,6 +2,12 @@
 
 All notable changes to the API routes or the Database Schema will be documented in this file.
 
+## PoochFriendly API [v1.3.0] - 2020-10-28
+
+- Refactor sql into schema, procedures, triggers and sampleData.
+- Add trigger for checking advertise availability.
+- Add trigger for checking make bid.
+
 ## PoochFriendly API [v1.2.0] - 2020-10-27
 
 - Add route to soft delete pets. Must be logged in as pet owner to use this route.
