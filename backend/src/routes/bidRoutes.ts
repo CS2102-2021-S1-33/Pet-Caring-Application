@@ -318,7 +318,7 @@ bidRoutes.post("/submit-rating-review", async (req, res) => {
     .query(
       `
       UPDATE makes SET rating=$8, review=$9 
-      WHERE pet_owner_username=$1 AND pet_name=$2 AND bid_start_period=$3 AND bid_end_period=$4 AND ct_username=$5 AND availability_start_date=$6 AND availability_end_date=$7 AND is_successful=TRUE
+      WHERE pet_owner_username=$1 AND pet_name=$2 AND bid_start_period=$3 AND bid_end_period=$4 AND caretaker_username=$5 AND availability_start_date=$6 AND availability_end_date=$7 AND is_successful=TRUE
       `,
       [
         username,
@@ -411,7 +411,7 @@ bidRoutes.delete("/", async (req, res) => {
     .query(
       `
       DELETE FROM makes 
-      WHERE pet_owner_username=$1 AND pet_name=$2 AND bid_start_period=$3 AND bid_end_period=$4 AND ct_username=$5 AND availability_start_date=$6 AND availability_end_date=$7 
+      WHERE pet_owner_username=$1 AND pet_name=$2 AND bid_start_period=$3 AND bid_end_period=$4 AND caretaker_username=$5 AND availability_start_date=$6 AND availability_end_date=$7 
       `,
       [
         username,

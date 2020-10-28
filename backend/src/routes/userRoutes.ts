@@ -185,10 +185,7 @@ userRoutes.get("/user-details", authMiddleware, async (req, res) => {
   const { username } = req.user as any;
   await pool
     .query(
-      `SELECT u.username, u.email, u.name, 
-        EXISTS (SELECT * FROM pet_owners po WHERE po.username = $1) AS is_pet_owner,
-        EXISTS (SELECT * FROM part_time_caretakers ptc WHERE ptc.username = $1) AS is_pt_caretaker, 
-        EXISTS (SELECT * FROM full_time_caretakers ftc WHERE ftc.username = $1) AS is_ft_caretaker 
+      `SELECT u.username, u.email, u.name, u.user_type 
       FROM users u WHERE u.username=$1`,
       [username]
     )

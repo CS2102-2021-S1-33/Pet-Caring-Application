@@ -157,7 +157,7 @@ availabilityRoutes.delete("/", async (req, res) => {
 
   await pool
     .query(
-      "UPDATE advertise_availabilities SET is_deleted=TRUE WHERE ct_username=$1 AND availability_start_date=$2 AND availability_end_date=$3",
+      "UPDATE advertise_availabilities SET is_deleted=TRUE WHERE username=$1 AND availability_start_date=$2 AND availability_end_date=$3",
       [username, availabilityStartDate, availabilityEndDate]
     )
     .then((result) =>
