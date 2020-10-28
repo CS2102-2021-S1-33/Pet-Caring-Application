@@ -65,7 +65,8 @@ CREATE TABLE full_time_caretakers (
 
 CREATE TABLE verified_caretakers (
   username VARCHAR PRIMARY KEY REFERENCES caretakers(username),
-  admin_username VARCHAR NOT NULL REFERENCES pcs_admins(username)
+  admin_username VARCHAR NOT NULL REFERENCES pcs_admins(username),
+  verified_date DATE
 );
 
 CREATE TABLE apply_leaves (

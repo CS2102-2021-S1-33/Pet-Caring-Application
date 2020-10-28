@@ -269,7 +269,7 @@ userRoutes.post("/verify-pt-caretaker", authMiddleware, async (req, res) => {
   const { username } = req.user as any; // admin username
   const { ct_username }: { ct_username: string } = req.body;
   await pool
-    .query("INSERT INTO verified_caretakers VALUES ($1, $2)", [
+    .query("INSERT INTO verified_caretakers VALUES ($1, $2, CURRENT_DATE)", [
       ct_username,
       username,
     ])

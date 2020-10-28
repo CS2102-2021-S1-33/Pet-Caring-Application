@@ -61,3 +61,22 @@ LANGUAGE plpgsql;
 
 CREATE TRIGGER makes_insert_trigger BEFORE INSERT ON makes
 FOR EACH ROW EXECUTE PROCEDURE check_make_bid();
+
+CREATE OR REPLACE FUNCTION check_150_working_days() RETURNS TRIGGER AS
+  $$
+  BEGIN
+    -- check if worked for 150 working days based on previous leaves. If no previously approved leaves, then take verified date as day 1 of work.
+    IF (NEW.leave_start_date - (SELECT COALESCE ((SELECT MAX(leave_end_date) FROM apply_leaves al WHERE al.is_successful = TRUE AND al.username = NEW.username), 
+    (SELECT verified_date FROM verified_caretakers vc WHERE vc.username = NEW.username))) >= 150) THEN
+   
+      RETURN NEW; END IF;
+    RETURN NULL;
+  END;
+  $$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER apply_leaves_insert_trigger BEFORE INSERT ON apply_leaves
+FOR EACH ROW EXECUTE PROCEDURE check_150_working_days();
+
+UPDATE verified_caretakers SET verified_date = '2019-01-02';
+INSERT INTO apply_leaves VALUES ('micky', 'admin', '2020-10-02', '2020-10-25');

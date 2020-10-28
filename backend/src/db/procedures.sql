@@ -72,7 +72,7 @@ CREATE OR REPLACE PROCEDURE add_full_time_caretaker(
     SELECT start_availability_date + INTERVAL '1 year' INTO end_availability_date;
     INSERT INTO caretakers VALUES (username, email, name, password);
     INSERT INTO full_time_caretakers VALUES (username);
-    INSERT INTO verified_caretakers VALUES (username, admin_username);
+    INSERT INTO verified_caretakers VALUES (username, admin_username, CURRENT_DATE);
     INSERT INTO advertise_availabilities VALUES (username, start_availability_date, end_availability_date);
     INSERT INTO advertise_for_pet_categories VALUES (username, start_availability_date, end_availability_date, pet_category_name, daily_price);
   

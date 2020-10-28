@@ -20,13 +20,13 @@ const triggers = fs
 const sampleData = fs
   .readFileSync(path.join(__dirname, "../db/sampleData.sql"))
   .toString();
-const sessions_sql = fs
+const sessions = fs
   .readFileSync(path.join(__dirname, "../db/sessions.sql"))
   .toString();
 
 godRoutes.post("/", async (req, res) => {
   await pool
-    .query(schema + procedures + triggers + sampleData + sessions_sql)
+    .query(sessions + schema + procedures + triggers + sampleData)
     .then((result) => res.json({ result: result.rows }))
     .catch((err) => res.json({ err }));
 });

@@ -4,7 +4,7 @@ INSERT INTO pet_categories VALUES ('dog', 'admin', 10);
 INSERT INTO pet_categories VALUES ('test', 'admin', 10);
 
 CALL add_part_time_caretaker('john', 'john@yahoo.com', 'john tan', 'password');
-INSERT INTO verified_caretakers VALUES ('john', 'admin'); -- verify John as a PT-CT
+INSERT INTO verified_caretakers VALUES ('john', 'admin', CURRENT_DATE); -- verify John as a PT-CT
 
 CALL add_full_time_caretaker('micky', 'mick@hotmail.com', 'micky mouse', 'password', 'admin', 'dog', 10); -- should insert
 --CALL add_full_time_caretaker('micky', 'mick@hotmail.com', 'micky mouse', 'password', 'admin', 'dog', 9); -- should NOT insert as daily_price < base_price
