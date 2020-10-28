@@ -46,12 +46,19 @@ CREATE OR REPLACE FUNCTION check_make_bid() RETURNS TRIGGER AS
       AND NOT (m.bid_start_period > NEW.bid_end_period OR m.bid_end_period < NEW.bid_start_period) 
     ) THEN RETURN NULL; END IF;
 
-    -- checks if its full-time caretaker since ft ct will auto-accept any valid bids
-    IF EXISTS (
+    -- checks if its full-time caretaker since ft ct will auto-accept any valid bids and num pets caring during that period < 5
+    IF (EXISTS (
       SELECT 1
       FROM full_time_caretakers f
       WHERE f.username = NEW.caretaker_username
-    ) THEN NEW.is_successful = TRUE; NEW.payment_method = 'CREDIT_CARD'; NEW.transfer_method = 'TRANSFER_THROUGH_PCS_BUILDING'; END IF;
+    ) AND (
+      SELECT COUNT(*) 
+      FROM makes m 
+      WHERE m.caretaker_username = NEW.caretaker_username 
+        AND is_successful = TRUE 
+        AND NOT (m.bid_start_period > NEW.bid_end_period OR m.bid_end_period < NEW.bid_start_period)) < 5) THEN
+
+        NEW.is_successful = TRUE; NEW.payment_method = 'CREDIT_CARD'; NEW.transfer_method = 'TRANSFER_THROUGH_PCS_BUILDING'; END IF;
 
     RETURN NEW;
 
@@ -62,21 +69,36 @@ LANGUAGE plpgsql;
 CREATE TRIGGER makes_insert_trigger BEFORE INSERT ON makes
 FOR EACH ROW EXECUTE PROCEDURE check_make_bid();
 
-CREATE OR REPLACE FUNCTION check_150_working_days() RETURNS TRIGGER AS
+-- if avg rating >= 4, then can take care of up to 5 pets
+-- else, can only take care of up to 2 pets
+CREATE OR REPLACE FUNCTION check_choose_bid() RETURNS TRIGGER AS
   $$
   BEGIN
-    -- check if worked for 150 working days based on previous leaves. If no previously approved leaves, then take verified date as day 1 of work.
-    IF (NEW.leave_start_date - (SELECT COALESCE ((SELECT MAX(leave_end_date) FROM apply_leaves al WHERE al.is_successful = TRUE AND al.username = NEW.username), 
-    (SELECT verified_date FROM verified_caretakers vc WHERE vc.username = NEW.username))) >= 150) THEN
-   
-      RETURN NEW; END IF;
+    -- check if pet category exists, and if it exists check whether daily_price > base_price
+    IF ((SELECT AVG(rating) FROM makes m WHERE m.caretaker_username = NEW.caretaker_username) >= 4) THEN
+      IF ((SELECT COUNT(*) 
+      FROM makes m 
+      WHERE m.caretaker_username = NEW.caretaker_username 
+        AND is_successful = TRUE 
+        AND NOT (m.bid_start_period > NEW.bid_end_period OR m.bid_end_period < NEW.bid_start_period)) < 5) THEN
+      
+      RETURN NEW;
+      END IF;
+    ELSE 
+      IF ((SELECT COUNT(*) 
+      FROM makes m 
+      WHERE m.caretaker_username = NEW.caretaker_username 
+        AND is_successful = TRUE 
+        AND NOT (m.bid_start_period > NEW.bid_end_period OR m.bid_end_period < NEW.bid_start_period)) < 5) THEN
+      
+      RETURN NEW;
+      END IF;
+    END IF;
+
     RETURN NULL;
   END;
   $$
 LANGUAGE plpgsql;
 
-CREATE TRIGGER apply_leaves_insert_trigger BEFORE INSERT ON apply_leaves
-FOR EACH ROW EXECUTE PROCEDURE check_150_working_days();
-
-UPDATE verified_caretakers SET verified_date = '2019-01-02';
-INSERT INTO apply_leaves VALUES ('micky', 'admin', '2020-10-02', '2020-10-25');
+CREATE TRIGGER makes_choose_bid_update_trigger BEFORE UPDATE OF is_successful ON makes
+FOR EACH ROW EXECUTE PROCEDURE check_choose_bid();

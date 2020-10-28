@@ -194,17 +194,16 @@ CREATE OR REPLACE PROCEDURE make_bid(
   $$
 LANGUAGE plpgsql;
 
--- Sets Bid as successful, checks caretaker is actually available
 CREATE OR REPLACE PROCEDURE choose_bid(
-  pet_owner_username VARCHAR,
-  pet_name VARCHAR,
-  bid_start_period VARCHAR,
-  bid_end_period VARCHAR,
-  caretaker_username VARCHAR,
-  availability_start_date VARCHAR,
-  availability_end_date VARCHAR,
-  payment_method VARCHAR,
-  transfer_method VARCHAR
+  _pet_owner_username VARCHAR,
+  _pet_name VARCHAR,
+  _bid_start_period VARCHAR,
+  _bid_end_period VARCHAR,
+  _caretaker_username VARCHAR,
+  _availability_start_date VARCHAR,
+  _availability_end_date VARCHAR,
+  _payment_method VARCHAR,
+  _transfer_method VARCHAR
   ) AS
   $$
   DECLARE pou VARCHAR;
@@ -217,25 +216,27 @@ CREATE OR REPLACE PROCEDURE choose_bid(
   DECLARE pm VARCHAR;
   DECLARE tm VARCHAR;
   BEGIN
-    SELECT pet_owner_username INTO pou;
-    SELECT pet_name INTO pn;
-    SELECT date(bid_start_period) INTO bsp;
-    SELECT date(bid_end_period) INTO bep;
-    SELECT caretaker_username INTO cu;
-    SELECT date(availability_start_date) INTO asd;
-    SELECT date(availability_end_date) INTO aed;
-    SELECT payment_method INTO pm;
-    SELECT transfer_method INTO tm;
+    SELECT _pet_owner_username INTO pou;
+    SELECT _pet_name INTO pn;
+    SELECT date(_bid_start_period) INTO bsp;
+    SELECT date(_bid_end_period) INTO bep;
+    SELECT _caretaker_username INTO cu;
+    SELECT date(_availability_start_date) INTO asd;
+    SELECT date(_availability_end_date) INTO aed;
+    SELECT _payment_method INTO pm;
+    SELECT _transfer_method INTO tm;
 
     IF NOT EXISTS (
       SELECT * FROM makes m 
       WHERE m.caretaker_username = cu AND m.is_successful = TRUE AND NOT (m.bid_start_period > bep OR m.bid_end_period < bsp)
     ) THEN 
-      UPDATE makes SET is_successful = TRUE, payment_method = pm, transfer_method = tm 
-      WHERE pet_owner_username = pou AND pet_name = pn AND bid_start_period = bsp AND bid_end_period = bep 
-      AND caretaker_username = cu AND availability_start_date = asd AND availability_end_date = aed;
+      UPDATE makes SET is_successful = TRUE, payment_method = pm, transfer_method = tm
+        WHERE pet_owner_username = pou AND pet_name = pn AND bid_start_period = bsp AND bid_end_period = bep 
+        AND caretaker_username = cu AND availability_start_date = asd AND availability_end_date = aed;
     END IF;
   
   END;
   $$
 LANGUAGE plpgsql;
+
+CALL choose_bid('sallyPO', 'petName', '2020-12-01', '2020-12-10', 'john', '2020-12-01', '2020-12-20', 'CASH', 'PET_OWNER_DELIVERS');
