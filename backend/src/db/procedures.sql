@@ -283,10 +283,6 @@ LANGUAGE plpgsql;
 -- that care taker works for a minimum of 2 x 150 consecutive days a year. 
 -- Before the leave application can be made. 
 
-
--- TODO when inserting a review , have a procedure to update 
--- the daily price of the care taker since the price increases with the rating.
-
 CREATE OR REPLACE PROCEDURE insert_review( 
   _pet_owner_username VARCHAR,
   _pet_name VARCHAR,
@@ -345,5 +341,3 @@ CREATE OR REPLACE PROCEDURE insert_review(
     END;
   $$
 LANGUAGE plpgsql; 
-
-CALL choose_bid('sallyPO', 'petName', '2020-12-01', '2020-12-10', 'john', '2020-12-01', '2020-12-20');

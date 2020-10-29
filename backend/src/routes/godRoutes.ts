@@ -26,7 +26,7 @@ const sessions = fs
 
 godRoutes.post("/", async (req, res) => {
   await pool
-    .query(sessions + schema + procedures + triggers + sampleData)
+    .query(schema + procedures + triggers + sampleData + sessions)
     .then((result) => res.json({ result: result.rows }))
     .catch((err) => res.json({ err }));
 });

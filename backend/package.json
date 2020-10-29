@@ -1,6 +1,6 @@
 {
   "name": "pcs-backend",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "backend service for pcs",
   "main": "server.ts",
   "scripts": {

@@ -2,6 +2,11 @@
 
 All notable changes to the API routes or the Database Schema will be documented in this file.
 
+## PoochFriendly API [v1.4.0] - 2020-10-29
+
+- Add sql for admin, caretaker and petowner complex query.
+- Add routes for admin, caretaker and petowner complex query.
+
 ## PoochFriendly API [v1.3.0] - 2020-10-28
 
 - Refactor sql into schema, procedures, triggers and sampleData.
