@@ -26,6 +26,18 @@ CALL make_bid('sallyPO', 'petName', '2020-12-01', '2020-12-10', 'john', '2020-12
 --CALL make_bid('sallyPO', 'testName', DATE '2020-12-01', DATE '2020-12-10', 'john', DATE '2020-12-01', DATE '2020-12-20', 10); -- should NOT insert as john did not advertise to take care of 'test' pet category
 --CALL make_bid('sallyPO', 'petName', DATE '2020-11-01', DATE '2020-12-25', 'john', DATE '2020-12-01', DATE '2020-12-20', 10); -- should NOT insert as bid period is not subset of availability period
 
+--test for insert review --
+SELECT * FROM advertise_for_pet_categories;
+UPDATE makes set is_successful = TRUE 
+    WHERE pet_owner_username = 'sallyPO' 
+        AND caretaker_username = 'john'
+        AND bid_start_period = date('2020-12-01')
+        AND bid_end_period = date('2020-12-10');
+
+CALL insert_review('sallyPO', 'petName', '2020-12-01', '2020-12-10', 'john', 2, 'TEST');
+SELECT * FROM advertise_for_pet_categories;
+
+
 /*
 INSERT INTO pet_owners VALUES ('sallyPO', 'sally@gmail.com', 'sally chan', 'password');
 INSERT INTO pet_categories VALUES ('dog', 'admin', 10);

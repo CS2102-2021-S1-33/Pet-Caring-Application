@@ -283,32 +283,46 @@ CREATE OR REPLACE PROCEDURE insert_review(
     DECLARE category VARCHAR;
     DECLARE asd DATE;
     DECLARE aed DATE;
+    DECLARE ra INTEGER;
+    DECLARE re VARCHAR;
     BEGIN
-        SELECT AVG(rating) INTO before FROM makes m 
-        WHERE m.caretaker_username = caretaker_username;
+        SELECT _rating into ra;
+        SELECT _review into re;
+        SELECT COALESCE(AVG(rating), 0) INTO before 
+          FROM makes m 
+          WHERE m.caretaker_username = caretaker_username;
         
-        UPDATE makes SET rating = _rating , review = _review
+        UPDATE makes SET rating = ra , review = re
           WHERE is_successful = TRUE
             AND pet_name = _pet_name
-            AND bid_start_period = _bid_start_period
-            AND bid_end_period = _bid_end_period
-            AND caretaker_username = _caretaker_username
+            AND date(bid_start_period) = date(_bid_start_period)
+            AND date(bid_end_period) = date(_bid_end_period)
+            AND caretaker_username = _caretaker_username;
 
         SELECT AVG(rating) into after
         FROM makes m 
         WHERE m.caretaker_username = caretaker_username;
 
+        -- We can change the numbers later 
         if (after - before >= 0.1) THEN 
             SELECT pet_category_name into category
             FROM owned_pets
             WHERE pet_name = _pet_name
               AND username = _pet_owner_username;
             
-            SELECT max(availability_start_date) into a_start_date , max(availability_end_date) into a_end_date
+            SELECT into asd, aed  MAX(availability_start_date) , MAX(availability_end_date)
             FROM advertise_availabilities
             WHERE username = _caretaker_username 
-            GROUP BY username; 
+            GROUP BY username;
+
+            -- Likewise here 
+            UPDATE advertise_for_pet_categories SET daily_price = daily_price * 1.2
+                WHERE username = _caretaker_username
+                AND date(availability_start_date) = date(asd)
+                AND date(availability_end_date) = date(aed)
+                AND pet_category_name = category;
         END IF;
+
     END;
   $$
 LANGUAGE plpgsql; 
