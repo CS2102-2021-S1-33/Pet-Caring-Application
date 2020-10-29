@@ -9,10 +9,10 @@ import { CaretakerJobsComponent } from './caretaker-jobs-page/caretaker-jobs.com
 const routes: Routes = [
   {path: 'login', component: RegisterLoginPageComponent},
   {path:'signup', component: SignUpPageComponent},
-  {path: 'find-caretaker', component: FindCaretakerComponent},
-  {path: 'individual-listing', component: IndividualListingComponent},
-  {path: 'caretaker-jobs', component: CaretakerJobsComponent},
-  {path: '', redirectTo: 'find-caretaker', pathMatch: 'full'},
+  {path: 'find', component: FindCaretakerComponent},
+  {path: 'listing', component: IndividualListingComponent},
+  {path: 'jobs', component: CaretakerJobsComponent},
+  {path: '', redirectTo: 'find', pathMatch: 'full'},
 ];
 
 @NgModule({
