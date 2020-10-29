@@ -58,7 +58,7 @@ const options = {
   definition: {
     info: {
       title: "PoochFriendly Backend Routes", // Title (required)
-      version: "1.3.0", // Version (required)
+      version: "1.4.0", // Version (required)
     },
   },
   // Path to the API docs
