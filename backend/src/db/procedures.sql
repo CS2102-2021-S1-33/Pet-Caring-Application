@@ -30,6 +30,26 @@ CREATE OR REPLACE PROCEDURE add_pet_owner(
   $$
 LANGUAGE plpgsql;
 
+-- Might be useful if we are allowing the user to enter their category name
+-- Delete if not required (put in for testing)
+CREATE OR REPLACE PROCEDURE add_pet (
+  username VARCHAR,
+  pet_name VARCHAR,
+  special_requirements VARCHAR,
+  pet_cat VARCHAR) AS 
+  $$ 
+    BEGIN 
+      IF NOT EXISTS (
+        SELECT 1
+        FROM pet_categories pc
+        WHERE pc.pet_category_name = pet_cat
+     ) THEN RETURN; 
+     ELSE
+        INSERT INTO owned_pets VALUES (username, pet_name, special_requirements,pet_cat);
+     END IF;
+     END
+  $$
+LANGUAGE plpgsql;
 -- ======================
 
 -- ======================
@@ -150,10 +170,6 @@ CREATE OR REPLACE PROCEDURE make_bid(
   bid_start_period VARCHAR,
   bid_end_period VARCHAR,
   caretaker_username VARCHAR,
-  -- Why does make_bid has to have availability_start_date and availability_end_date 
-  -- should`t it be our job to grab these data based on the caretaker_username and not the frontend provide us with it? 
-  availability_start_date VARCHAR,
-  availability_end_date VARCHAR,
   bid_price INTEGER, 
   payment_method VARCHAR,
   transfer_method VARCHAR) AS
@@ -172,10 +188,13 @@ CREATE OR REPLACE PROCEDURE make_bid(
     SELECT caretaker_username INTO cu;
     SELECT date(bid_start_period) INTO bsp;
     SELECT date(bid_end_period) INTO bep;
-    SELECT date(availability_start_date) INTO asd;
-    SELECT date(availability_end_date) INTO aed;
     SELECT payment_method INTO pm;
     SELECT transfer_method INTO tm;
+
+    SELECT into asd, aed  MAX(availability_start_date) , MAX(availability_end_date)
+      FROM advertise_availabilities
+      WHERE username = caretaker_username 
+      GROUP BY username;
 
     -- We have to rewrite this part after the discussion
     IF (bsp >= asd AND bep <= aed) THEN

@@ -100,7 +100,6 @@ CREATE TABLE advertise_availabilities (
   availability_end_date DATE,
   is_deleted BOOLEAN DEFAULT FALSE,
   -- I would not recommend primary key to be avaliability_end_date 
-  -- Do we really need on DELETE CASCADE since we are not doing any deleting 
   PRIMARY KEY (username, availability_start_date, availability_end_date)
 );
 
