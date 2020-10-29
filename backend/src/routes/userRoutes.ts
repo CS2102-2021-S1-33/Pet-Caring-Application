@@ -1,4 +1,5 @@
 import express from "express";
+import { adminCQ, caretakerCQ, petOwnerCQ } from "../db/complexQueries";
 import pool from "../db/init";
 import {
   generateResponseJson,
@@ -302,6 +303,116 @@ userRoutes.get("/", authMiddleware, async (req, res) => {
     .then((result) =>
       res.json({
         ...generateDefaultSuccessJson("Successfully get all users"),
+        result: result.rows,
+      })
+    )
+    .catch((err) => generateDefaultErrorJson(err));
+});
+
+/**
+ * @swagger
+ *
+ * /api/user/admin-cq:
+ *   get:
+ *     description: Gets all underperforming ft ct- avg rating for past 90 days is < 2 OR no caretaking jobs for past 90 days (subquery + aggregation). Must be logged in as admin.
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: Get admin cq OK
+ *       400:
+ *         description: Bad request
+ */
+userRoutes.get("/admin-cq", authMiddleware, async (req, res) => {
+  await pool
+    .query(
+      `
+      (SELECT username
+      FROM full_time_caretakers
+      EXCEPT
+      SELECT caretaker_username
+      FROM makes
+      WHERE is_successful = TRUE AND CURRENT_DATE - bid_start_period <= 90)
+      UNION
+      SELECT m.caretaker_username
+      FROM makes m INNER JOIN full_time_caretakers f ON m.caretaker_username = f.username AND m.is_successful = TRUE AND CURRENT_DATE - m.bid_start_period <= 60
+      GROUP BY m.caretaker_username
+      HAVING AVG(m.rating) < 2
+    `
+    )
+    .then((result) =>
+      res.json({
+        ...generateDefaultSuccessJson(
+          "Successfully generated admin complex query"
+        ),
+        result: result.rows,
+      })
+    )
+    .catch((err) => generateDefaultErrorJson(err));
+});
+
+/**
+ * @swagger
+ *
+ * /api/user/caretaker-cq:
+ *   get:
+ *     description: Gets total num of pet-days for this month. Must be logged in as caretaker.
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: Get caretaker cq OK
+ *       400:
+ *         description: Bad request
+ */
+userRoutes.get("/caretaker-cq", authMiddleware, async (req, res) => {
+  const { username } = req.user as any; // caretaker username
+  await pool
+    .query(
+      `
+      SELECT COALESCE(
+        (
+          SELECT SUM(m.bid_end_period - m.bid_start_period + 1)
+          FROM makes m
+          WHERE m.caretaker_username = $1 AND m.is_successful = TRUE AND EXTRACT(MONTH FROM CURRENT_DATE) = EXTRACT(MONTH FROM m.bid_start_period) 
+          GROUP BY m.caretaker_username
+        ), 0) AS num_pet_days`,
+      [username]
+    )
+    .then((result) =>
+      res.json({
+        ...generateDefaultSuccessJson(
+          "Successfully generated caretaker complex query"
+        ),
+        result: result.rows,
+      })
+    )
+    .catch((err) => generateDefaultErrorJson(err));
+});
+
+/**
+ * @swagger
+ *
+ * /api/user/petowner-cq:
+ *   get:
+ *     description: Gets average daily caretaking cost for each pet. Must be logged in as pet owner.
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: Get petowner cq OK
+ *       400:
+ *         description: Bad request
+ */
+userRoutes.get("/petowner-cq", authMiddleware, async (req, res) => {
+  const { username } = req.user as any; // pet owner username
+  await pool
+    .query(petOwnerCQ, [username])
+    .then((result) =>
+      res.json({
+        ...generateDefaultSuccessJson(
+          "Successfully generated pet owner complex query"
+        ),
         result: result.rows,
       })
     )

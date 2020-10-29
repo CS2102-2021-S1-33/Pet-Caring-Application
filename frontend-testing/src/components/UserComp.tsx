@@ -141,6 +141,45 @@ const UserComp = () => {
           Verify pt caretaker
         </button>
       </div>
+      <div>
+        <div>Admin complex query</div>
+        <button
+          onClick={(e) =>
+            axios
+              .get("/api/user/admin-cq")
+              .then((res) => console.log(res.data))
+              .catch((err) => console.log(err))
+          }
+        >
+          Get underperforming caretakers.
+        </button>
+      </div>
+      <div>
+        <div>Caretaker complex query</div>
+        <button
+          onClick={(e) =>
+            axios
+              .get("/api/user/caretaker-cq")
+              .then((res) => console.log(res.data))
+              .catch((err) => console.log(err))
+          }
+        >
+          Get total num of pet-days for this month
+        </button>
+      </div>
+      <div>
+        <div>Pet owner complex query</div>
+        <button
+          onClick={(e) =>
+            axios
+              .get("/api/user/petowner-cq")
+              .then((res) => console.log(res.data))
+              .catch((err) => console.log(err))
+          }
+        >
+          Get avg daily caretaking cost per pet.
+        </button>
+      </div>
     </div>
   );
 };
