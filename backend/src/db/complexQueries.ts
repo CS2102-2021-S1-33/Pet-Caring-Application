@@ -12,7 +12,7 @@ export const adminCQ = `
   SELECT m.caretaker_username
   FROM makes m INNER JOIN full_time_caretakers f ON m.caretaker_username = f.username AND m.is_successful = TRUE AND CURRENT_DATE - m.bid_start_period <= 60
   GROUP BY m.caretaker_username
-  HAVING AVG(m.rating) < . 
+  HAVING AVG(m.rating) < 2 
 `;
 
 //Caretaker: total number of pet-days for this month
