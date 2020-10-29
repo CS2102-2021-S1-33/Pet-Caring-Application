@@ -238,5 +238,3 @@ CREATE OR REPLACE PROCEDURE choose_bid(
   END;
   $$
 LANGUAGE plpgsql;
-
-CALL choose_bid('sallyPO', 'petName', '2020-12-01', '2020-12-10', 'john', '2020-12-01', '2020-12-20', 'CASH', 'PET_OWNER_DELIVERS');
