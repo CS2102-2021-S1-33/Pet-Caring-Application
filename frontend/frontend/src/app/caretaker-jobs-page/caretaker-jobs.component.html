@@ -18,7 +18,7 @@
     </div>
     <div class="actual-content">
         <div class="pending-action-table">
-            <table mat-table [dataSource]="bidTableDataSource" class="bids-table">
+            <mat-table [dataSource]="bidTableDataSource" class="bids-table">
                 <ng-container matColumnDef="name">
                     <th mat-header-cell *matHeaderCellDef>Pet owner</th>
                     <td mat-cell *matCellDef="let bid">{{ bid.name }}</td>
@@ -61,7 +61,7 @@
                         <input class="button" id="reject-button" type="submit" value="Reject">
                     </td>
                 </ng-container>
-            </table>
+            </mat-table>
         </div>
         <div class="upcoming-jobs-table">
             

@@ -8,6 +8,7 @@ import { FormBuilder,Validators,FormArray, ReactiveFormsModule, FormGroup, FormC
 })
 export class RegisterLoginPageComponent implements OnInit {
 
+  isLoggedIn: boolean = true;
   constructor() { }
 
   loginForm = new FormGroup({
@@ -16,8 +17,10 @@ export class RegisterLoginPageComponent implements OnInit {
   });
 
   ngOnInit(): void {
+  }
 
-
+  getLoginStatus(): boolean {
+    return this.isLoggedIn;
   }
 
 }

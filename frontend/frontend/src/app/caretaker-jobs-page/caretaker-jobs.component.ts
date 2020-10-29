@@ -1,7 +1,7 @@
 import { Component, Input, Output, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatTableModule } from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatTable } from '@angular/material/table';
 import { CdkTableModule } from '@angular/cdk/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { Observable } from 'rxjs';
