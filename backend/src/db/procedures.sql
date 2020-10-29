@@ -6,7 +6,7 @@
 -- PET OWNERS AND PETS
 -- enforces total participation in (Pet owner == Own <== Pet) 
 CREATE OR REPLACE PROCEDURE add_pet_owner(
-  username VARCHAR, 
+  _username VARCHAR, 
   email VARCHAR,
   name VARCHAR,
   password VARCHAR,
@@ -22,10 +22,15 @@ CREATE OR REPLACE PROCEDURE add_pet_owner(
       FROM pet_categories pc
       WHERE pc.pet_category_name = pcn
     ) THEN RETURN; END IF;
-
-    INSERT INTO pcs_user VALUES (username, email, name, password);
-    INSERT INTO pet_owners VALUES (username);
-    INSERT INTO owned_pets VALUES (username, pet_name, special_requirements, pcn);
+    IF NOT EXISTS (
+        SELECT 1 
+        FROM pcs_user pcs
+        WHERE pcs.username = _username
+    ) THEN 
+        INSERT INTO pcs_user VALUES (_username, email, name, password);
+    END IF;
+    INSERT INTO pet_owners VALUES (_username);
+    INSERT INTO owned_pets VALUES (_username, pet_name, special_requirements, pcn);
   END;
   $$
 LANGUAGE plpgsql;
@@ -55,15 +60,21 @@ LANGUAGE plpgsql;
 -- ======================
 -- CARETAKERS AND LEAVES (FULL-TIME ONLY)
 CREATE OR REPLACE PROCEDURE add_part_time_caretaker(
-  username VARCHAR, 
+  _username VARCHAR, 
   email VARCHAR,
   name VARCHAR,
   password VARCHAR) AS
   $$
   BEGIN
-    INSERT INTO pcs_user VALUES (username, email, name, password);
-    INSERT INTO caretakers VALUES (username); 
-    INSERT INTO part_time_caretakers VALUES (username);
+    IF NOT EXISTS ( 
+        SELECT 1 
+        FROM pcs_user pcs
+        WHERE pcs.username = _username
+    ) THEN 
+        INSERT INTO pcs_user VALUES (_username, email, name, password);
+    END IF;
+    INSERT INTO caretakers VALUES (_username); 
+    INSERT INTO part_time_caretakers VALUES (_username);
   END;
   $$
 LANGUAGE plpgsql;
@@ -71,7 +82,7 @@ LANGUAGE plpgsql;
 -- THIS WILL NOT BE CALLED, FULL-TIME CARETAKERS WILL BE ADDED ON THE BACKEND MANUALLY BY PCS_ADMIN
 -- AS SUCH, FULL-TIME CARETAKERS THAT ARE IN THE TABLE ARE ALREADY VERIFIED
 CREATE OR REPLACE PROCEDURE add_full_time_caretaker(
-  username VARCHAR, 
+  _username VARCHAR, 
   email VARCHAR,
   name VARCHAR,
   password VARCHAR,
@@ -94,13 +105,18 @@ CREATE OR REPLACE PROCEDURE add_full_time_caretaker(
     -- From project brief (Full time care taker is treated as avaliable until they apply leave) 
     -- We have a problem here 
     SELECT start_availability_date + INTERVAL '1 year' INTO end_availability_date;
-    INSERT INTO pcs_user VALUES (username, email, name, password);
-    INSERT INTO caretakers VALUES (username);
-    INSERT INTO full_time_caretakers VALUES (username);
-    INSERT INTO verified_caretakers VALUES (username, admin_username, CURRENT_DATE);
-    INSERT INTO advertise_availabilities VALUES (username, start_availability_date, end_availability_date);
-    INSERT INTO advertise_for_pet_categories VALUES (username, start_availability_date, end_availability_date, pet_category_name, daily_price);
-  
+    IF NOT EXISTS (
+        SELECT 1 
+        FROM pcs_user pcs
+        WHERE pcs.username = _username
+    ) THEN 
+        INSERT INTO pcs_user VALUES (_username, email, name, password);
+    END IF;
+    INSERT INTO caretakers VALUES (_username);
+    INSERT INTO full_time_caretakers VALUES (_username);
+    INSERT INTO verified_caretakers VALUES (_username, admin_username, CURRENT_DATE);
+    INSERT INTO advertise_availabilities VALUES (_username, start_availability_date, end_availability_date);
+    INSERT INTO advertise_for_pet_categories VALUES (_username, start_availability_date, end_availability_date, pet_category_name, daily_price); 
     END IF;
   END;
   $$
@@ -110,7 +126,7 @@ CREATE OR REPLACE PROCEDURE delete_user(username_to_be_deleted VARCHAR) AS
   $$
   BEGIN
     UPDATE pcs_user SET is_deleted = TRUE WHERE username = username_to_be_deleted;
-    DELETE FROM verified_caretakers WHERE ct_username = username_to_be_deleted;
+    DELETE FROM verified_caretakers WHERE username = username_to_be_deleted;
 
     -- soft delete other entries
     UPDATE owned_pets SET is_deleted = TRUE where username = username_to_be_deleted;
@@ -118,6 +134,7 @@ CREATE OR REPLACE PROCEDURE delete_user(username_to_be_deleted VARCHAR) AS
   END;
   $$
 LANGUAGE plpgsql;
+
 -- ======================
 
 -- ======================
@@ -196,7 +213,6 @@ CREATE OR REPLACE PROCEDURE make_bid(
       WHERE username = caretaker_username 
       GROUP BY username;
 
-    -- We have to rewrite this part after the discussion
     IF (bsp >= asd AND bep <= aed) THEN
       -- determine pet category
       SELECT op.pet_category_name INTO bid_pet_category
@@ -240,7 +256,6 @@ CREATE OR REPLACE PROCEDURE choose_bid(
   _caretaker_username VARCHAR,
   _availability_start_date VARCHAR,
   _availability_end_date VARCHAR
-  -- choose_bid should not have payment_method and transfer_method , these information should already be there when i create a bid
   ) AS
   $$
   DECLARE pou VARCHAR;
