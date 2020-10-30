@@ -15,6 +15,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AgmCoreModule } from '@agm/core';
 
+import { RouterModule } from '@angular/router'
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { RegisterLoginPageComponent } from './login-page/register-login-page/register-login-page/register-login-page.component';
@@ -53,6 +54,7 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
     CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory }),
     BrowserModule, 
     AgmCoreModule.forRoot({ apiKey: 'AIzaSyDONDMmUqsDzOORDSXOngURXK4tjXPZ9lc' }), 
+    RouterModule
   
   ],
   providers: [],

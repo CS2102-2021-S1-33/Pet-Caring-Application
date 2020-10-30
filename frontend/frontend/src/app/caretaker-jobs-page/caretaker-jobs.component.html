@@ -5,20 +5,20 @@
         </div>
         <div class="options">
         <ul class="header-list">
-            <li><a [routerLink] = "['/find']">Find a caretaker</a></li>
-            <li ><a [routerLink] = "['/login']">Login</a></li> <!-- ngIf NOT authenticated-->
-            <li><a [routerLink] = "['/signup']">Sign Up</a></li> <!-- ngIf NOT authenticated-->
-            <li ><a [routerLink] = "['/login']">Login</a></li> <!-- ngIf authenticated-->
-            <!-- <li><a [routerLink] = "['/bids']">Your bids</a></li> ngIf authenticated AND pet owner
-            <li><a [routerLink] = "['/jobs']">Your jobs</a></li>  ngIf authenticated AND caretaker
-            <li><a [routerLink] = "['/profile']">Profile</a></li>  ngIf authenticated
-            <li><a href=""><i class="fas fa-sign-out-alt"></i></a></li>  ngIf authenticated -->
+            <!-- <li><a [routerLink] = "['/find']">Find a caretaker</a></li>
+            <li ><a [routerLink] = "['/login']">Login</a></li>
+            <li><a [routerLink] = "['/signup']">Sign Up</a></li> 
+            <li ><a [routerLink] = "['/login']">Login</a></li>  -->
+            <li><a  href= "http://localhost:4200/find">Find a caretaker</a></li>
+            <li ><a  href= "http://localhost:4200/login">Login</a></li>
+            <li><a  href= "http://localhost:4200/signup">Sign Up</a></li> 
+            <li ><a  href= "http://localhost:4200/login">Login</a></li> 
         </ul>
       </div>
     </div>
     <div class="actual-content">
         <div class="pending-action-table">
-            <mat-table [dataSource]="bidTableDataSource" class="bids-table">
+            <table mat-table [dataSource]="bidTableDataSource" class="bids-table">
                 <ng-container matColumnDef="name">
                     <th mat-header-cell *matHeaderCellDef>Pet owner</th>
                     <td mat-cell *matCellDef="let bid">{{ bid.name }}</td>
@@ -61,7 +61,7 @@
                         <input class="button" id="reject-button" type="submit" value="Reject">
                     </td>
                 </ng-container>
-            </mat-table>
+            </table>
         </div>
         <div class="upcoming-jobs-table">
             

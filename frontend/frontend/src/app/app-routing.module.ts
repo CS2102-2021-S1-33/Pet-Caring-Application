@@ -10,7 +10,7 @@ const routes: Routes = [
   {path: 'find', component: FindCaretakerComponent, canActivate: [AuthGuard]},
   {path: 'listing', component: IndividualListingComponent, canActivate: [AuthGuard]},
   {path: 'jobs', component: CaretakerJobsComponent, canActivate: [AuthGuard]},
-  {path: '', redirectTo: 'find', pathMatch: 'full'},
+  {path: '', redirectTo: 'login', pathMatch: 'full'},
 ];
 
 @NgModule({
