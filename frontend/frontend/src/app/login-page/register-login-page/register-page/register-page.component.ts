@@ -53,17 +53,6 @@ export class RegisterPageComponent implements OnInit {
     review: new FormControl('', Validators.required)
   });
 
-
-
-
-
-
-
-
-
-
-
-
   constructor() { }
 
   ngOnInit(): void {
