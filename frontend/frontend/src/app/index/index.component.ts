@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormControl } from '@angular/forms';
+
 
 @Component({
     selector: 'app-index',
@@ -8,6 +10,10 @@ import { Component, OnInit } from '@angular/core';
 
 export class IndexComponent implements OnInit {
     constructor() {}
+
+    searchForm = new FormGroup({
+        address: new FormControl()
+      });
 
     ngOnInit(): void {
 
