@@ -38,10 +38,7 @@ CREATE TABLE pet_owners (
   username VARCHAR PRIMARY KEY,
   FOREIGN KEY (username) REFERENCES pcs_user(username) 
 );
-
--- pet_categories should not have is_deleted field 
--- what happens if the admins wants to update the price for a category?
--- do we do an update or ???? 
+ 
 CREATE TABLE pet_categories (
   pet_category_name VARCHAR PRIMARY KEY,
   set_by VARCHAR NOT NULL REFERENCES pcs_admins(username),
@@ -99,21 +96,17 @@ CREATE TABLE advertise_availabilities (
   availability_start_date DATE,
   availability_end_date DATE,
   is_deleted BOOLEAN DEFAULT FALSE,
-  -- I would not recommend primary key to be avaliability_end_date 
-  PRIMARY KEY (username, availability_start_date, availability_end_date)
+  PRIMARY KEY (username, availability_start_date)
 );
 
 CREATE TABLE advertise_for_pet_categories (
   username VARCHAR,
   availability_start_date DATE,
-  availability_end_date DATE,
   pet_category_name VARCHAR, 
   daily_price INTEGER NOT NULL CHECK (daily_price > 0), 
-  FOREIGN KEY (username, availability_start_date, availability_end_date) REFERENCES advertise_availabilities(username, availability_start_date, availability_end_date),
+  FOREIGN KEY (username, availability_start_date) REFERENCES advertise_availabilities(username, availability_start_date),
   FOREIGN KEY (pet_category_name) REFERENCES pet_categories(pet_category_name),
-  -- Refer to comments in advertise_availabilities and in add_full_time_caretaker
-  PRIMARY KEY (username, availability_start_date, availability_end_date, pet_category_name)
-  -- Likewise ^ 
+  PRIMARY KEY (username, availability_start_date, pet_category_name) 
 );
 
 CREATE TABLE bid_period (
@@ -129,7 +122,6 @@ CREATE TABLE makes (
   bid_end_period DATE,
   caretaker_username VARCHAR,
   availability_start_date DATE,
-  availability_end_date DATE,
   bid_price INTEGER NOT NULL,
   is_successful BOOLEAN DEFAULT FALSE,
   payment_method VARCHAR,
@@ -138,8 +130,8 @@ CREATE TABLE makes (
   review VARCHAR DEFAULT NULL,
   FOREIGN KEY (pet_owner_username, pet_name) REFERENCES owned_pets(username, pet_name),
   FOREIGN KEY (bid_start_period, bid_end_period) REFERENCES bid_period(bid_start_period, bid_end_period),
-  FOREIGN KEY (caretaker_username, availability_start_date, availability_end_date) REFERENCES advertise_availabilities(username, availability_start_date, availability_end_date),
-  PRIMARY KEY (pet_owner_username, pet_name, bid_start_period, bid_end_period, caretaker_username, availability_start_date, availability_end_date)
+  FOREIGN KEY (caretaker_username, availability_start_date) REFERENCES advertise_availabilities(username, availability_start_date),
+  PRIMARY KEY (pet_owner_username, pet_name, bid_start_period, bid_end_period, caretaker_username, availability_start_date)
 );
 -- ======================
 

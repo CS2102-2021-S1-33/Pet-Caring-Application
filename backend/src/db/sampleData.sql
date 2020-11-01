@@ -63,16 +63,16 @@ SELECT * from owned_pets;
 -- TEST CASES FOR advertise_availability
 
 -- should insert
-CALL advertise_availability('john', '2020-12-01', '2020-12-20', 'dog', 11); 
+CALL advertise_availability('john', '2020-12-01', 'dog', 11); 
 /*
 -- should not insert not test pet_category
-CALL advertise_availability('john','2020-12-01','2020-12-20', 'test', 20); 
+CALL advertise_availability('john','2020-12-01', 'test', 20); 
 
 -- should NOT insert as daily_price < base_price
-CALL advertise_availability('john', '2020-12-01', '2020-12-20', 'dog', 9); 
+CALL advertise_availability('john', '2020-12-01', 'dog', 9); 
 
 -- should NOT insert as 'random' is not a username of a verified caretaker
-CALL advertise_availability('random','2020-12-01', '2020-12-20', 'cat', 10); 
+CALL advertise_availability('random','2020-12-01', 'cat', 10); 
 
 SELECT * FROM advertise_availabilities; -- should have 2 entries 
 SELECT * FROM advertise_for_pet_categories; -- should have 2 entries */

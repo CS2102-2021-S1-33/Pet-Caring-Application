@@ -91,7 +91,6 @@ CREATE OR REPLACE PROCEDURE add_full_time_caretaker(
   daily_price INTEGER) AS
   $$
   DECLARE start_availability_date DATE;
-  DECLARE end_availability_date DATE;
   DECLARE pcn VARCHAR;
   BEGIN
     SELECT pet_category_name INTO pcn;
@@ -102,9 +101,6 @@ CREATE OR REPLACE PROCEDURE add_full_time_caretaker(
       WHERE pc.pet_category_name = pcn AND pc.base_price <= daily_price) THEN
   
     SELECT CURRENT_DATE INTO start_availability_date;
-    -- From project brief (Full time care taker is treated as avaliable until they apply leave) 
-    -- We have a problem here 
-    SELECT start_availability_date + INTERVAL '1 year' INTO end_availability_date;
     IF NOT EXISTS (
         SELECT 1 
         FROM pcs_user pcs
@@ -115,8 +111,8 @@ CREATE OR REPLACE PROCEDURE add_full_time_caretaker(
     INSERT INTO caretakers VALUES (_username);
     INSERT INTO full_time_caretakers VALUES (_username);
     INSERT INTO verified_caretakers VALUES (_username, admin_username, CURRENT_DATE);
-    INSERT INTO advertise_availabilities VALUES (_username, start_availability_date, end_availability_date);
-    INSERT INTO advertise_for_pet_categories VALUES (_username, start_availability_date, end_availability_date, pet_category_name, daily_price); 
+    INSERT INTO advertise_availabilities VALUES (_username, start_availability_date);
+    INSERT INTO advertise_for_pet_categories VALUES (_username, start_availability_date, pet_category_name, daily_price); 
     END IF;
   END;
   $$
@@ -142,7 +138,6 @@ LANGUAGE plpgsql;
 CREATE OR REPLACE PROCEDURE advertise_availability(
   username VARCHAR,
   availability_start_date VARCHAR,
-  availability_end_date VARCHAR,
   pet_category_name VARCHAR, 
   daily_price INTEGER) AS
   $$
@@ -153,7 +148,6 @@ CREATE OR REPLACE PROCEDURE advertise_availability(
   BEGIN
     SELECT username INTO u; 
     SELECT date(availability_start_date) INTO asd; 
-    SELECT date(availability_end_date) INTO aed; 
     SELECT pet_category_name INTO pcn;
 
     IF NOT EXISTS (
@@ -171,11 +165,10 @@ CREATE OR REPLACE PROCEDURE advertise_availability(
       FROM advertise_availabilities aa
       WHERE aa.username = u 
         AND aa.availability_start_date = asd 
-        AND aa.availability_end_date = aed
     ) THEN
-        INSERT INTO advertise_availabilities VALUES (u, asd, aed);
+        INSERT INTO advertise_availabilities VALUES (u, asd);
     END IF;
-    INSERT INTO advertise_for_pet_categories VALUES (u, asd, aed, pet_category_name, daily_price);
+    INSERT INTO advertise_for_pet_categories VALUES (u, asd, pet_category_name, daily_price);
   END;
   $$
 LANGUAGE plpgsql;
@@ -208,12 +201,17 @@ CREATE OR REPLACE PROCEDURE make_bid(
     SELECT payment_method INTO pm;
     SELECT transfer_method INTO tm;
 
-    SELECT into asd, aed  MAX(availability_start_date) , MAX(availability_end_date)
+    SELECT MAX(availability_start_date) into asd
       FROM advertise_availabilities
       WHERE username = caretaker_username 
       GROUP BY username;
 
-    IF (bsp >= asd AND bep <= aed) THEN
+    SELECT COALESCE(availability_end_date, '1/1/1900') into aed
+      FROM advertise_availabilities
+      WHERE username = caretaker_username
+        AND availability_start_date = asd;
+
+    IF (bsp >= asd AND ( aed = '1/1/1900' or bep <= aed)) THEN
       -- determine pet category
       SELECT op.pet_category_name INTO bid_pet_category
       FROM owned_pets op
@@ -240,7 +238,7 @@ CREATE OR REPLACE PROCEDURE make_bid(
         ) THEN
   
         INSERT INTO bid_period VALUES (bsp, bep);
-        INSERT INTO makes VALUES (pet_owner_username, pet_name, bsp, bep, caretaker_username, asd, aed, bid_price, FALSE, pm, tm);
+        INSERT INTO makes VALUES (pet_owner_username, pet_name, bsp, bep, caretaker_username, asd, bid_price, FALSE, pm, tm);
   
       END IF;
     END IF;
