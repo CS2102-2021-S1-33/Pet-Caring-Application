@@ -76,28 +76,17 @@ a {
   margin-top: 60px;
 }
 
+.subheading {
+  font-family: 'Balsamiq Sans', sans-serif;
+  font-size: 24px;
+  margin-bottom: 30px;
+}
+
 .title {
   font-family: 'Balsamiq Sans', sans-serif;
+  font-style: italic;
   font-size: 30px;
   margin-bottom: 30px;
-}
-
-.subtitle {
-  font-family: 'Balsamiq Sans', sans-serif;
-  font-size: 25px;
-  margin-bottom: 30px;
-}
-
-.card-title {
-  font-size: 18px;
-  font-weight: 600;
-  margin-bottom: 10px;
-}
-
-.summary {
-  display: flex;
-  flex-direction: row;
-  margin-bottom: 50px;
 }
 
 .button {
@@ -116,16 +105,15 @@ a {
   }
 }
 
-#accept-button {
-    background-color: #48B943;
+#review-button, #pay-button {
+    background-color: @button;
 
     &:hover {
-        background-color: #399435;
+        background-color: @button-hover;
       }
 }
 
-#reject-button {
-    margin-left: 10px;
+#cancel-button {
     background-color: #DD3D12;
 
     &:hover {
@@ -171,15 +159,9 @@ a {
   border: none !important;
 }
 
-.mat-card {
-  font-family: 'Asap', sans-serif;
-  font-size: 15px;
-  width: 28vw;
-  height: 80px;  
-  padding: 30px;
-  margin-left: 20px;
-}
-
-.mat-card:not([class*=mat-elevation-z]) {
-  box-shadow: 0px 0px 6px #00000029;
+label {
+  display: inline-block;
+  margin: 2vw 0vw 0.5vw 0vw;
+  font-size: 16px;
+  color: @paragraph-grey;
 }
