@@ -20,9 +20,18 @@ FOR EACH ROW EXECUTE PROCEDURE check_advertise_availability();
 
 CREATE OR REPLACE FUNCTION check_make_bid() RETURNS TRIGGER AS
   $$
+  DECLARE aed DATE; 
   BEGIN
+
+     SELECT COALESCE(availability_end_date, '1/1/1900') into aed
+      FROM advertise_availabilities
+      WHERE username = NEW.caretaker_username
+        AND availability_start_date = NEW.availability_start_date;
+
+
     -- check bidPeriod is subset of availability period
-    IF NOT (date(NEW.bid_start_period) >= date(NEW.availability_start_date) AND date(NEW.bid_end_period) <= date(NEW.availability_end_date)) THEN
+    IF NOT (date(NEW.bid_start_period) >= date(NEW.availability_start_date) AND (
+        aed = '1/1/1900' or date(NEW.bid_end_period) <= date(aed))) THEN
     RETURN NULL; END IF;
 
     -- checks if caretaker actually advertised that he is able to care for this pet category and if the bid_price > daily_price 
@@ -30,7 +39,6 @@ CREATE OR REPLACE FUNCTION check_make_bid() RETURNS TRIGGER AS
       SELECT 1
       FROM advertise_for_pet_categories a
       WHERE a.availability_start_date = NEW.availability_start_date 
-        AND a.availability_end_date = NEW.availability_end_date
         AND a.pet_category_name = (
             SELECT op.pet_category_name
             FROM owned_pets op
@@ -92,3 +100,16 @@ LANGUAGE plpgsql;
 
 CREATE TRIGGER makes_choose_bid_update_trigger BEFORE UPDATE OF is_successful ON makes
 FOR EACH ROW EXECUTE PROCEDURE check_choose_bid();
+
+
+CREATE OR REPLACE FUNCTION check_leave() RETURNS TRIGGER AS 
+  $$
+  DECLARE curYear VARCHAR;
+  BEGIN 
+    SELECT date_part('year', CURRENT_DATE) into curYear;
+  END;
+  $$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER leave_insert_trigger BEFORE INSERT ON apply_leaves
+FOR EACH ROW EXECUTE PROCEDURE check_leave();

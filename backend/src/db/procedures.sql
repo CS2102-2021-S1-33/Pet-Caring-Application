@@ -354,3 +354,37 @@ CREATE OR REPLACE PROCEDURE insert_review(
     END;
   $$
 LANGUAGE plpgsql; 
+
+CREATE OR REPLACE PROCEDURE approve_leave(
+  _ftCaretaker_username VARCHAR,
+  _admin_username VARCHAR, 
+  _leave_start_date DATE,
+  _leave_end_date DATE
+) AS 
+  $$
+  DECLARE asd DATE;
+  BEGIN 
+    SELECT MAX(availability_start_date) into asd
+      FROM advertise_availabilities
+      WHERE username = _ftCaretaker_username 
+      GROUP BY username;
+
+    -- Update leave table 
+    UPDATE apply_leaves SET is_successful = TRUE , admin_username = _admin_username
+      WHERE username = _ftCaretaker_username
+        AND leave_start_date = _leave_start_date
+        AND leave_end_date = leave_end_date; 
+
+    -- Update advertise table 
+    UPDATE advertise_availabilities SET availability_end_date = _leave_start_date
+        WHERE username = _ftCaretaker_username
+          AND availability_start_date = asd;
+
+    -- Insert new advertise record
+    INSERT INTO advertise_availabilites VALUES (_ftCaretaker_username, leave_end_date);
+
+    -- do we also insert for every category the caretaker was doing before or ??
+
+  END;
+  $$
+LANGUAGE plpgsql; 
