@@ -22,14 +22,6 @@
             <div class="subheading">Accepted pet categories</div>
             <div class="info">{{ petCategories }}</div>
 
-            <div class="subheading">{{ name }} 's home</div>
-            <div class="info" style="margin-bottom: 10px;">{{ location }}</div>
-            <div style="margin-bottom: 40px;">
-                <agm-map [zoom]="16" [latitude]="lat" [longitude]="lng">
-                    <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
-                </agm-map>
-            </div>
-
             <div class="heading">Availability</div>
 
             <div class="heading">Review</div>

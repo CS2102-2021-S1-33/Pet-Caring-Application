@@ -19,7 +19,6 @@ const routes: Routes = [
   {path: 'listing', component: IndividualListingComponent},
   {path: 'jobs', component: CaretakerJobsComponent},
   {path: 'bids', component: PetOwnerBidsComponent},
-  {path: '', redirectTo: 'find', pathMatch: 'full'},
   {path: '', component: IndexComponent},
   {path: 'admin', component: AdminHomepageComponent},
   {path: 'admin/approve-leave', component: ApproveLeaveComponent},

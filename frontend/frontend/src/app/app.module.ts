@@ -13,7 +13,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
@@ -33,6 +33,8 @@ import { AdminHomepageComponent } from './admin/admin-homepage/admin-homepage.co
 import { ApproveLeaveComponent } from './admin/approve-leave/approve-leave.component';
 import { VerifyCaretakerComponent } from './admin/verify-caretaker/verify-caretaker.component';
 import { ViewPetCategoriesComponent } from './admin/view-pet-categories/view-pet-categories.component';
+
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 @NgModule({
@@ -74,7 +76,8 @@ import { ViewPetCategoriesComponent } from './admin/view-pet-categories/view-pet
     MatTableModule,
     MatPaginatorModule,
     MatButtonModule,
-    MatDialogModule
+    MatDatepickerModule,
+    NgbModule
   ],
   providers: [],
   bootstrap: [AppComponent]
