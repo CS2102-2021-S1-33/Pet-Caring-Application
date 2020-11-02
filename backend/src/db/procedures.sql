@@ -369,19 +369,16 @@ CREATE OR REPLACE PROCEDURE approve_leave(
       WHERE username = _ftCaretaker_username 
       GROUP BY username;
 
-    -- Update leave table 
-    UPDATE apply_leaves SET is_successful = TRUE , admin_username = _admin_username
-      WHERE username = _ftCaretaker_username
-        AND leave_start_date = _leave_start_date
-        AND leave_end_date = leave_end_date; 
-
+    -- insert into  approved_apply_leave table 
+    INSERT into approved_apply_leaves VALUES (_ftCaretaker_username, _admin_username, _leave_start_date, _leave_end_date);
+    
     -- Update advertise table 
     UPDATE advertise_availabilities SET availability_end_date = _leave_start_date
         WHERE username = _ftCaretaker_username
           AND availability_start_date = asd;
 
     -- Insert new advertise record
-    INSERT INTO advertise_availabilites VALUES (_ftCaretaker_username, leave_end_date);
+    INSERT INTO advertise_availabilities VALUES (_ftCaretaker_username, _leave_end_date);
 
     -- do we also insert for every category the caretaker was doing before or ??
 

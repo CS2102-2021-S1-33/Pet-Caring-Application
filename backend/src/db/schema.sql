@@ -79,10 +79,20 @@ CREATE TABLE verified_caretakers (
 
 CREATE TABLE apply_leaves (
   username VARCHAR, 
+  leave_start_date DATE,
+  leave_end_date DATE,
+  FOREIGN KEY (username) REFERENCES full_time_caretakers(username),
+  PRIMARY KEY (username, leave_start_date, leave_end_date)
+);
+
+-- Update ER Diagram 
+-- We need this table because we need to insert an entry when a FT apply leave but the leave is not yet approved.
+-- admin -- approve -- apply_leaves (apply_leaves now become an aggregated entite) 
+CREATE TABLE approved_apply_leaves (
+  username VARCHAR, 
   admin_username VARCHAR, 
   leave_start_date DATE,
   leave_end_date DATE,
-  is_successful BOOLEAN DEFAULT FALSE,
   FOREIGN KEY (username) REFERENCES full_time_caretakers(username),
   FOREIGN KEY (admin_username) REFERENCES pcs_admins(username), 
   PRIMARY KEY (username, leave_start_date, leave_end_date, admin_username)

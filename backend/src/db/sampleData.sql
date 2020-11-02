@@ -63,16 +63,16 @@ SELECT * from owned_pets;
 -- TEST CASES FOR advertise_availability
 
 -- should insert
-CALL advertise_availability('john', '2020-12-01', 'dog', 11); 
+CALL advertise_availability('john', '2020-08-01', 'dog', 11); 
 /*
 -- should not insert not test pet_category
-CALL advertise_availability('john','2020-12-01', 'test', 20); 
+CALL advertise_availability('john','2020-08-01', 'test', 20); 
 
 -- should NOT insert as daily_price < base_price
-CALL advertise_availability('john', '2020-12-01', 'dog', 9); 
+CALL advertise_availability('john', '2020-08-01', 'dog', 9); 
 
 -- should NOT insert as 'random' is not a username of a verified caretaker
-CALL advertise_availability('random','2020-12-01', 'cat', 10); 
+CALL advertise_availability('random','2020-08-01', 'cat', 10); 
 
 SELECT * FROM advertise_availabilities; -- should have 2 entries 
 SELECT * FROM advertise_for_pet_categories; -- should have 2 entries */
@@ -84,16 +84,16 @@ SELECT * FROM advertise_for_pet_categories; -- should have 2 entries */
 -- TEST CASES FOR make_bid
 
 -- should insert
-CALL make_bid('sallyPO', 'petName', '2020-12-01', '2020-12-10', 'john', 12,'CASH', 'PET_OWNER_DELIVERS'); 
+CALL make_bid('sallyPO', 'petName', '2020-08-01', '2020-08-10', 'john', 12,'CASH', 'PET_OWNER_DELIVERS'); 
 /*
 -- should NOT insert as bid_price < daily_price
-CALL make_bid('sallyPO', 'petName', '2020-12-01', '2020-12-10', 'john', 9, 'CASH', 'PET_OWNER_DELIVERS'); 
+CALL make_bid('sallyPO', 'petName', '2020-08-01', '2020-08-10', 'john', 9, 'CASH', 'PET_OWNER_DELIVERS'); 
 
 -- should NOT insert as john did not advertise to take care of 'cat' pet category
-CALL make_bid('sallyPO', 'testName', '2020-12-01', '2020-12-10', 'john', 10, 'CREDIT', 'COLLECT_BY_CARETAKER');
+CALL make_bid('sallyPO', 'testName', '2020-08-01', '2020-08-10', 'john', 10, 'CREDIT', 'COLLECT_BY_CARETAKER');
 
 -- should NOT insert as bid period is not subset of availability period
-CALL make_bid('sallyPO', 'petName', '2020-11-01', '2020-12-25', 'john',  10, 'CREDIT', 'PET_DELIVERY_SERVICE'); 
+CALL make_bid('sallyPO', 'petName', '2020-08-01', '2020-08-25', 'john',  10, 'CREDIT', 'PET_DELIVERY_SERVICE'); 
 
 SELECT count(*) FROM makes; --Should only have 1 entry */
 
@@ -107,11 +107,25 @@ SELECT * FROM advertise_for_pet_categories;
 UPDATE makes set is_successful = TRUE 
     WHERE pet_owner_username = 'sallyPO' 
         AND caretaker_username = 'john'
-        AND bid_start_period = date('2020-12-01')
-        AND bid_end_period = date('2020-12-10');
+        AND bid_start_period = date('2020-08-01')
+        AND bid_end_period = date('2020-08-10');
 
-CALL insert_review('sallyPO', 'petName', '2020-12-01', '2020-12-10', 'john', 2, 'TEST');
+CALL insert_review('sallyPO', 'petName', '2020-08-01', '2020-08-10', 'john', 2, 'TEST');
 SELECT * FROM advertise_for_pet_categories; */
+
+-- ======================
+
+-- ======================
+-- TEST CASES FOR check_leave() 
+
+-- 150 days EXACT
+INSERT into advertise_availabilities VALUES ('micky', '2020-01-01', '2020-05-30');
+INSERT into advertise_availabilities VALUES ('micky', '2020-05-30', '2020-10-27');
+INSERT into apply_leaves(username, leave_start_date, leave_end_date) VALUES ('micky', '2020-10-28', '2020-10-29');
+SELECT * FROM apply_leaves; -- verify that micky has applied for leave
+
+CALL approve_leave('micky', 'admin', '2020-10-28','2020-10-29');
+SELECT * FROM approved_apply_leaves; --verify that the leave has been approved; 
 
 
 /*

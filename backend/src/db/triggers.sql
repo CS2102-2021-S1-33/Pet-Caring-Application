@@ -107,6 +107,15 @@ CREATE OR REPLACE FUNCTION check_leave() RETURNS TRIGGER AS
   DECLARE curYear VARCHAR;
   BEGIN 
     SELECT date_part('year', CURRENT_DATE) into curYear;
+    IF ( (SELECT COUNT(*) 
+        FROM ( 
+            SELECT COALESCE(availability_end_date,CURRENT_DATE) - availability_start_date as wDay 
+            FROM advertise_availabilities 
+            WHERE username = 'micky') as wDayTable 
+        WHERE wDay >= 150) >= 2) THEN
+        RETURN NEW;
+    END IF;
+    RETURN NULL;
   END;
   $$
 LANGUAGE plpgsql;
