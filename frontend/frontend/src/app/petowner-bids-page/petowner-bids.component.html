@@ -27,9 +27,10 @@
                 <ngx-datatable-column name="Caretaking period"></ngx-datatable-column>
                 <ngx-datatable-column name="Phone"></ngx-datatable-column>
                 <ngx-datatable-column name="Bid date"></ngx-datatable-column>
-                <ngx-datatable-column name="" [width]="80" [sortable]="false" prop="name">
+                <ngx-datatable-column name="" [width]="180" [sortable]="false" prop="name">
                     <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-                          <input type="button" class="button" id="pay-button" (click)="onPaySelect(row)" value="Pay" />
+                        <input type="button" class="button" id="pay-button" (click)="onCashSelect(row)" value="Cash" />
+                        <input type="button" style="margin-left: 10px;" class="button" id="pay-button" (click)="onCreditSelect(row)" value="Credit" />
                     </ng-template>
                 </ngx-datatable-column>
             </ngx-datatable>
