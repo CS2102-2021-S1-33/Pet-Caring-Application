@@ -157,9 +157,6 @@ CREATE OR REPLACE PROCEDURE advertise_availability(
         AND pc.base_price < daily_price 
     ) THEN RETURN; END IF;
 
-      -- checks if there already exists the same availability slot for this caretaker, if yes then just add additional pet category
-      -- TODO will have to update this after discussion about availability_end_date
-
     IF NOT EXISTS (
       SELECT *
       FROM advertise_availabilities aa
@@ -216,30 +213,17 @@ CREATE OR REPLACE PROCEDURE make_bid(
       SELECT op.pet_category_name INTO bid_pet_category
       FROM owned_pets op
       WHERE op.pet_name = pn AND op.username = pet_owner_username;
-  
-      -- check whether bid_price >= daily_price AND does not conflict with existing caretaker jobs
-            -- TODO update after discussion if its based on advertise_for_pet_categories daily price 
-            -- or pet_categories table daily price 
-            -- this check of bid_price should only affect full-time care taker 
-            -- if the care taker choosen is full-time , the bid is marked successful immediately 
-      -- Good cases:
-      -- newBidStart newBidEnd oldBidStart oldBidEnd
-      -- oldBidStart oldBidEnd newBidStart newBidEnd
+
+      -- determine that the care_taker selected has advertise for this pet_category
       IF EXISTS (
-        SELECT *
+        SELECT 1
         FROM advertise_for_pet_categories a 
         WHERE a.pet_category_name = bid_pet_category 
-            AND bid_price >= a.daily_price) 
-        AND NOT EXISTS (
-            SELECT 1 FROM makes m 
-            WHERE m.caretaker_username = cu 
-                AND m.is_successful = TRUE 
-                AND NOT (m.bid_start_period > bep OR m.bid_end_period < bsp)
+            AND a.username = caretaker_username
         ) THEN
   
         INSERT INTO bid_period VALUES (bsp, bep);
-        INSERT INTO makes VALUES (pet_owner_username, pet_name, bsp, bep, caretaker_username, asd, bid_price, FALSE, pm, tm);
-  
+        INSERT INTO makes VALUES (pet_owner_username, pet_name, bsp, bep, caretaker_username, asd, bid_price, FALSE, pm, tm); 
       END IF;
     END IF;
   END;
@@ -286,15 +270,10 @@ CREATE OR REPLACE PROCEDURE choose_bid(
             AND caretaker_username = cu 
             AND availability_start_date = asd 
             AND availability_end_date = aed;
-    END IF;
-  
+    END IF; 
   END;
   $$
 LANGUAGE plpgsql;
-
--- TODO have a procedure to check 
--- that care taker works for a minimum of 2 x 150 consecutive days a year. 
--- Before the leave application can be made. 
 
 CREATE OR REPLACE PROCEDURE insert_review( 
   _pet_owner_username VARCHAR,
@@ -331,7 +310,6 @@ CREATE OR REPLACE PROCEDURE insert_review(
         FROM makes m 
         WHERE m.caretaker_username = caretaker_username;
 
-        -- We can change the numbers later 
         if (after - before >= 0.1) THEN 
             SELECT pet_category_name into category
             FROM owned_pets
@@ -343,7 +321,6 @@ CREATE OR REPLACE PROCEDURE insert_review(
             WHERE username = _caretaker_username 
             GROUP BY username;
 
-            -- Likewise here 
             UPDATE advertise_for_pet_categories SET daily_price = daily_price * 1.2
                 WHERE username = _caretaker_username
                 AND date(availability_start_date) = date(asd)
@@ -366,10 +343,10 @@ CREATE OR REPLACE PROCEDURE approve_leave(
   BEGIN 
     SELECT MAX(availability_start_date) into asd
       FROM advertise_availabilities
-      WHERE username = _ftCaretaker_username 
+      WHERE username = _ftCaretaker_username
       GROUP BY username;
 
-    -- insert into  approved_apply_leave table 
+    -- insert into approved_apply_leave table 
     INSERT into approved_apply_leaves VALUES (_ftCaretaker_username, _admin_username, _leave_start_date, _leave_end_date);
     
     -- Update advertise table 
@@ -379,8 +356,6 @@ CREATE OR REPLACE PROCEDURE approve_leave(
 
     -- Insert new advertise record
     INSERT INTO advertise_availabilities VALUES (_ftCaretaker_username, _leave_end_date);
-
-    -- do we also insert for every category the caretaker was doing before or ??
 
   END;
   $$

@@ -117,16 +117,48 @@ SELECT * FROM advertise_for_pet_categories; */
 
 -- ======================
 -- TEST CASES FOR check_leave() 
+/*
+-- 2 x 150 days EXACT
+INSERT into pcs_user VALUES ('Kat', 'Kat@hotmail.com', 'Kat Low', 'password');
+INSERT into caretakers VALUES ('Kat');
+INSERT into full_time_caretakers VALUES ('Kat');
+INSERT into verified_caretakers VALUES ('Kat','admin','2020-01-01');
+INSERT into advertise_availabilities VALUES ('Kat', '2020-01-01', '2020-05-30');
+INSERT into advertise_availabilities VALUES ('Kat', '2020-05-30', '2020-10-27');
+INSERT into apply_leaves(username, leave_start_date, leave_end_date) VALUES ('Kat', '2020-10-28', '2020-10-29');
+SELECT * FROM apply_leaves; -- verify that Kat has applied for leave
 
--- 150 days EXACT
-INSERT into advertise_availabilities VALUES ('micky', '2020-01-01', '2020-05-30');
-INSERT into advertise_availabilities VALUES ('micky', '2020-05-30', '2020-10-27');
-INSERT into apply_leaves(username, leave_start_date, leave_end_date) VALUES ('micky', '2020-10-28', '2020-10-29');
-SELECT * FROM apply_leaves; -- verify that micky has applied for leave
+CALL approve_leave('Kat', 'admin', '2020-10-28','2020-10-29');
+SELECT count(*) FROM approved_apply_leaves; --verify that the leave has been approved; 
+SELECT * from advertise_availabilities;
 
-CALL approve_leave('micky', 'admin', '2020-10-28','2020-10-29');
-SELECT * FROM approved_apply_leaves; --verify that the leave has been approved; 
+--Only 1 x 150 days but still have enough time to do another 150 days  
+INSERT into pcs_user VALUES ('Ben', 'Ben@hotmail.com', 'Ben Lao', 'password');
+INSERT into caretakers VALUES ('Ben');
+INSERT into full_time_caretakers VALUES ('Ben');
+INSERT into verified_caretakers VALUES ('Ben','admin','2020-01-01');
+INSERT into advertise_availabilities VALUES('Ben', '2020-01-01', '2020-05-30'); 
+INSERT into advertise_for_pet_categories VALUES('Ben', '2020-01-01','dog', 10);
+INSERT into apply_leaves VALUES ('Ben', '2020-06-01', '2020-06-02');
+SELECT * FROM apply_leaves; -- verify that ben has applied for leave
+CALL approve_leave('Ben','admin', '2020-06-01', '2020-06-02');
+SELECT count(*) as num_approved from approved_apply_leaves; -- 2 records;
+SELECT * from advertise_availabilities;
 
+-- Doesn`t meet 2 x 150 days 
+-- Have 1 but have bid during period 
+INSERT into pcs_user VALUES ('James', 'James@hotmail.com', 'James Ho', 'password');
+INSERT into caretakers VALUES ('James');
+INSERT into full_time_caretakers VALUES ('James');
+INSERT into verified_caretakers VALUES ('James','admin','2020-01-01');
+INSERT into advertise_availabilities VALUES('James', '2020-01-01', '2020-05-30');
+INSERT into advertise_availabilities VALUES ('James', '2020-05-31');
+INSERT into advertise_for_pet_categories VALUES('James', '2020-05-31','dog', 10);
+CALL make_bid('sallyPO', 'petName', '2020-06-01', '2020-06-10', 'James', 15, 'CASH', 'PET_OWNER_DELIVERS'); 
+SELECT pet_owner_username, pet_name, bid_start_period, bid_end_period , caretaker_username, is_successful from makes; -- verify that there is a new bid created and that its already set to true 
+INSERT into apply_leaves VALUES ('James','2020-05-31', '2020-06-15');
+SELECT * from apply_leaves -- verify that james did not apply for leave 
+*/
 
 /*
 INSERT INTO pet_owners VALUES ('sallyPO', 'sally@gmail.com', 'sally chan', 'password');
