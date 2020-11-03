@@ -29,13 +29,13 @@ import { IndividualListingComponent } from './individual-listing-page/individual
 import { CaretakerJobsComponent } from './caretaker-jobs-page/caretaker-jobs.component';
 import { PetOwnerBidsComponent } from './petowner-bids-page/petowner-bids.component';
 import { IndexComponent } from './index/index.component';
+import { ProfileComponent } from './profile-page/profile.component';
 import { AdminHomepageComponent } from './admin/admin-homepage/admin-homepage.component';
 import { ApproveLeaveComponent } from './admin/approve-leave/approve-leave.component';
 import { VerifyCaretakerComponent } from './admin/verify-caretaker/verify-caretaker.component';
 import { ViewPetCategoriesComponent } from './admin/view-pet-categories/view-pet-categories.component';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-
 
 @NgModule({
   declarations: [
@@ -51,7 +51,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     VerifyCaretakerComponent,
     ViewPetCategoriesComponent,
     CaretakerJobsComponent,
-    PetOwnerBidsComponent
+    PetOwnerBidsComponent,
+    ProfileComponent
   ],
   imports: [
     BrowserModule,

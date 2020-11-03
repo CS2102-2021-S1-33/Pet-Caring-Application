@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { IndexComponent } from './index/index.component';
+import { ProfileComponent } from './profile-page/profile.component';
 import { RegisterLoginPageComponent } from './register-login-page/register-login-page.component';
 import { SignUpPageComponent } from "./sign-up-page/sign-up-page.component";
 import { FindCaretakerComponent } from './find-caretaker-page/find-caretaker.component'
@@ -17,6 +18,7 @@ const routes: Routes = [
   {path:'signup', component: SignUpPageComponent},
   {path: 'find', component: FindCaretakerComponent},
   {path: 'listing', component: IndividualListingComponent},
+  {path: 'profile', component: ProfileComponent},
   {path: 'jobs', component: CaretakerJobsComponent},
   {path: 'bids', component: PetOwnerBidsComponent},
   {path: '', component: IndexComponent},
@@ -24,7 +26,6 @@ const routes: Routes = [
   {path: 'admin/approve-leave', component: ApproveLeaveComponent},
   {path: 'admin/verify-caretaker', component: VerifyCaretakerComponent},
   {path: 'admin/view-pet-categories', component: ViewPetCategoriesComponent}
-
 ];
 
 @NgModule({
