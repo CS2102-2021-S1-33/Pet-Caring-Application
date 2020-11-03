@@ -24,6 +24,7 @@
 
     <div class="auth">
       <h1>Sign Up</h1>
+      <h1 *ngIf=false>Edit Profile</h1> <!-- actual *ngIf authenticated and came from Edit Profile-->
       <form [formGroup]="registerForm">
         <p>Personal Information</p>
         <label class="first-label" for="name">Name</label>
@@ -41,37 +42,38 @@
         <mat-divider></mat-divider>
 
         <label>Account type</label>
-        <div class="type-checkbox">
+        <div class="type-checkbox" formGroupName="accountType">
           <label class="container">Pet owner
-            <input type="checkbox" formControlName="typePetowner">
+            <input type="checkbox" formControlName="typePetowner" (change)="poEventCheck($event)">
             <span class="checkmark"></span>
           </label>
           <label class="container">Caretaker
-            <input type="checkbox" formControlName="typeCaretaker">
+            <input type="checkbox" formControlName="typeCaretaker" (change)="cEventCheck($event)">
             <span class="checkmark"></span>
           </label>
         </div>
 
 
-        <div class="enabled">
+        <div class="enabled" *ngIf='caretakerChecked'>
           <p>Caretaker Details</p>
           <div class="type-checkbox">
             <label class="container">Full-time
-              <input type="radio" name="caretaker-role" formControlName="caretakerRole">
+              <input type="radio" name="caretakerRole" formControlName="caretakerRole">
               <span class="radio"></span>
             </label>
             <label class="container">Part-time
-              <input type="radio" name="caretaker-role" formControlName="caretakerRole">
+              <input type="radio" name="caretakerRole" formControlName="caretakerRole">
               <span class="radio"></span>
             </label>
           </div>
 
-
-          <label>Select pet categories to care for</label>
-          <div><i>~insert a <b>multiselect</b> dropdown here~</i></div>
+          <div class="dropdown">
+            <label>Select pet categories to care for</label>
+            <input class="field" id="petCategories" type="text" formControlName="petCategories">
+          </div>
         </div>
 
-        <div class="enabled">
+        <div class="enabled" *ngIf='petOwnerChecked'>
           <p>Pet Information</p>
           <div>
             <label id="no-of-pets-label">How many pets do you have?</label>
@@ -80,12 +82,13 @@
 
           <div *ngFor="let pets of pe.controls; let i = index" class="pet-info" formArrayName="petInfo">
             <br><br><mat-divider></mat-divider>
-            <p style="font-size: 17px; font-weight: 400; margin-bottom: 5px;">Pet {{i + 1}}</p>
-            <label class="first-label" for="name">Name</label>
+            <label style="margin-top: 25px;" class="first-label" for="name">Name</label>
             <input class="field" id="name" type="text" formControlName="name">
 
-            <label>Select pet category of pet</label>
-            <div><i>~ insert a dropdown here~</i></div><br/>
+            <div class="dropdown">
+              <label>Select your pet's category</label>
+              <input class="field" id="petCategories" type="text" formControlName="petCategories">
+            </div>
 
             <label>Special requirements</label>
             <textarea class="field" style="resize: vertical;"></textarea>
