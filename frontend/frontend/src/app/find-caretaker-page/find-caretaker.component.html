@@ -18,30 +18,30 @@
     <div class="search-bar">
       <form [formGroup]="searchForm" class="form">
         <div class="field-container">
-          <i class="fas fa-search"></i>
+          <div class="icon"><i class="fas fa-search"></i></div>
           <input class="field" type="text" id="search-keyword" placeholder="Search keyword..." formControlName="keyword">
         </div>
 
         <div class="field-container">
-          <i class="fas fa-paw"></i>
+          <div class="icon"><i class="fas fa-paw"></i></div>
           <input class="field" type="text" id="search-pet-category" placeholder="Select pet categories" formControlName="pet">
         </div>
 
-        <div class="field-container">
-          <i class="fas fa-map-marker-alt"></i>
-          <input class="field" type="text" id="search-location" placeholder="Enter address" formControlName="location">
-        </div>
-
         <div class="field-container date-container">
-          <i class="fas fa-calendar-alt"></i>
-          <input class="field date-field" type="text" id="search-start-date" placeholder="Start date" formControlName="startDate">
+          <input ngbDatepicker #d="ngbDatepicker" class="field date-field" type="text" id="search-start-date" placeholder="Start date" formControlName="startDate">
+          <div class="input-group-append">
+            <button class="btn" (click)="d.toggle()" type="button"> <i class="fas fa-calendar-alt"></i></button>
+          </div>
         </div>
+      
 
         <i class="fas fa-long-arrow-alt-right"></i>
 
         <div class="field-container date-container">
-          <i class="fas fa-calendar-alt"></i>
-          <input class="field date-field" type="text" id="search-end-date" placeholder="End date" formControlName="endDate">
+          <input ngbDatepicker #e="ngbDatepicker" class="field date-field" type="text" id="search-end-date" placeholder="End date" formControlName="endDate">
+          <div class="input-group-append" id="date-append">
+            <button class="btn" (click)="e.toggle()" type="button"><i class="fas fa-calendar-alt"></i></button>
+          </div>
         </div>
       </form>
     </div>
@@ -51,10 +51,6 @@
         <mat-card  *ngFor="let listing of obs | async">
           <div class="listing">
             <div class="list-name">Priscilla Lim</div>
-          
-            <div class="list-address">Bukit Batok, Singapore</div>
-          
-            <div class="list-relative-location">1.2km away</div>
           
             <div class="list-pet-categories"> 
               <mat-chip-list>
@@ -78,4 +74,3 @@
     </div>
   </div>
 </div>
-  

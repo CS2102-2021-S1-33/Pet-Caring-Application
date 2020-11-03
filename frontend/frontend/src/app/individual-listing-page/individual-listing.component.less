@@ -37,12 +37,24 @@
   margin-bottom: 40px;
 }
 
-.actual-content {
-  display: flex;
-  flex-flow: row;
-  flex-wrap: nowrap;
-  height: 100%;
-  width: 100%;
+@media screen and (max-width: 2560px) and (min-width: 1920px) {
+  .actual-content {
+    display: flex;
+    flex-flow: row;
+    flex-wrap: nowrap;
+    height: 100%;
+    width: 85%;
+  }
+}
+
+@media screen and (max-width: 1919px) {
+  .actual-content {
+    display: flex;
+    flex-flow: row;
+    flex-wrap: nowrap;
+    height: 100%;
+    width: 95%;
+  }
 }
 
 .listing {
