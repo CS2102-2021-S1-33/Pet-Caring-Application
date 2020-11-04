@@ -21,7 +21,7 @@ const routes: Routes = [
   {path: 'profile', component: ProfileComponent},
   {path: 'jobs', component: CaretakerJobsComponent},
   {path: 'bids', component: PetOwnerBidsComponent},
-  {path: '', component: IndexComponent},
+  {path: '', component: RegisterLoginPageComponent},
   {path: 'admin', component: AdminHomepageComponent},
   {path: 'admin/approve-leave', component: ApproveLeaveComponent},
   {path: 'admin/verify-caretaker', component: VerifyCaretakerComponent},

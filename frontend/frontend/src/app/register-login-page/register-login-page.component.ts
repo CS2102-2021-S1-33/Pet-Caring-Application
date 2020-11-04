@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder,Validators,FormArray, ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
+import { GeneralService } from '../general.service'
 
 @Component({
   selector: 'app-register-login-page',
@@ -8,7 +9,9 @@ import { FormBuilder,Validators,FormArray, ReactiveFormsModule, FormGroup, FormC
 })
 export class RegisterLoginPageComponent implements OnInit {
 
-  constructor() { }
+  isLoggedIn: boolean = false;
+
+  constructor(private _service: GeneralService) { }
 
   loginForm = new FormGroup({
     user: new FormControl(),
@@ -17,7 +20,17 @@ export class RegisterLoginPageComponent implements OnInit {
 
   ngOnInit(): void {
 
+  }
 
+  onClickLogin() {
+    let username = this.loginForm.get('user').value;
+    let password = this.loginForm.get('userPassword').value;
+
+    this._service.sendLoginRequest(username, password).subscribe(res => {
+      console.log(res);
+
+      this._service.petOwnerAddsPet("ad", "a", "dog").subscribe(d => console.log(d));
+    });
   }
 
 }
