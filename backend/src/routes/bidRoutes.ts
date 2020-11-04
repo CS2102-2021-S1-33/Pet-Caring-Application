@@ -1,5 +1,9 @@
 import express from "express";
 import pool from "../db/init";
+import {
+  generateDefaultErrorJson,
+  generateDefaultSuccessJson,
+} from "../helpers/generateResponseJson";
 
 const bidRoutes = express.Router();
 
@@ -31,14 +35,14 @@ enum TRANSFER_METHOD {
 bidRoutes.get("/", async (req, res) => {
   const { username }: { username: string } = req.user as any;
   await pool
-    .query(
-      "SELECT * FROM makes m WHERE m.pet_owner_username=$1 OR m.ct_username=$1",
-      [username]
+    .query("SELECT * FROM makes m")
+    .then((result) =>
+      res.json({
+        ...generateDefaultSuccessJson("Successfully get all user's bids"),
+        result: result.rows,
+      })
     )
-    .then((result) => res.json({ result: result.rows }))
-    .catch((err) =>
-      res.status(400).json({ msg: "An error has occurred", err })
-    );
+    .catch((err) => res.json(generateDefaultErrorJson(err)));
 });
 
 /**
@@ -46,7 +50,7 @@ bidRoutes.get("/", async (req, res) => {
  *
  * /api/bid:
  *   post:
- *     description: Makes a bid
+ *     description: Makes a bid. Called by the pet owner.
  *     produces:
  *       - application/json
  *     consumes:
@@ -57,9 +61,6 @@ bidRoutes.get("/", async (req, res) => {
  *         schema:
  *           type: object
  *           properties:
- *             poUsername:
- *               type: string
- *               example: sallyPO
  *             poPetName:
  *               type: string
  *               example: petName
@@ -82,15 +83,13 @@ bidRoutes.get("/", async (req, res) => {
  *               type: number
  *               example: 10
  *           required:
- *             - poUsername
  *             - poPetName
  *             - bidStartPeriod
  *             - bidEndPeriod
  *             - ctUsername
  *             - availabilityStartDate
  *             - availabilityEndDate
- *             - username
- *             - bidPrice:
+ *             - bidPrice
  *     responses:
  *       200:
  *         description: Make bid OK
@@ -131,18 +130,19 @@ bidRoutes.post("/", async (req, res) => {
     ])
     .then((result) =>
       res.json({
-        msg: "successfully made call to make_bid",
+        ...generateDefaultSuccessJson("Successfully made call to make_bid"),
+        result: result.rows,
       })
     )
-    .catch((err) => res.status(400).json({ msg: err }));
+    .catch((err) => res.json(generateDefaultErrorJson(err)));
 });
 
 /**
  * @swagger
  *
- * /api/bid/choose_bid:
+ * /api/bid/choose-bid:
  *   post:
- *     description: Chooses a successful bid
+ *     description: Chooses a successful bid. Called by the caretaker.
  *     produces:
  *       - application/json
  *     consumes:
@@ -165,9 +165,6 @@ bidRoutes.post("/", async (req, res) => {
  *             bidEndPeriod:
  *               type: string
  *               example: 2020-12-10
- *             ctUsername:
- *               type: string
- *               example: john
  *             availabilityStartDate:
  *               type: string
  *               example: 2020-12-01
@@ -185,10 +182,8 @@ bidRoutes.post("/", async (req, res) => {
  *             - poPetName
  *             - bidStartPeriod
  *             - bidEndPeriod
- *             - ctUsername
  *             - availabilityStartDate
  *             - availabilityEndDate
- *             - username
  *             - paymentMtd
  *             - petTransferMtd
  *     responses:
@@ -197,7 +192,106 @@ bidRoutes.post("/", async (req, res) => {
  *       400:
  *         description: Bad request
  */
-bidRoutes.post("/choose_bid", async (req, res) => {
+bidRoutes.post("/choose-bid", async (req, res) => {
+  const {
+    poUsername,
+    poPetName,
+    bidStartPeriod,
+    bidEndPeriod,
+    availabilityStartDate,
+    availabilityEndDate,
+    paymentMtd,
+    petTransferMtd,
+  }: {
+    poUsername: string;
+    poPetName: string;
+    bidStartPeriod: string;
+    bidEndPeriod: string;
+    availabilityStartDate: string;
+    availabilityEndDate: string;
+    paymentMtd: PAYMENT_METHOD;
+    petTransferMtd: TRANSFER_METHOD;
+  } = req.body;
+
+  const { username }: { username: string } = req.user as any; // CARETAKER USERNAME
+
+  await pool
+    .query("CALL choose_bid($1, $2, $3, $4, $5, $6, $7, $8, $9)", [
+      poUsername,
+      poPetName,
+      bidStartPeriod,
+      bidEndPeriod,
+      username,
+      availabilityStartDate,
+      availabilityEndDate,
+      paymentMtd,
+      petTransferMtd,
+    ])
+    .then((result) =>
+      res.json({
+        ...generateDefaultSuccessJson("Successfully made update call"),
+        result: result.rows,
+      })
+    )
+    .catch((err) => res.json(generateDefaultErrorJson(err)));
+});
+
+/**
+ * @swagger
+ *
+ * /api/bid/submit-rating-review:
+ *   post:
+ *     description: Submits a rating and review for a transaction. Called by the pet owner.
+ *     produces:
+ *       - application/json
+ *     consumes:
+ *       - application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         schema:
+ *           type: object
+ *           properties:
+ *             poPetName:
+ *               type: string
+ *               example: petName
+ *             bidStartPeriod:
+ *               type: string
+ *               example: 2020-12-01
+ *             bidEndPeriod:
+ *               type: string
+ *               example: 2020-12-10
+ *             ctUsername:
+ *               type: string
+ *               example: john
+ *             availabilityStartDate:
+ *               type: string
+ *               example: 2020-12-01
+ *             availabilityEndDate:
+ *               type: string
+ *               example: 2020-12-20
+ *             rating:
+ *               type: number
+ *               example: 3
+ *             review:
+ *               type: string
+ *               example: Very good experience!
+ *           required:
+ *             - poPetName
+ *             - bidStartPeriod
+ *             - bidEndPeriod
+ *             - ctUsername
+ *             - availabilityStartDate
+ *             - availabilityEndDate
+ *             - rating
+ *             - review
+ *     responses:
+ *       200:
+ *         description: Create account OK
+ *       400:
+ *         description: Bad request
+ */
+bidRoutes.post("/submit-rating-review", async (req, res) => {
   const {
     poPetName,
     bidStartPeriod,
@@ -205,8 +299,8 @@ bidRoutes.post("/choose_bid", async (req, res) => {
     ctUsername,
     availabilityStartDate,
     availabilityEndDate,
-    paymentMtd,
-    petTransferMtd,
+    rating,
+    review,
   }: {
     poPetName: string;
     bidStartPeriod: string;
@@ -214,15 +308,18 @@ bidRoutes.post("/choose_bid", async (req, res) => {
     ctUsername: string;
     availabilityStartDate: string;
     availabilityEndDate: string;
-    paymentMtd: PAYMENT_METHOD;
-    petTransferMtd: TRANSFER_METHOD;
+    rating: number;
+    review: string;
   } = req.body;
 
   const { username }: { username: string } = req.user as any; // PET OWNER USERNAME
 
   await pool
     .query(
-      "UPDATE makes SET is_successful=TRUE, payment_method=$8, transfer_method=$9 WHERE pet_owner_username=$1 AND pet_name=$2 AND bid_start_period=$3 AND bid_end_period=$4 AND ct_username=$5 AND availability_start_date=$6 AND availability_end_date=$7",
+      `
+      UPDATE makes SET rating=$8, review=$9 
+      WHERE pet_owner_username=$1 AND pet_name=$2 AND bid_start_period=$3 AND bid_end_period=$4 AND caretaker_username=$5 AND availability_start_date=$6 AND availability_end_date=$7 AND is_successful=TRUE
+      `,
       [
         username,
         poPetName,
@@ -231,19 +328,108 @@ bidRoutes.post("/choose_bid", async (req, res) => {
         ctUsername,
         availabilityStartDate,
         availabilityEndDate,
-        paymentMtd,
-        petTransferMtd,
+        rating,
+        review,
       ]
     )
     .then((result) =>
       res.json({
-        msg: "Successfully made update call",
-        res: result.rows,
+        ...generateDefaultSuccessJson("Successfully made update call"),
+        result: result.rows,
       })
     )
-    .catch((err) =>
-      res.status(400).json({ msg: "An error has occurred!", err })
-    );
+    .catch((err) => res.json(generateDefaultErrorJson(err)));
+});
+
+/**
+ * @swagger
+ *
+ * /api/bid/:
+ *   delete:
+ *     description: Deletes a bid that was made. Called by the pet owner.
+ *     produces:
+ *       - application/json
+ *     consumes:
+ *       - application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         schema:
+ *           type: object
+ *           properties:
+ *             poPetName:
+ *               type: string
+ *               example: petName
+ *             bidStartPeriod:
+ *               type: string
+ *               example: 2020-12-01
+ *             bidEndPeriod:
+ *               type: string
+ *               example: 2020-12-10
+ *             ctUsername:
+ *               type: string
+ *               example: john
+ *             availabilityStartDate:
+ *               type: string
+ *               example: 2020-12-01
+ *             availabilityEndDate:
+ *               type: string
+ *               example: 2020-12-20
+ *           required:
+ *             - poPetName
+ *             - bidStartPeriod
+ *             - bidEndPeriod
+ *             - ctUsername
+ *             - availabilityStartDate
+ *             - availabilityEndDate
+ *     responses:
+ *       200:
+ *         description: Delete bid OK
+ *       400:
+ *         description: Bad request
+ */
+bidRoutes.delete("/", async (req, res) => {
+  const {
+    poPetName,
+    bidStartPeriod,
+    bidEndPeriod,
+    ctUsername,
+    availabilityStartDate,
+    availabilityEndDate,
+  }: {
+    poPetName: string;
+    bidStartPeriod: string;
+    bidEndPeriod: string;
+    ctUsername: string;
+    availabilityStartDate: string;
+    availabilityEndDate: string;
+  } = req.body;
+
+  const { username }: { username: string } = req.user as any; // PET OWNER USERNAME
+
+  await pool
+    .query(
+      `
+      DELETE FROM makes 
+      WHERE pet_owner_username=$1 AND pet_name=$2 AND bid_start_period=$3 AND bid_end_period=$4 AND caretaker_username=$5 AND availability_start_date=$6 AND availability_end_date=$7 
+      `,
+      [
+        username,
+        poPetName,
+        bidStartPeriod,
+        bidEndPeriod,
+        ctUsername,
+        availabilityStartDate,
+        availabilityEndDate,
+      ]
+    )
+    .then((result) =>
+      res.json({
+        ...generateDefaultSuccessJson("Successfully made update call"),
+        result: result.rows,
+      })
+    )
+    .catch((err) => res.json(generateDefaultErrorJson(err)));
 });
 
 export default bidRoutes;

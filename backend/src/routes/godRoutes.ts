@@ -8,18 +8,27 @@ import path from "path";
 
 const godRoutes = express.Router();
 
-const init_sql = fs
-  .readFileSync(path.join(__dirname, "../db/init.sql"))
+const schema = fs
+  .readFileSync(path.join(__dirname, "../db/schema.sql"))
   .toString();
-const sessions_sql = fs
+const procedures = fs
+  .readFileSync(path.join(__dirname, "../db/procedures.sql"))
+  .toString();
+const triggers = fs
+  .readFileSync(path.join(__dirname, "../db/triggers.sql"))
+  .toString();
+const sampleData = fs
+  .readFileSync(path.join(__dirname, "../db/sampleData.sql"))
+  .toString();
+const sessions = fs
   .readFileSync(path.join(__dirname, "../db/sessions.sql"))
   .toString();
 
-godRoutes.get("/", async (req, res) => {
+godRoutes.post("/", async (req, res) => {
   await pool
-    .query(init_sql + sessions_sql)
+    .query(schema + procedures + triggers + sampleData + sessions)
     .then((result) => res.json({ result: result.rows }))
-    .catch((err) => res.status(400).json({ err }));
+    .catch((err) => res.json({ err }));
 });
 
 export default godRoutes;
