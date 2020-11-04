@@ -24,7 +24,6 @@
     "@angular/platform-browser-dynamic": "~10.1.4",
     "@angular/router": "~10.1.4",
     "@ng-bootstrap/ng-bootstrap": "^7.0.0",
-<<<<<<< HEAD
     "@swimlane/ngx-charts": "^16.0.0",
     "@swimlane/ngx-datatable": "^18.0.0",
     "@types/googlemaps": "3.39.12",
@@ -32,12 +31,6 @@
     "bootstrap": "^4.5.0",
     "date-fns": "^2.16.1",
     "ngx-bootstrap": "^6.1.0",
-=======
-    "@swimlane/ngx-datatable": "^18.0.0",
-    "bootstrap": "^4.5.0",
-    "ng2-completer": "^9.0.1",
-    "ng2-smart-table": "^1.7.1",
->>>>>>> bb59db01ec7750660a06943b162eb4ad910dfc70
     "rxjs": "~6.5.4",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.2"
