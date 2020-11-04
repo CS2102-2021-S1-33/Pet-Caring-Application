@@ -1,0 +1,76 @@
+<div class="page">  
+  <div class="actual-content">
+    <div class="header">
+      <div class="header-logo">
+        <img src="assets/logo.svg" height="28px">
+      </div>
+      <div class="options">
+        <ul class="header-list">
+          <li><a href="http://localhost:4200/find-caretaker">Find a caretaker</a></li>
+          <li><a href="">Your jobs</a></li>
+          <li><a href="">Your bids</a></li>
+          <li><a href="">Profile</a></li>
+          <li><a href=""><i class="fas fa-sign-out-alt"></i></a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="search-bar">
+      <form [formGroup]="searchForm" class="form">
+        <div class="field-container">
+          <div class="icon"><i class="fas fa-search"></i></div>
+          <input class="field" type="text" id="search-keyword" placeholder="Search keyword..." formControlName="keyword">
+        </div>
+
+        <div class="field-container">
+          <div class="icon"><i class="fas fa-paw"></i></div>
+          <input class="field" type="text" id="search-pet-category" placeholder="Select pet categories" formControlName="pet">
+        </div>
+
+        <div class="field-container date-container">
+          <input ngbDatepicker #d="ngbDatepicker" class="field date-field" type="text" id="search-start-date" placeholder="Start date" formControlName="startDate">
+          <div class="input-group-append">
+            <button class="btn" (click)="d.toggle()" type="button"> <i class="fas fa-calendar-alt"></i></button>
+          </div>
+        </div>
+      
+
+        <i class="fas fa-long-arrow-alt-right"></i>
+
+        <div class="field-container date-container">
+          <input ngbDatepicker #e="ngbDatepicker" class="field date-field" type="text" id="search-end-date" placeholder="End date" formControlName="endDate">
+          <div class="input-group-append" id="date-append">
+            <button class="btn" (click)="e.toggle()" type="button"><i class="fas fa-calendar-alt"></i></button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="search-result">
+      <div class="table">
+        <mat-card  *ngFor="let listing of obs | async">
+          <div class="listing">
+            <div class="list-name">Priscilla Lim</div>
+          
+            <div class="list-pet-categories"> 
+              <mat-chip-list>
+                <mat-chip disableRipple *ngFor="let pets of listing.petCategories">{{ pets }}</mat-chip>
+              </mat-chip-list>
+            </div>
+          
+            <div class="list-price">
+              <div id="price">$17</div> per day
+            </div>
+          
+            <div class="list-rating">
+                <div class="stars">
+                    <i *ngFor="let i of [].constructor(5)" class="fas fa-star"></i>
+                </div> 82 reviews
+            </div>
+          </div>
+        </mat-card>
+      </div>
+      <mat-paginator [pageSize]="8"></mat-paginator>
+    </div>
+  </div>
+</div>

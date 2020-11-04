@@ -1,0 +1,281 @@
+@header-hover: #F95124;
+@paragraph-black: #000000;
+@paragraph-grey: #403F3F;
+@paragraph-white: #ffffff;
+@button: #F2994A;
+@button-hover: #EB7F20;
+@footer: #F4AD6E;
+@form-field-height: 42px;
+
+.actual-content {
+  font-family: 'Asap', sans-serif;
+  display: flex;
+  flex-flow: column;
+  flex-wrap: nowrap;
+  overflow-y: auto;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  position: fixed;
+  z-index: auto;
+}
+
+.header {
+  display: flex;
+  flex: 0 1 auto;
+  margin: 10px;
+  font-weight: 500;
+  height: 40px;
+}
+
+.header-logo {
+  float: left;
+  padding: 7px;
+  margin-right: 32vw;
+}
+
+.header-list {
+  list-style-type: none;
+  overflow: hidden;
+  display: flex;
+  margin: 2px 5px;
+  float: right;
+
+  li {
+    float: right;
+    color: #000000;
+    font-size: 16px;
+    text-align: center;
+    cursor: pointer;
+  }
+
+  li:hover {
+    color: @header-hover;
+  }
+}
+
+ul li:not(:last-child) {
+  margin-right: 4vw;
+}
+
+a {
+    text-decoration: none;
+
+    &:visited {
+        color: #000000;
+    }
+}
+
+.options {
+    float: right;
+    padding: 8px;
+}
+
+.search-bar {
+    display: flex;
+    background-color: @footer;
+    opacity: 100%;
+    min-height: 100px;
+    width: inherit;
+    align-items: center;
+    justify-content: center;
+    z-index: 4;
+}
+
+.form {
+    display: flex;
+    flex-flow: row;
+}
+
+
+.fa-search, .fa-paw, .fa-calendar-alt {
+    width: 15px;
+    height: 15px;
+}
+
+.icon {
+    display: flex;
+    height: @form-field-height;
+    width: 38px;
+    background: white;
+    border-radius: 10px 0px 0px 10px;
+    align-items: center;
+    justify-content: center;
+}
+
+.input-group-append {
+    height: @form-field-height;
+    width: @form-field-height;
+    background: white;
+    border: 1px solid @button-hover;
+    border-radius: 0px 10px 10px 0px;
+}
+
+#date-append {
+    border-radius: 0px 10px 10px 0px !important;
+}
+
+.field-container {
+    display: flex; 
+    align-items: center;
+    height: @form-field-height;
+    margin-right: 10px;
+
+    .field {
+        border: 0px;
+        border-radius: 0px 10px 10px 0px;
+        width: 18vw;
+        height: @form-field-height;
+          
+        &:focus {
+            outline: none;
+            border: 2px solid @button-hover;
+        }
+    }
+
+    .date-container {
+        margin-right: 0px;
+    }
+
+    .date-field {
+        border-radius: 10px 0px 0px 10px;
+        width: 8vw;
+    }
+}
+
+.fa-long-arrow-alt-right {
+    padding: 12px 10px 0px 0px;
+    width: 28px;
+    height: 28px;
+}
+
+input {
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 16px;
+    font-family: Asap, sans-serif;
+}
+
+.search-result {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 40px;
+    margin-bottom: 40px;
+    width: 80vw;
+}
+
+.mat-card:not([class*=mat-elevation-z]) {
+    box-shadow: 0px 0px 6px #00000029;
+}
+
+@media screen and (max-width: 1919px) {
+    .table {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: auto;
+        row-gap: 15px;
+        justify-items: center;
+    }
+
+    .mat-card {
+        width: 18vw;
+        height: 230px;  
+        padding: 30px;
+        margin: 15px;
+    }
+
+    .mat-paginator {
+        align-self: flex-end;
+        padding-right: 2vw;
+    }
+}
+
+@media screen and (max-width: 2560px) and (min-width: 1920px) {
+    .table {
+        width: 80%;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: auto;
+        row-gap: 35px;
+        justify-items: center;
+    }
+
+    .mat-card {
+        width: 14vw;
+        height: 230px;  
+        padding: 30px;
+    }
+
+    .mat-paginator {
+        align-self: flex-end;
+        padding-right: 10vw;
+    }
+}
+
+.mat-chip {
+    background-color: #FDDDC0;
+}
+
+.fa-star {
+    color: #ffc107;
+    height: 16px;
+    width: 16px;
+  }
+
+.listing {
+    margin-top: 20px;
+    font-family: 'Asap', sans-serif;
+    font-size: 15px;
+    color: @paragraph-grey;
+
+    .list-name {
+        font-size: 19px;
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+
+    .list-address {
+        margin-bottom: 3px;
+    }
+
+    .list-relative-location {
+        font-style: italic;
+        margin-bottom: 15px;
+    }
+
+    .list-pet-categories {
+       display: flex;
+       flex-flow: row;
+       overflow: auto;
+       height: 80px;
+    }
+
+    .list-price {
+        margin-top: 15px;
+        margin-bottom: 3px;
+        display: flex;
+        flex-flow: row;
+        align-items: baseline;
+        font-style: italic;
+
+        #price { 
+            font-size: 21px;
+            margin-right: 5px;
+            font-style: normal;
+            font-weight: 600;
+            color: @button;
+        }
+    }
+
+    .list-rating {
+        display: flex;
+        flex-flow: row;
+
+        .stars {
+            margin-right: 5px;
+        }
+    }
+}

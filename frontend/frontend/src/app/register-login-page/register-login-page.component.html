@@ -1,0 +1,39 @@
+<div class="page">
+  <div class="background">
+    <img src="assets/blob.svg" height="400px">
+  </div>
+
+  <div class="actual-content">
+    <div class="header">
+      <div class="header-logo">
+        <img src="assets/logo.svg" height="28px">
+      </div>
+      <div class="options">
+        <ul class="header-list">
+          <li><a [routerLink] = "['find']">Find a caretaker</a></li>
+          <li ><a [routerLink] = "['login']">Login</a></li> <!-- ngIf NOT authenticated-->
+          <li><a [routerLink] = "['signup']">Sign Up</a></li> <!-- ngIf NOT authenticated-->
+          <li ><a [routerLink] = "['login']">Login</a></li> <!-- ngIf authenticated-->
+          <!-- <li><a [routerLink] = "['bids']">Your bids</a></li> ngIf authenticated AND pet owner
+          <li><a [routerLink] = "['jobs']">Your jobs</a></li>  ngIf authenticated AND caretaker
+          <li><a [routerLink] = "['profile']">Profile</a></li>  ngIf authenticated
+          <li><a href=""><i class="fas fa-sign-out-alt"></i></a></li>  ngIf authenticated -->
+        </ul>
+      </div>
+    </div>
+
+    <div class="auth">
+      <h1>Log In</h1>
+      <form [formGroup]="loginForm">
+        <label for="login-user">Username</label>
+        <input class="field" id="login-user" type="text" formControlName="user">
+        <label for="login-password">Password</label>
+        <input class="field" id="login-password" type="password" formControlName="userPassword">
+        <input class="button" type="submit" value="Login">
+        <p><u>Forgot your password?</u></p>
+      </form>
+    </div>
+  </div>
+</div>
+
+
