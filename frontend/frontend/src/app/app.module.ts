@@ -28,8 +28,11 @@ import { FindCaretakerComponent } from './find-caretaker-page/find-caretaker.com
 import { IndividualListingComponent } from './individual-listing-page/individual-listing.component';
 import { CaretakerJobsComponent } from './caretaker-jobs-page/caretaker-jobs.component';
 import { PetOwnerBidsComponent } from './petowner-bids-page/petowner-bids.component';
+import { LeaveReviewComponent } from './petowner-bids-page/leave-review-page/leave-review.component';
 import { IndexComponent } from './index/index.component';
 import { ProfileComponent } from './profile-page/profile.component';
+import { ApplyLeaveComponent } from './profile-page/apply-leave-page/apply-leave.component';
+import { IndicateAvailabilityComponent } from './profile-page/indicate-availability-page/indicate-availability.component';
 import { AdminHomepageComponent } from './admin/admin-homepage/admin-homepage.component';
 import { ApproveLeaveComponent } from './admin/approve-leave/approve-leave.component';
 import { VerifyCaretakerComponent } from './admin/verify-caretaker/verify-caretaker.component';
@@ -52,7 +55,10 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     ViewPetCategoriesComponent,
     CaretakerJobsComponent,
     PetOwnerBidsComponent,
-    ProfileComponent
+    ProfileComponent,
+    LeaveReviewComponent,
+    ApplyLeaveComponent,
+    IndicateAvailabilityComponent
   ],
   imports: [
     BrowserModule,

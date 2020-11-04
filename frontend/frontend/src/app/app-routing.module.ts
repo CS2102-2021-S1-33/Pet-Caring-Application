@@ -12,6 +12,9 @@ import { AdminHomepageComponent } from "./admin/admin-homepage/admin-homepage.co
 import { ApproveLeaveComponent } from './admin/approve-leave/approve-leave.component';
 import { VerifyCaretakerComponent } from './admin/verify-caretaker/verify-caretaker.component';
 import { ViewPetCategoriesComponent } from './admin/view-pet-categories/view-pet-categories.component';
+import { LeaveReviewComponent } from './petowner-bids-page/leave-review-page/leave-review.component';
+import { ApplyLeaveComponent } from './profile-page/apply-leave-page/apply-leave.component';
+import { IndicateAvailabilityComponent } from './profile-page/indicate-availability-page/indicate-availability.component';
 
 const routes: Routes = [
   {path: 'login', component: RegisterLoginPageComponent},
@@ -21,6 +24,9 @@ const routes: Routes = [
   {path: 'profile', component: ProfileComponent},
   {path: 'jobs', component: CaretakerJobsComponent},
   {path: 'bids', component: PetOwnerBidsComponent},
+  {path: 'leave-review', component: LeaveReviewComponent},
+  {path: 'apply-leave', component: ApplyLeaveComponent},
+  {path: 'apply-availability', component: IndicateAvailabilityComponent},
   {path: '', component: IndexComponent},
   {path: 'admin', component: AdminHomepageComponent},
   {path: 'admin/approve-leave', component: ApproveLeaveComponent},

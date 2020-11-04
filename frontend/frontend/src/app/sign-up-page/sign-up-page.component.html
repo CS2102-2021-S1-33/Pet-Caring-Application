@@ -82,16 +82,16 @@
 
           <div *ngFor="let pets of pe.controls; let i = index" class="pet-info" formArrayName="petInfo">
             <br><br><mat-divider></mat-divider>
-            <label style="margin-top: 25px;" class="first-label" for="name">Name</label>
-            <input class="field" id="name" type="text" formControlName="name">
+            <label style="margin-top: 25px;" class="first-label" for="petName">Name</label>
+            <input class="field" id="petName" type="text" formControlName="petName">
 
             <div class="dropdown">
               <label>Select your pet's category</label>
-              <input class="field" id="petCategories" type="text" formControlName="petCategories">
+              <input class="field" id="petCategory" type="text" formControlName="petCategory">
             </div>
 
             <label>Special requirements</label>
-            <textarea class="field" style="resize: vertical;"></textarea>
+            <textarea class="field" formControlName="specialReq" style="resize: vertical;"></textarea>
           </div>
         </div>
         

@@ -60,8 +60,8 @@ export class SignUpPageComponent implements OnInit {
     if (this.pe.length < number) {
         for (let i = this.pe.length; i < number; i++) {
             this.pe.push(this.registerFormBuilder.group({
-                name: ['', Validators.required],
-                //insert dropdown
+                petName: ['', Validators.required],
+                petCategory: ['', Validators.required],
                 specialReq: ['']
             }));
         }

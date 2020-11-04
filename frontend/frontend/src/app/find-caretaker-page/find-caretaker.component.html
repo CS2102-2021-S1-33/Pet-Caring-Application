@@ -50,22 +50,22 @@
       <div class="table">
         <mat-card  *ngFor="let listing of obs | async">
           <div class="listing">
-            <div class="list-name">Priscilla Lim</div>
+            <div class="list-name">{{ listing.name }}</div>
           
             <div class="list-pet-categories"> 
               <mat-chip-list>
-                <mat-chip disableRipple *ngFor="let pets of listing.petCategories">{{ pets }}</mat-chip>
+                <mat-chip disableRipple *ngFor="let pets of listing.petCategories">{{ listing.petCategories }}</mat-chip>
               </mat-chip-list>
             </div>
           
             <div class="list-price">
-              <div id="price">$17</div> per day
+              <div id="price">{{ listing.price }}</div> per day
             </div>
           
             <div class="list-rating">
                 <div class="stars">
-                    <i *ngFor="let i of [].constructor(5)" class="fas fa-star"></i>
-                </div> 82 reviews
+                    <i *ngFor="let i of [].constructor(listing.rating)" class="fas fa-star"></i>
+                </div> {{ listing.review }} reviews
             </div>
           </div>
         </mat-card>

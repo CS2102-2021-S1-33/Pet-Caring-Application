@@ -6,8 +6,6 @@ import { Observable } from 'rxjs';
 
 export interface Listing {
   name: string;
-  address: string;
-  relativeLocation: number;
   petCategories: string[];
   price: number;
   rating: number;
@@ -17,8 +15,6 @@ export interface Listing {
 const DATA: Listing[] = [
   {
     name: 'Priscilla Lim',
-    address: 'Bukit Batok, Singapore',
-    relativeLocation: 1.2,
     petCategories: ['Cat', 'Dog'],
     price: 17,
     rating: 4,
@@ -26,8 +22,6 @@ const DATA: Listing[] = [
   }, 
   {
     name: 'Joel Lim',
-    address: 'Bukit Batok, Singapore',
-    relativeLocation: 1.4,
     petCategories: ['Cat'],
     price: 15,
     rating: 4,
@@ -35,8 +29,6 @@ const DATA: Listing[] = [
   },
   {
     name: 'Priscilla Lim',
-    address: 'Bukit Batok, Singapore',
-    relativeLocation: 1.2,
     petCategories: ['Cat', 'Dog'],
     price: 17,
     rating: 4,
@@ -44,8 +36,6 @@ const DATA: Listing[] = [
   }, 
   {
     name: 'Joel Lim',
-    address: 'Bukit Batok, Singapore',
-    relativeLocation: 1.4,
     petCategories: ['Cat'],
     price: 15,
     rating: 4,
@@ -53,8 +43,6 @@ const DATA: Listing[] = [
   },
   {
     name: 'Priscilla Lim',
-    address: 'Bukit Batok, Singapore',
-    relativeLocation: 1.2,
     petCategories: ['Cat', 'Dog'],
     price: 17,
     rating: 4,
@@ -62,8 +50,6 @@ const DATA: Listing[] = [
   }, 
   {
     name: 'Joel Lim',
-    address: 'Bukit Batok, Singapore',
-    relativeLocation: 1.4,
     petCategories: ['Cat'],
     price: 15,
     rating: 4,
