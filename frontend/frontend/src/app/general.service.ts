@@ -18,7 +18,7 @@ export class GeneralService {
     "password": password
     }
   
-  this._http.post(url, null, { params: data, withCredentials: true, });
+  return this._http.post(url, data, { withCredentials: true, });
 
   }
 
@@ -185,7 +185,7 @@ export class GeneralService {
       "pet_category_name": category
     }
 
-    this._http.post(url, null, { params: data, withCredentials: true});
+    return this._http.post(url, data, { withCredentials: true});
   }
 
   getUserPets() {
