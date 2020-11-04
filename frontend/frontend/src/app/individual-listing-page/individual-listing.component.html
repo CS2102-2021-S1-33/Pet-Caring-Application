@@ -63,18 +63,22 @@
                 <div class="heading">Bid for service</div>
                 <form [formGroup]="bidForm">
                     <label for="bid-pets">Pet for caretaking</label>
-                    <input class="field">
-
+                    <div class="dropdown-container">
+                        <mat-select id="bid-pest" formControlName="pet" multiple>
+                            <mat-option *ngFor="let pet of petList" [value]="pet">{{ pet }}</mat-option>
+                        </mat-select>
+                    </div>
+                    
                     <label>Caretaking period</label>
                     <div class="date-container">
                         <div class="date-label-container">
                             <label for="bid-start-date" id="date-label">Start date</label>
-                            <input class="field" id="date-field" >
+                            <input class="field" formControlName="startDate" id="date-field" >
                         </div>
 
                         <div class="date-label-container">
                             <label for="bid-end-date" id="date-label">End date</label>
-                            <input class="field" id="date-field">
+                            <input class="field" formControlName="endDate" id="date-field">
                         </div>
                     </div>
 

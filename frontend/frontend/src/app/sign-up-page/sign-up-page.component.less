@@ -195,6 +195,24 @@ p {
   flex-direction: column;
 }
 
+.dropdown-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  font-family: 'Asap', sans-serif;
+  font-size: 17px;
+  border-radius: 10px;
+  height: @form-field-height;
+  width: 22vw;
+  border: 1px solid @paragraph-grey;
+  padding: 0vw 1vw;
+}
+
+.dropdown-container:hover {
+  border: 1px solid @button;
+}
+
 /* customize the label (the container) */
 .container {
   display: block;
@@ -310,4 +328,8 @@ p {
   height: 12px;
   border-radius: 50%;
   background: white;
+}
+
+::ng-deep .mat-select-value-text .mat-option-text {
+  font-family: 'Asap', sans-serif !important;
 }

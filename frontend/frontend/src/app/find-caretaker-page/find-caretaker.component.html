@@ -24,7 +24,11 @@
 
         <div class="field-container">
           <div class="icon"><i class="fas fa-paw"></i></div>
-          <input class="field" type="text" id="search-pet-category" placeholder="Select pet categories" formControlName="pet">
+          <div class="dropdown-container">
+            <mat-select id="search-pet-category" formControlName="pet" id="petCategories" multiple>
+              <mat-option *ngFor="let pet of petList" [value]="pet">{{ pet }}</mat-option>
+            </mat-select>
+          </div>
         </div>
 
         <div class="field-container date-container">
@@ -54,7 +58,7 @@
           
             <div class="list-pet-categories"> 
               <mat-chip-list>
-                <mat-chip disableRipple *ngFor="let pets of listing.petCategories">{{ listing.petCategories }}</mat-chip>
+                <mat-chip disableRipple *ngFor="let pets of listing.petCategories">{{ pets }}</mat-chip>
               </mat-chip-list>
             </div>
           

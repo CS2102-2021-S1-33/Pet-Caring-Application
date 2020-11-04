@@ -142,7 +142,7 @@ label {
 
 .field {
   font-size: 17px;
-  border-radius: 40px;
+  border-radius: 10px;
   height: @form-field-height;
   width: 22vw;
   border: 1px solid @paragraph-grey;
@@ -156,6 +156,25 @@ label {
   &:focus {
     outline: none;
   }
+}
+
+.dropdown-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  background-color: @paragraph-white;
+  font-family: 'Asap', sans-serif;
+  font-size: 17px;
+  border-radius: 10px;
+  height: @form-field-height;
+  border: 1px solid @paragraph-grey;
+  padding: 0vw 1vw;
+  margin-bottom: 30px;
+}
+
+.dropdown-container:hover {
+  border: 1px solid @button;
 }
 
 .date-container {

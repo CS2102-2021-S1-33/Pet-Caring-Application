@@ -52,6 +52,8 @@ export class IndividualListingComponent implements OnInit, OnDestroy {
   totalReviews = "30"
   minPrice = "17"
 
+  petList: string[] = ['Nala', 'Maru'];
+
   @ViewChild(MatPaginator) paginator: MatPaginator;
   obs: Observable<any>;
   dataSource: MatTableDataSource<Review> = new MatTableDataSource<Review>(DATA);
@@ -60,9 +62,9 @@ export class IndividualListingComponent implements OnInit, OnDestroy {
   }
   
   bidForm = new FormGroup({
-    //pet: new FormControl(''),
-    //startDate: new FormControl(''),
-    //endDate: new FormControl(''),
+    pet: new FormControl(''),
+    startDate: new FormControl(''),
+    endDate: new FormControl(''),
     phone: new FormControl(''),
     price: new FormControl('')
   });

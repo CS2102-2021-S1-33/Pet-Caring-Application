@@ -8,9 +8,10 @@
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
+.mat-select-value-text {
+    font-family: 'Asap', sans-serif !important;
+}
 
-/* Importing Bootstrap SCSS file. */
-
-
-/* Importing Bootstrap SCSS file. */
-@import '~bootstrap/scss/bootstrap';
+.mat-option-text {
+    font-family: 'Asap', sans-serif !important;
+}

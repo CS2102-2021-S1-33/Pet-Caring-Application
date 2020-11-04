@@ -16,6 +16,8 @@ export class SignUpPageComponent implements OnInit {
   caretakerChecked: boolean;
   petOwnerChecked: boolean;
 
+  petList: string[] = ['Cat', 'Dog', 'Rabbit', 'Fish', 'Iguana', 'Hamster', 'Chincilla', 'Guinea Pig'];
+
   ngOnInit() {
     this.caretakerChecked = false;
     this.petOwnerChecked = false;

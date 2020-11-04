@@ -65,6 +65,9 @@ const DATA: Listing[] = [
 
 export class FindCaretakerComponent implements OnInit {
 
+  petList: string[] = ['Cat', 'Dog', 'Rabbit', 'Fish', 'Iguana', 'Hamster', 'Chincilla', 'Guinea Pig'];
+
+
   searchForm = new FormGroup({
     keyword: new FormControl(''),
     pet: new FormControl(''),

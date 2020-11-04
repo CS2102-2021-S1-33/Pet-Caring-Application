@@ -69,7 +69,11 @@
 
           <div class="dropdown">
             <label>Select pet categories to care for</label>
-            <input class="field" id="petCategories" type="text" formControlName="petCategories">
+            <div class="dropdown-container">
+              <mat-select formControlName="petCategories" id="petCategories" multiple>
+                <mat-option *ngFor="let pet of petList" [value]="pet">{{ pet }}</mat-option>
+              </mat-select>
+            </div>
           </div>
         </div>
 
