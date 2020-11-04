@@ -12,7 +12,7 @@ axios.defaults.withCredentials = true;
 })
 export class GeneralService {
 
-  baseUrl: string = "http://poochfriendly.herokuapp.com/api/";
+  baseUrl: string = "http://localhost:5000/api/";
 
   constructor(private _http: HttpClient) { }
 
