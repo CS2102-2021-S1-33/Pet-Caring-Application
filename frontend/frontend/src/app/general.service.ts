@@ -1,5 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
+import axios from 'axios'
+
+if (window.location.hostname == "localhost") {
+  axios.defaults.baseURL = "http://localhost:4200/";
+}
+axios.defaults.withCredentials = true;
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +26,30 @@ export class GeneralService {
   
   return this._http.post(url, data, { withCredentials: true, });
 
+  }
+
+  axiosLogin(username: string, password: string) {
+  
+    let url = this.baseUrl + "auth/login";
+    let data = {
+    "username": username,
+    "password": password
+    };
+
+    return axios.post(url, data);
+  }
+  axiospetOwnerAddsPet(petName: string, specialReq: string, category: string) {
+
+
+    let url = this.baseUrl + "pet";
+
+    let data = {
+      "pet_name": petName,
+      "special_requirements": specialReq,
+      "pet_category_name": category
+    }
+
+    return axios.post(url, data).then(res => console.log(res.data));
   }
 
   sendAdminLoginRequest(username: string, password: string) {
