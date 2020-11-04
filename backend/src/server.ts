@@ -17,6 +17,7 @@ import availabilityRoutes from "./routes/availabilityRoutes";
 import godRoutes from "./routes/godRoutes";
 
 const app = express();
+app.use(cors({ credentials: true, origin: true }));
 app.use(
   session({
     store: new (require("connect-pg-simple")(session))(),
@@ -28,7 +29,6 @@ app.use(
 );
 app.use(cookieParser());
 app.use(express.json());
-app.use(cors({ credentials: true, origin: process.env.FRONTEND_LOCAL_URL }));
 
 app.use(passport.initialize());
 app.use(passport.session());
