@@ -1,0 +1,301 @@
+@header-hover: #F95124;
+@paragraph-black: #000000;
+@paragraph-grey: #403F3F;
+@paragraph-white: #ffffff;
+@button: #F2994A;
+@button-hover: #EB7F20;
+@form-field-height: 42px;
+
+.page {
+  font-family: 'Asap', sans-serif;
+  display: flex;
+  flex-flow: column;
+  flex-wrap: nowrap;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  position: fixed;
+  z-index: auto;
+  overflow-y: auto;
+  color: @paragraph-grey;
+}
+
+@media screen and (max-width: 2560px) and (min-width: 1920px) {
+  .actual-content {
+    display: flex;
+    flex-flow: column;
+    flex-wrap: nowrap;
+    height: 100%;
+    width: 65%;
+    margin-top: 60px;
+  }
+}
+
+@media screen and (max-width: 1919px) {
+  .actual-content {
+    display: flex;
+    flex-flow: column;
+    flex-wrap: nowrap;
+    height: 100%;
+    width: 75%;
+    margin-top: 60px;
+  }
+}
+
+.header {
+  display: flex;
+  flex: 0 1 auto;
+  padding: 10px;
+  font-weight: 500;
+}
+
+.header-logo {
+  float: left;
+  padding: 7px;
+  margin-right: 32vw;
+}
+
+.header-list {
+  list-style-type: none;
+  overflow: hidden;
+  display: flex;
+  margin: 2px 5px;
+  float: right;
+
+  li {
+    float: right;
+    color: #000000;
+    font-size: 16px;
+    text-align: center;
+    cursor: pointer;
+  }
+
+  li:hover {
+    color: @header-hover;
+  }
+}
+
+ul li:not(:last-child) {
+  margin-right: 4vw;
+}
+
+a {
+  text-decoration: none;
+  color: #000000;
+
+  &:visited {
+      color: #000000;
+  }
+}
+
+.options {
+  float: right;
+  padding: 8px;
+}
+
+.heading {
+  font-family: 'Balsamiq Sans', sans-serif;
+  font-size: 30px;
+  margin-bottom: 30px;
+}
+
+.subheading {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+.button {
+  background-color: white;
+  height: @form-field-height;
+  width: @form-field-height;
+  border: none;
+
+  &:hover .fa-edit  {
+    color: @button;
+  }
+
+  &:hover .fa-plus  {
+    color: @button;
+  }
+  
+  &:focus {
+    outline: none;
+  }
+
+  &:focus .fa-edit  {
+    color: @button-hover;
+  }
+
+  &:focus .fa-plus  {
+    color: @button-hover;
+  }
+
+  .fa-edit, .fa-plus {
+    color: @paragraph-grey;
+    height: 22px;
+    width: 22px;
+  }
+}
+
+.summary {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 50px;
+}
+
+.block {
+  display: flex;
+  flex-direction: column;
+  margin-left: 150px;
+
+  &:first-child {
+    margin: 0px;
+  }
+
+  .block-heading {
+    font-size: 14px;
+    color: #747474;
+    margin-bottom: 10px;
+  }
+
+  .block-info {
+    font-size: 16px;
+  }
+}
+
+.pets {
+  margin-bottom: 50px;
+
+  .pet-grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: auto;
+    row-gap: 15px;
+  }
+
+  .list-name {
+    font-size: 19px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .list-pet-categories {
+    display: flex;
+    flex-flow: row;
+    overflow: auto;
+    height: 60px;
+ }
+
+ .list-req {
+   height: 100px;
+   max-height: fit-content;
+ }
+}
+
+.average-rating {
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  font-size: 16px;
+
+  .stars {
+    margin-right: 10px;
+  }
+  
+  .fa-star {
+    color: #ffc107;
+    height: 20px;
+    width: 20px;
+  }
+}
+
+.table {
+  margin-bottom: 50px;
+}
+
+.mat-chip {
+  background-color: #FDDDC0;
+}
+
+.button {
+  font-size: 13px;
+  border-radius: 10px;
+  height: 30px;
+  width: 60px;
+  margin-top: 5px;
+  border: none;
+  color: @paragraph-white;
+  font-family: 'Asap', sans-serif;
+  align-self: center;
+  
+  &:focus {
+    outline: none;
+  }
+}
+
+#delete-button {
+  margin-left: 10px;
+  background-color: #DD3D12;
+
+  &:hover {
+      background-color: #bd320d;
+  }
+}
+
+@media screen and (max-width: 1919px) {
+  ::ng-deep .ngx-datatable {
+    width: 80vw;
+    border: 1px solid rgba(190, 190, 190, 0.3);
+    transform: scaleY(0.5);
+    font-size: 14px;
+    font-family: Asap, sans-serif;
+    box-shadow: none !important;
+  }
+  
+  ::ng-deep .datatable-body-row {
+    border-bottom: 1px solid rgba(190, 190, 190, 0.3);
+  }
+
+  .mat-card {
+    font-family: 'Asap', sans-serif;
+    font-size: 15px;
+    width: 17vw;
+    height: fit-content;  
+    padding: 30px;
+  }
+}
+
+@media screen and (max-width: 2560px) and (min-width: 1920px) {
+  ::ng-deep .ngx-datatable {
+    width: 65vw;
+    border: 1px solid rgba(190, 190, 190, 0.3);
+    transform: scaleY(0.5);
+    font-size: 14px;
+    font-family: Asap, sans-serif;
+    box-shadow: none !important;
+  }
+  
+  ::ng-deep .datatable-body-row {
+    border-bottom: 1px solid rgba(190, 190, 190, 0.3);
+  }
+
+  .mat-card {
+    font-family: 'Asap', sans-serif;
+    font-size: 15px;
+    width: 15vw;
+    height: fit-content; 
+    padding: 30px;
+  }
+}
+
+.mat-card:not([class*=mat-elevation-z]) {
+  box-shadow: 0px 0px 6px #00000029;
+}
+
+::ng-deep .datatable-footer {
+  border: none !important;
+}

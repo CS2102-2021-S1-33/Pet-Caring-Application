@@ -1,0 +1,116 @@
+<div class="page">  
+    <div class="header">
+        <div class="header-logo">
+        <img src="assets/logo.svg" height="28px">
+        </div>
+        <div class="options">
+        <ul class="header-list">
+            <li><a [routerLink] = "['find']">Find a caretaker</a></li>
+            <li ><a [routerLink] = "['login']">Login</a></li> <!-- ngIf NOT authenticated-->
+            <li><a [routerLink] = "['signup']">Sign Up</a></li> <!-- ngIf NOT authenticated-->
+            <!-- <li><a [routerLink] = "['bids']">Your bids</a></li> ngIf authenticated AND pet owner
+            <li><a [routerLink] = "['jobs']">Your jobs</a></li>  ngIf authenticated AND caretaker
+            <li><a [routerLink] = "['profile']">Profile</a></li>  ngIf authenticated
+            <li><a href=""><i class="fas fa-sign-out-alt"></i></a></li>  ngIf authenticated -->
+        </ul>
+      </div>
+    </div>
+    <div class="actual-content">
+        <div class="heading">Profile</div>
+
+        <div class="subheading">Personal Information <button (click)="onEditInformationClick" class="button"><i class="fas fa-edit"></i></button></div>
+        <div class="summary" *ngFor="let info of user">
+            
+            <div class="block">
+                <div class="block-heading">Name</div>
+                <div class="block-info">{{ info.name }}</div>
+            </div>
+
+            <div class="block">
+                <div class="block-heading">Username</div>
+                <div class="block-info">{{ info.username }}</div>
+            </div>
+
+            <div class="block">
+                <div class="block-heading">E-mail</div>
+                <div class="block-info">{{ info.email }}</div>
+            </div>
+
+            <div class="block">
+                <div class="block-heading">Account type</div>
+                <div class="block-info">{{ info.accountType }}</div>
+            </div>
+        </div>
+
+        <div class="subheading">Pet Information <button (click)="onEditInformationClick" class="button"><i class="fas fa-edit"></i></button></div>
+        <div class="pets">
+            <div class="pet-grid">
+                <mat-card *ngFor="let pet of pets">
+                    <div class="list-name">{{ pet.pet_name }}</div>
+            
+                    <div class="list-pet-categories"> 
+                    <mat-chip-list>
+                        <mat-chip disableRipple>{{ pet.pet_category }}</mat-chip>
+                    </mat-chip-list>
+                    </div>
+
+                    <div class="list-req">{{ pet.special_requirements }}</div>
+                </mat-card>
+            </div>
+        </div>
+
+        <div class="subheading">Caretaking Information <button (click)="onEditInformationClick" class="button"><i class="fas fa-edit"></i></button></div>
+        <div class="caretaker">
+            <div class="summary" *ngFor="let info of caretaker" >
+                <div class="block">
+                    <div class="block-heading">Pet categories</div>
+                    <div class="block-info">{{ info.petCategories }}</div>
+                </div>
+
+                <div class="block">
+                    <div class="block-heading">Average rating</div>
+                    <div class="average-rating"> 
+                        <div class="stars">
+                            <i *ngFor="let i of [].constructor(info.avgRating)" class="fas fa-star"></i>
+                        </div> {{ info.avgRating }} average from {{ info.totalReviews }} reviews
+                    </div>
+                </div>
+
+                <div class="block">
+                    <div class="block-heading">Last time you've worked</div>
+                    <div class="block-info">{{ info.lastWorked }} days ago</div>
+                </div>
+            </div>
+
+            <div class="subheading">Leave Summary<button (click)="onAddLeaveClick" class="button"><i class="fas fa-plus"></i></button></div>
+            <div class="table"> <!-- *ngIf fulltimeCaretaker-->
+                <ngx-datatable class="material" [columnMode]="'force'" [rows]="LDataSource" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [limit]="10" > 
+                    <ngx-datatable-column prop='leave_start' name="Leave start date"></ngx-datatable-column>
+                    <ngx-datatable-column prop='leave_end' name="Leave end date"></ngx-datatable-column>
+                    <ngx-datatable-column prop='application_date' name="Application date"></ngx-datatable-column>
+                    <ngx-datatable-column prop='processed_date' name="Processed on"></ngx-datatable-column>
+                    <ngx-datatable-column name="Status"></ngx-datatable-column>
+                    <ngx-datatable-column name="" [width]="80" [sortable]="false" prop="leave_start">
+                        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                            <input type="button" class="button" id="delete-button" (click)="onDeleteSelect(row)" value="Delete" />
+                        </ng-template>
+                    </ngx-datatable-column>
+                </ngx-datatable>
+            </div>
+
+            <div class="subheading" *ngIf=false>Availability Summary<button (click)="onAddAvailabilityClick" class="button"><i class="fas fa-plus"></i></button></div>
+            <div class="table" *ngIf=false> <!-- *ngIf parttimeCaretaker-->
+                <ngx-datatable class="material" [columnMode]="'force'" [rows]="ADataSource" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [limit]="10" > 
+                    <ngx-datatable-column prop='avail_start' name="Availability start date"></ngx-datatable-column>
+                    <ngx-datatable-column prop='avail_end' name="Availability end date"></ngx-datatable-column>
+                    <ngx-datatable-column prop='application_date' name="Application date"></ngx-datatable-column>
+                    <ngx-datatable-column name="" [width]="80" [sortable]="false" prop="avail_start">
+                        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                            <input type="button" class="button" id="delete-button" (click)="onDeleteSelect(row)" value="Delete" />
+                        </ng-template>
+                    </ngx-datatable-column>
+                </ngx-datatable>
+            </div>
+        </div>
+    </div>
+</div>

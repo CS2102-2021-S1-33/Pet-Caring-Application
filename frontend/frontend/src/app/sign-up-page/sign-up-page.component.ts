@@ -1,11 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators, ValidatorFn, FormControl } from "@angular/forms";
 
-interface Food {
-  value: string;
-  viewValue: string;
-}
-
 @Component({
   selector: 'app-sign-up-page',
   templateUrl: './sign-up-page.component.html',
@@ -18,26 +13,46 @@ export class SignUpPageComponent implements OnInit {
 
   registerForm: FormGroup;
 
+  caretakerChecked: boolean;
+  petOwnerChecked: boolean;
+
   ngOnInit() {
+    this.caretakerChecked = false;
+    this.petOwnerChecked = false;
+
     this.registerForm = this.registerFormBuilder.group({
-      name: ['', Validators.required],
+      // IF IT'S COMING FROM EDIT PROFILE, DO POPULATE these fields
+      name: ['', Validators.required], 
       email: ['', Validators.required],
       address: ['', Validators.required],
-      userName: ['', Validators.required],
+      username: ['', Validators.required],
       password: ['', Validators.required],
       confirmPassword: ['', Validators.required],
-      typeCaretaker: [''],
-      typePetowner: [''],
+
+      accountType: new FormGroup({
+        typePetowner: new FormControl(false),
+        typeCaretaker: new FormControl(false),
+      }, requireCheckboxesToBeCheckedValidator()),
 
       //caretaker fields
       caretakerRole: [''],
-      //insert dropdown
+      petCategories: ['', Validators.required],
 
       //petowner fields
       noOfPets: [''],
       pets: new FormArray([])
 
     });
+  }
+
+  cEventCheck(event){
+    console.log(event.target.checked);
+    this.caretakerChecked = event.target.checked;
+  }
+
+  poEventCheck(event){
+    console.log(event.target.checked);
+    this.petOwnerChecked = event.target.checked;
   }
 
   onChangePets(e) {
@@ -56,8 +71,31 @@ export class SignUpPageComponent implements OnInit {
         }
     }
   }
+  
 
   get f() { return this.registerForm.controls; }
   get pe() { return this.f.pets as FormArray; }
 
+}
+
+export function requireCheckboxesToBeCheckedValidator(minRequired = 1): ValidatorFn {
+  return function validate (formGroup: FormGroup) {
+    let checked = 0;
+
+    Object.keys(formGroup.controls).forEach(key => {
+      const control = formGroup.controls[key];
+
+      if (control.value === true) {
+        checked ++;
+      }
+    });
+
+    if (checked < minRequired) {
+      return {
+        requireCheckboxesToBeChecked: true,
+      };
+    }
+
+    return null;
+  };
 }

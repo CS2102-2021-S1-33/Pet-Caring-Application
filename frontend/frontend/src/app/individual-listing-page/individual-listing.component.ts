@@ -46,12 +46,8 @@ const DATA: Review[] = [
 })
 
 export class IndividualListingComponent implements OnInit, OnDestroy {
-  lat = 1.3452996;
-  lng = 103.7474273;
-
   name = "Priscilla";
   petCategories = "Cats, rabbits, dog"
-  location = "Around 1.2km away from you"
   avgRating = "4.5"
   totalReviews = "30"
   minPrice = "17"

@@ -1,6 +1,4 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FormsModule } from '@angular/forms'; 
 
 export interface Bid {
   name: string;
@@ -101,7 +99,7 @@ export class PetOwnerBidsComponent implements OnInit {
   review: string;
   rating: number;
 
-  constructor(public dialog: MatDialog) {
+  constructor() {
 
   }
   
@@ -113,7 +111,11 @@ export class PetOwnerBidsComponent implements OnInit {
     console.log(row); 
   }
 
-  onPaySelect(row) {
+  onCreditSelect(row) {
+    console.log(row); 
+  }
+
+  onCashSelect(row) {
     console.log(row); 
   }
 
