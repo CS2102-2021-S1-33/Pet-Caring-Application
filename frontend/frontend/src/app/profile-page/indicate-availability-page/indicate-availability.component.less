@@ -1,0 +1,175 @@
+@header-hover: #F95124;
+@paragraph-black: #000000;
+@paragraph-grey: #403F3F;
+@paragraph-white: #ffffff;
+@subtitle-grey: #747474;
+@button: #F2994A;
+@button-hover: #EB7F20;
+@footer: #F4AD6E;
+@form-field-height: 42px;
+
+
+.background {
+  position: static;
+  z-index: -1;
+  float:right;
+}
+
+.actual-content {
+  font-family: 'Asap', sans-serif;
+  font-weight: 400;
+  display: flex;
+  flex-flow: column;
+  flex-wrap: nowrap;
+  overflow-y: auto;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  position: fixed;
+  z-index: auto;
+}
+
+.header {
+  display: flex;
+  flex: 0 1 auto;
+  padding: 10px;
+  font-weight: 500;
+}
+
+.header-logo {
+  float: left;
+  padding: 7px;
+  margin-right: 40vw;
+}
+
+.header-list {
+  list-style-type: none;
+  overflow: hidden;
+  display: flex;
+  margin: 2px 5px;
+  float: right;
+
+  li {
+    float: right;
+    font-size: 16px;
+    text-align: center;
+    cursor: pointer;
+
+    a {
+      text-decoration: none;
+      color: @paragraph-black;
+    }
+  }
+
+  li:hover {
+    color: @header-hover !important;
+  }
+}
+
+ul li:not(:last-child) {
+  margin-right: 4vw;
+}
+
+a {
+  text-decoration: none;
+
+  &:visited {
+      color: #000000;
+  }
+}
+
+.options {
+  float: right;
+  padding: 8px;
+}
+
+.auth {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  margin: 2vw 0vw 10vw 0vw;
+
+  h1 {
+    font-size: 30px;
+    font-family: 'Balsamiq Sans', cursive;
+    text-align: center;
+  }
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  display: inline-block;
+  margin: 2vw 0vw 0.5vw 0vw;
+  font-size: 16px;
+  color: @paragraph-grey;
+}
+
+.first-label {
+  margin: 1vw 0vw 0.5vw 0vw;
+}
+
+p {
+  text-align: left;
+  font-size: 20px;
+  color: @subtitle-grey;
+  margin: 2vw 0vw 0.5vw 0vw;
+}
+
+.field-container {
+  display: flex; 
+  align-items: center;
+}
+
+.field {
+  font-size: 17px;
+  border-radius: 10px 0px 0px 10px;
+  height: @form-field-height;
+  width: 18vw;
+  border: 1px solid @paragraph-grey;
+  padding: 0vw 1vw;
+}
+
+.field:hover {
+  border: 1px solid @button;
+}
+
+.field:focus {
+  outline: none;
+}
+
+.button {
+  font-size: 17px;
+  border-radius: 10px;
+  height: @form-field-height;
+  width: 100px;
+  margin-top: 3vw;
+  border: none;
+  background-color: @button;
+  color: @paragraph-white;
+  font-family: 'Asap', sans-serif;
+  align-self: center;
+}
+
+.button:hover {
+  background-color: @button-hover;
+}
+
+.button:focus {
+  outline: none;
+}
+
+.input-group-append {
+  height: @form-field-height;
+  width: @form-field-height;
+  background: white;
+  border: 1px solid @paragraph-black;
+  border-radius: 0px 10px 10px 0px;
+}
+
+#date-append {
+  border-radius: 0px 10px 10px 0px !important;
+}

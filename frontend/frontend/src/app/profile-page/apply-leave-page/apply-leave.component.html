@@ -1,0 +1,48 @@
+<div class="page">
+    <div class="background">
+      <img src="assets/blob.svg" height="400px">
+    </div>
+  
+    <div class="actual-content">
+        <div class="header">
+            <div class="header-logo">
+                <img src="assets/logo.svg" height="28px">
+            </div>
+            <div class="options">
+            <ul class="header-list">
+                <li><a [routerLink] = "['find']">Find a caretaker</a></li>
+                <li ><a [routerLink] = "['login']">Login</a></li> <!-- ngIf NOT authenticated-->
+                <li><a [routerLink] = "['signup']">Sign Up</a></li> <!-- ngIf NOT authenticated-->
+                <li ><a [routerLink] = "['login']">Login</a></li> <!-- ngIf authenticated-->
+                <!-- <li><a [routerLink] = "['bids']">Your bids</a></li> ngIf authenticated AND pet owner
+                <li><a [routerLink] = "['jobs']">Your jobs</a></li>  ngIf authenticated AND caretaker
+                <li><a [routerLink] = "['profile']">Profile</a></li>  ngIf authenticated
+                <li><a href=""><i class="fas fa-sign-out-alt"></i></a></li>  ngIf authenticated -->
+            </ul>
+            </div>
+        </div>
+  
+        <div class="auth">
+            <h1>Apply for leave</h1>
+            <form [formGroup]="applyForm">
+                <label class="first-label" for="name">Start date</label>
+                <div class="field-container date-container">
+                    <input ngbDatepicker #e="ngbDatepicker" class="field date-field" type="text" id="start-date" formControlName="startDate">
+                    <div class="input-group-append" id="date-append">
+                      <button class="btn" (click)="e.toggle()" type="button"><i class="fas fa-calendar-alt"></i></button>
+                    </div>
+                  </div>
+
+                <label>End date</label>
+                <div class="field-container date-container">
+                    <input ngbDatepicker #e="ngbDatepicker" class="field date-field" type="text" id="end-date" formControlName="endDate">
+                    <div class="input-group-append" id="date-append">
+                      <button class="btn" (click)="e.toggle()" type="button"><i class="fas fa-calendar-alt"></i></button>
+                    </div>
+                  </div>
+                <input class="button" type="submit" value="Submit">
+            </form>
+        </div>
+    </div>
+</div>
+  
