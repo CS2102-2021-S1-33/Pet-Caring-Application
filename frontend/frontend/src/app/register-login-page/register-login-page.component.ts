@@ -26,11 +26,17 @@ export class RegisterLoginPageComponent implements OnInit {
     let username = this.loginForm.get('user').value;
     let password = this.loginForm.get('userPassword').value;
 
-    this._service.sendLoginRequest(username, password).subscribe(res => {
-      console.log(res);
+    // this._service.sendLoginRequest(username, password).subscribe(res => {
+    //   console.log(res);
 
-      this._service.petOwnerAddsPet("ad", "a", "dog").subscribe(d => console.log(d));
+    //   this._service.petOwnerAddsPet("ad", "a", "dog").subscribe(d => console.log(d));
+    // });
+
+    this._service.axiosLogin(username,password).then(res => {
+      console.log(res.data);
+      this._service.axiospetOwnerAddsPet("a", "b", "dog");
     });
+
   }
 
 }
