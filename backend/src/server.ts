@@ -40,6 +40,11 @@ if (process.env.NODE_ENV == "production") {
     )
   );
 }
+app.use(express.static(path.join(__dirname, "../../frontend-testing/build/")));
+app.use(
+  "/test/frontend-test",
+  express.static(path.join(__dirname, "../../frontend-testing/build/"))
+);
 
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
@@ -53,7 +58,7 @@ const options = {
   definition: {
     info: {
       title: "PoochFriendly Backend Routes", // Title (required)
-      version: "1.0.0", // Version (required)
+      version: "1.4.0", // Version (required)
     },
   },
   // Path to the API docs

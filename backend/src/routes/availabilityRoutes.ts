@@ -1,5 +1,9 @@
 import express from "express";
 import pool from "../db/init";
+import {
+  generateDefaultErrorJson,
+  generateDefaultSuccessJson,
+} from "../helpers/generateResponseJson";
 
 const availabilityRoutes = express.Router();
 
@@ -8,59 +12,34 @@ const availabilityRoutes = express.Router();
  *
  * /api/availability:
  *   get:
- *     description: Gets ALL availability that fits within startPeriod and endPeriod. If start and end period not given, then gets ALL availability made by the user.
+ *     description: Caretaker uses this route. Gets ALL availability.
  *     produces:
  *       - application/json
- *     parameters:
- *       - in: query
- *         name: startPeriod
- *         schema:
- *           type: string
- *       - in: query
- *         name: endPeriod
- *         schema:
- *           type: string
  *     responses:
  *       200:
- *         description: Get availabilities OK.
+ *         description: Get all availabilities OK.
  *       400:
  *         description: Bad request
  */
 availabilityRoutes.get("/", async (req, res) => {
   const { username } = req.user as any;
 
-  const {
-    startPeriod, //YYYY-MM-DD
-    endPeriod, //YYYY-MM-DD
-  }: { startPeriod: string; endPeriod: string } = req.query as any;
-
-  if (startPeriod && endPeriod) {
-    await pool
-      .query(
-        `
-    SELECT aa.availability_start_date, aa.availability_end_date 
-    FROM advertise_availabilities aa 
-    WHERE aa.ct_username=$1 AND aa.availability_start_date >= date($2) AND aa.availability_end_date <= date($3)`,
-        [username, startPeriod, endPeriod]
-      )
-      .then((result) => res.json({ result: result.rows }))
-      .catch((err) =>
-        res.status(400).json({ msg: "An error has occured", err })
-      );
-  } else {
-    await pool
-      .query(
-        `
-    SELECT aa.availability_start_date, aa.availability_end_date 
-    FROM advertise_availabilities aa 
-    WHERE aa.ct_username=$1`,
-        [username]
-      )
-      .then((result) => res.json({ result: result.rows }))
-      .catch((err) =>
-        res.status(400).json({ msg: "An error has occured", err })
-      );
-  }
+  await pool
+    .query(
+      `
+    SELECT *
+    FROM advertise_availabilities
+    WHERE is_deleted = FALSE`
+    )
+    .then((result) =>
+      res.json({
+        ...generateDefaultSuccessJson(
+          "Successfully fetched all availabilities"
+        ),
+        result: result.rows,
+      })
+    )
+    .catch((err) => res.json(generateDefaultErrorJson(err)));
 });
 
 /**
@@ -68,7 +47,7 @@ availabilityRoutes.get("/", async (req, res) => {
  *
  * /api/availability/:
  *   post:
- *     description: Adds an availability with daily price for a particular pet category. If availability exists then just add the pet category with given daily price.
+ *     description: Caretaker uses this route. Adds an availability with daily price for a particular pet category. If availability exists then just add the pet category with given daily price.
  *     produces:
  *       - application/json
  *     consumes:
@@ -125,10 +104,69 @@ availabilityRoutes.post("/", async (req, res) => {
       petCategory,
       dailyPrice,
     ])
-    .then((result) => res.json({ result: result.rows }))
-    .catch((err) =>
-      res.status(400).json({ msg: "An error has occurred", err })
-    );
+    .then((result) =>
+      res.json({
+        ...generateDefaultSuccessJson("Successfully added availability"),
+        result: result.rows,
+      })
+    )
+    .catch((err) => res.json(generateDefaultErrorJson(err)));
+});
+
+/**
+ * @swagger
+ *
+ * /api/availability/:
+ *   delete:
+ *     description: Caretaker uses this route. Deletes a availability period.
+ *     produces:
+ *       - application/json
+ *     consumes:
+ *       - application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         description: Date is always YYYY-MM-DD
+ *         schema:
+ *           type: object
+ *           properties:
+ *             availabilityStartDate:
+ *               type: string
+ *               example: 2020-12-01
+ *             availabilityEndDate:
+ *               type: string
+ *               example: 2020-12-20
+ *           required:
+ *             - availabilityStartDate
+ *             - availabilityEndDate
+ *     responses:
+ *       200:
+ *         description: Delete availability OK
+ *       400:
+ *         description: Bad request
+ */
+availabilityRoutes.delete("/", async (req, res) => {
+  const { username } = req.user as any; // caretaker username
+  const {
+    availabilityStartDate,
+    availabilityEndDate,
+  }: {
+    availabilityStartDate: string;
+    availabilityEndDate: string;
+  } = req.body;
+
+  await pool
+    .query(
+      "UPDATE advertise_availabilities SET is_deleted=TRUE WHERE username=$1 AND availability_start_date=$2 AND availability_end_date=$3",
+      [username, availabilityStartDate, availabilityEndDate]
+    )
+    .then((result) =>
+      res.json({
+        ...generateDefaultSuccessJson("Successfully deleted availability"),
+        result: result.rows,
+      })
+    )
+    .catch((err) => res.json(generateDefaultErrorJson(err)));
 });
 
 export default availabilityRoutes;

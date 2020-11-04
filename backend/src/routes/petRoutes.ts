@@ -1,5 +1,9 @@
 import express from "express";
 import pool from "../db/init";
+import {
+  generateDefaultErrorJson,
+  generateDefaultSuccessJson,
+} from "../helpers/generateResponseJson";
 
 const petRoutes = express.Router();
 
@@ -56,10 +60,13 @@ petRoutes.post("/", async (req, res) => {
       special_requirements,
       pet_category_name,
     ])
-    .then((result) => res.json({ msg: "Successfully added pet" }))
-    .catch((err) =>
-      res.status(400).json({ msg: "An error has occurred", err })
-    );
+    .then((result) =>
+      res.json({
+        ...generateDefaultSuccessJson("Successfully added pet"),
+        result,
+      })
+    )
+    .catch((err) => res.json(generateDefaultErrorJson(err)));
 });
 
 /**
@@ -79,13 +86,64 @@ petRoutes.post("/", async (req, res) => {
 petRoutes.get("/", async (req, res) => {
   const { username } = req.user as any; // pet owner username
   await pool
-    .query("SELECT * FROM owned_pets op WHERE op.pet_owner_username = $1", [
-      username,
-    ])
-    .then((result) => res.json({ result: result.rows }))
-    .catch((err) =>
-      res.status(400).json({ msg: "An error has occurred", err })
-    );
+    .query("SELECT * FROM owned_pets WHERE is_deleted = FALSE")
+    .then((result) =>
+      res.json({
+        ...generateDefaultSuccessJson("Successfully fetched all pets"),
+        result: result.rows,
+      })
+    )
+    .catch((err) => res.json(generateDefaultErrorJson(err)));
+});
+
+/**
+ * @swagger
+ *
+ * /api/pet/:
+ *   delete:
+ *     description: Deletes a pet that is owned by a pet owner. Pet owner must be logged in.
+ *     produces:
+ *       - application/json
+ *     consumes:
+ *       - application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         schema:
+ *           type: object
+ *           properties:
+ *             pet_name:
+ *               type: string
+ *               example: petName
+ *           required:
+ *             - pet_name
+ *     responses:
+ *       200:
+ *         description: Add pet OK
+ *       400:
+ *         description: Bad request
+ */
+petRoutes.delete("/", async (req, res) => {
+  const {
+    pet_name,
+  }: {
+    pet_name: string;
+  } = req.body;
+
+  const { username } = req.user as any; // pet owner username
+
+  await pool
+    .query(
+      "UPDATE owned_pets SET is_deleted=TRUE WHERE pet_owner_username = $1 AND pet_name = $2",
+      [username, pet_name]
+    )
+    .then((result) =>
+      res.json({
+        ...generateDefaultSuccessJson("Successfully deleted pet"),
+        result: result.rows,
+      })
+    )
+    .catch((err) => res.json(generateDefaultErrorJson(err)));
 });
 
 export default petRoutes;

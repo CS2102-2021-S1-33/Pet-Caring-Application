@@ -1,5 +1,11 @@
 import express from "express";
+import { adminCQ, caretakerCQ, petOwnerCQ } from "../db/complexQueries";
 import pool from "../db/init";
+import {
+  generateResponseJson,
+  generateDefaultErrorJson,
+  generateDefaultSuccessJson,
+} from "../helpers/generateResponseJson";
 import authMiddleware from "../middlewares/authMiddleware";
 
 const userRoutes = express.Router();
@@ -15,7 +21,7 @@ enum USER_TYPES {
  *
  * /api/user/create-account:
  *   post:
- *     description: Creates a new user account for EITHER PET_OWNER OR PART_TIME_CARETAKER
+ *     description: Creates a new user account for EITHER PET_OWNER OR PART_TIME_CARETAKER. If PET_OWNER, need to provide details of 1 pet.
  *     produces:
  *       - application/json
  *     consumes:
@@ -23,7 +29,7 @@ enum USER_TYPES {
  *     parameters:
  *       - in: body
  *         name: body
- *         description: userTypes can be PET_OWNER, PART_TIME_CARETAKER, FULL_TIME_CARETAKER
+ *         description: userTypes can be PET_OWNER or PART_TIME_CARETAKER
  *         schema:
  *           type: object
  *           properties:
@@ -39,7 +45,7 @@ enum USER_TYPES {
  *             password:
  *               type: string
  *               example: password
- *             userTypes:
+ *             userType:
  *               type: string
  *               example: PET_OWNER
  *             petName:
@@ -56,7 +62,7 @@ enum USER_TYPES {
  *             - email
  *             - name
  *             - password
- *             - userTypes
+ *             - userType
  *     responses:
  *       200:
  *         description: Create account OK
@@ -69,7 +75,7 @@ userRoutes.post("/create-account", async (req, res) => {
     password,
     email,
     name,
-    userTypes,
+    userType,
     petName,
     petSpecialReqs,
     petCategory,
@@ -78,7 +84,7 @@ userRoutes.post("/create-account", async (req, res) => {
     password: string;
     email: string;
     name: string;
-    userTypes: USER_TYPES;
+    userType: USER_TYPES;
     petName: string;
     petSpecialReqs: string;
     petCategory: string;
@@ -86,10 +92,14 @@ userRoutes.post("/create-account", async (req, res) => {
 
   const errors: Array<string> = [];
 
-  if (userTypes == USER_TYPES.FULL_TIME_CARETAKER) {
-    return res.status(400).json({
-      msg: "Full-time caretaker must be manually added by admin",
-    });
+  if (userType == USER_TYPES.FULL_TIME_CARETAKER) {
+    return res
+      .status(400)
+      .json(
+        generateDefaultErrorJson(
+          "Full-time caretaker must be manually added by admin"
+        )
+      );
   }
 
   await pool
@@ -103,13 +113,17 @@ userRoutes.post("/create-account", async (req, res) => {
       errors.push("An error has occured when querying users table")
     );
 
-  let validCheck = errors.length == 0;
+  let validCheck = errors.length === 0;
 
-  if (validCheck && userTypes == USER_TYPES.PET_OWNER) {
-    if (!petName && !petSpecialReqs && !petCategory) {
-      return res.status(400).json({
-        msg: "pet-name, pet-special-reqs and pet-category not found",
-      });
+  if (validCheck && userType === USER_TYPES.PET_OWNER) {
+    if (!petName || !petSpecialReqs || !petCategory) {
+      return res
+        .status(400)
+        .json(
+          generateDefaultErrorJson(
+            "pet-name, pet-special-reqs and pet-category not found"
+          )
+        );
     }
     await pool
       .query("CALL add_pet_owner($1, $2, $3, $4, $5, $6, $7)", [
@@ -123,7 +137,7 @@ userRoutes.post("/create-account", async (req, res) => {
       ])
       .then((result) => 1)
       .catch((err) => errors.push(err));
-  } else if (validCheck && userTypes == USER_TYPES.PART_TIME_CARETAKER) {
+  } else if (validCheck && userType === USER_TYPES.PART_TIME_CARETAKER) {
     await pool
       .query("CALL add_part_time_caretaker($1, $2, $3, $4)", [
         username,
@@ -133,19 +147,25 @@ userRoutes.post("/create-account", async (req, res) => {
       ])
       .then((result) => 1)
       .catch((err) => errors.push(err));
+  } else {
+    return res
+      .status(400)
+      .json(
+        generateDefaultErrorJson(
+          "userType must be either PET_OWNER or PART_TIME_CARETAKER"
+        )
+      );
   }
 
-  if (errors.length > 0) {
-    res.status(400);
-  }
-
-  res.json({
-    msg:
+  res.json(
+    generateResponseJson(
       errors.length > 0
         ? "An error has occurred"
         : "Successfully created account for new user",
-    errors,
-  });
+      errors.join("\n"),
+      errors.length == 0
+    )
+  );
 });
 
 /**
@@ -166,15 +186,57 @@ userRoutes.get("/user-details", authMiddleware, async (req, res) => {
   const { username } = req.user as any;
   await pool
     .query(
-      `SELECT u.username, u.email, u.name, 
-        EXISTS (SELECT * FROM pet_owners po WHERE po.username = $1) AS is_pet_owner,
-        EXISTS (SELECT * FROM part_time_caretakers ptc WHERE ptc.username = $1) AS is_pt_caretaker, 
-        EXISTS (SELECT * FROM full_time_caretakers ftc WHERE ftc.username = $1) AS is_ft_caretaker 
+      `SELECT u.username, u.email, u.name, u.user_type 
       FROM users u WHERE u.username=$1`,
       [username]
     )
-    .then((result) => res.json({ result: result.rows[0] }))
-    .catch((err) => res.status(400).json({ msg: "An error has occured" }));
+    .then((result) =>
+      res.json({
+        ...generateDefaultSuccessJson("Selected user details"),
+        result: result.rows[0],
+      })
+    )
+    .catch((err) => res.json(generateDefaultErrorJson(err)));
+});
+
+/**
+ * @swagger
+ *
+ * /api/user/:
+ *   delete:
+ *     description: Deletes a user. Must be logged in as admin to use this route.
+ *     produces:
+ *       - application/json
+ *     consumes:
+ *       - application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         schema:
+ *           type: object
+ *           properties:
+ *             username:
+ *               type: string
+ *               example: sallyPO
+ *           required:
+ *             - username
+ *     responses:
+ *       200:
+ *         description: Delete user OK
+ *       400:
+ *         description: Bad request
+ */
+userRoutes.delete("/", authMiddleware, async (req, res) => {
+  const { username }: { username: string } = req.body; // user to be deleted
+  await pool
+    .query("CALL delete_user($1)", [username])
+    .then((result) =>
+      res.json({
+        ...generateDefaultSuccessJson("Successfully deleted user"),
+        result: result.rows[0],
+      })
+    )
+    .catch((err) => res.json(generateDefaultErrorJson(err)));
 });
 
 /**
@@ -182,7 +244,7 @@ userRoutes.get("/user-details", authMiddleware, async (req, res) => {
  *
  * /api/user/verify-pt-caretaker:
  *   post:
- *     description: Verifies a part-time caretaker so that he can advertise his availability and accept bids from pet owners
+ *     description: Called by PCS Admin. Verifies a part-time caretaker so that he can advertise his availability and accept bids from pet owners
  *     produces:
  *       - application/json
  *     consumes:
@@ -208,12 +270,153 @@ userRoutes.post("/verify-pt-caretaker", authMiddleware, async (req, res) => {
   const { username } = req.user as any; // admin username
   const { ct_username }: { ct_username: string } = req.body;
   await pool
-    .query("INSERT INTO verified_caretakers VALUES ($1, $2)", [
+    .query("INSERT INTO verified_caretakers VALUES ($1, $2, CURRENT_DATE)", [
       ct_username,
       username,
     ])
-    .then((result) => res.json({ result: result.rows }))
-    .catch((err) => res.status(400).json({ msg: "An error has occured", err }));
+    .then((result) =>
+      res.json({
+        ...generateDefaultSuccessJson("Successfully verified caretaker"),
+        result: result.rows,
+      })
+    )
+    .catch((err) => res.json(generateDefaultErrorJson(err)));
+});
+
+/**
+ * @swagger
+ *
+ * /api/user/:
+ *   get:
+ *     description: Gets ALL user. Must be logged in to use this route.
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: Get all users OK
+ *       400:
+ *         description: Bad request
+ */
+userRoutes.get("/", authMiddleware, async (req, res) => {
+  await pool
+    .query("SELECT * FROM users WHERE is_deleted = FALSE")
+    .then((result) =>
+      res.json({
+        ...generateDefaultSuccessJson("Successfully get all users"),
+        result: result.rows,
+      })
+    )
+    .catch((err) => generateDefaultErrorJson(err));
+});
+
+/**
+ * @swagger
+ *
+ * /api/user/admin-cq:
+ *   get:
+ *     description: Gets all underperforming ft ct- avg rating for past 90 days is < 2 OR no caretaking jobs for past 90 days (subquery + aggregation). Must be logged in as admin.
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: Get admin cq OK
+ *       400:
+ *         description: Bad request
+ */
+userRoutes.get("/admin-cq", authMiddleware, async (req, res) => {
+  await pool
+    .query(
+      `
+      (SELECT username
+      FROM full_time_caretakers
+      EXCEPT
+      SELECT caretaker_username
+      FROM makes
+      WHERE is_successful = TRUE AND CURRENT_DATE - bid_start_period <= 90)
+      UNION
+      SELECT m.caretaker_username
+      FROM makes m INNER JOIN full_time_caretakers f ON m.caretaker_username = f.username AND m.is_successful = TRUE AND CURRENT_DATE - m.bid_start_period <= 60
+      GROUP BY m.caretaker_username
+      HAVING AVG(m.rating) < 2
+    `
+    )
+    .then((result) =>
+      res.json({
+        ...generateDefaultSuccessJson(
+          "Successfully generated admin complex query"
+        ),
+        result: result.rows,
+      })
+    )
+    .catch((err) => generateDefaultErrorJson(err));
+});
+
+/**
+ * @swagger
+ *
+ * /api/user/caretaker-cq:
+ *   get:
+ *     description: Gets total num of pet-days for this month. Must be logged in as caretaker.
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: Get caretaker cq OK
+ *       400:
+ *         description: Bad request
+ */
+userRoutes.get("/caretaker-cq", authMiddleware, async (req, res) => {
+  const { username } = req.user as any; // caretaker username
+  await pool
+    .query(
+      `
+      SELECT COALESCE(
+        (
+          SELECT SUM(m.bid_end_period - m.bid_start_period + 1)
+          FROM makes m
+          WHERE m.caretaker_username = $1 AND m.is_successful = TRUE AND EXTRACT(MONTH FROM CURRENT_DATE) = EXTRACT(MONTH FROM m.bid_start_period) 
+          GROUP BY m.caretaker_username
+        ), 0) AS num_pet_days`,
+      [username]
+    )
+    .then((result) =>
+      res.json({
+        ...generateDefaultSuccessJson(
+          "Successfully generated caretaker complex query"
+        ),
+        result: result.rows,
+      })
+    )
+    .catch((err) => generateDefaultErrorJson(err));
+});
+
+/**
+ * @swagger
+ *
+ * /api/user/petowner-cq:
+ *   get:
+ *     description: Gets average daily caretaking cost for each pet. Must be logged in as pet owner.
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: Get petowner cq OK
+ *       400:
+ *         description: Bad request
+ */
+userRoutes.get("/petowner-cq", authMiddleware, async (req, res) => {
+  const { username } = req.user as any; // pet owner username
+  await pool
+    .query(petOwnerCQ, [username])
+    .then((result) =>
+      res.json({
+        ...generateDefaultSuccessJson(
+          "Successfully generated pet owner complex query"
+        ),
+        result: result.rows,
+      })
+    )
+    .catch((err) => generateDefaultErrorJson(err));
 });
 
 export default userRoutes;

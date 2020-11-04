@@ -1,5 +1,9 @@
 import express from "express";
 import pool from "../db/init";
+import {
+  generateDefaultErrorJson,
+  generateDefaultSuccessJson,
+} from "../helpers/generateResponseJson";
 
 const petCategoryRoutes = express.Router();
 
@@ -8,7 +12,7 @@ const petCategoryRoutes = express.Router();
  *
  * /api/pet-category/:
  *   post:
- *     description: Adds a pet category with a corresponding base price
+ *     description: Adds a pet category with a corresponding base price. Called by the PCS Admin.
  *     produces:
  *       - application/json
  *     consumes:
@@ -51,10 +55,13 @@ petCategoryRoutes.post("/", async (req, res) => {
       username,
       base_price,
     ])
-    .then((result) => res.json({ msg: "Successfully added new pet category" }))
-    .catch((err) =>
-      res.status(400).json({ msg: "An error has occurred", err })
-    );
+    .then((result) =>
+      res.json({
+        ...generateDefaultSuccessJson("Successfully added new pet category"),
+        result: result.rows,
+      })
+    )
+    .catch((err) => res.json(generateDefaultErrorJson(err)));
 });
 
 /**
@@ -73,9 +80,63 @@ petCategoryRoutes.post("/", async (req, res) => {
  */
 petCategoryRoutes.get("/", async (req, res) => {
   await pool
-    .query("SELECT * FROM pet_categories")
-    .then((result) => res.json({ result: result.rows }))
-    .catch((err) => res.status(400).json({ msg: "An error has occured", err }));
+    .query("SELECT * FROM pet_categories WHERE is_deleted = FALSE")
+    .then((result) =>
+      res.json({
+        ...generateDefaultSuccessJson(
+          "Successfully fetched all pet categories and their corresponding base price"
+        ),
+        result: result.rows,
+      })
+    )
+    .catch((err) => res.json(generateDefaultErrorJson(err)));
+});
+
+/**
+ * @swagger
+ *
+ * /api/pet-category/:
+ *   delete:
+ *     description: Delets a pet category.
+ *     produces:
+ *       - application/json
+ *     consumes:
+ *       - application/json
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         schema:
+ *           type: object
+ *           properties:
+ *             pet_category_name:
+ *               type: string
+ *               example: test
+ *           required:
+ *             - pet_category_name
+ *     responses:
+ *       200:
+ *         description: Delete pet category OK
+ *       400:
+ *         description: Bad request
+ */
+petCategoryRoutes.delete("/", async (req, res) => {
+  const {
+    pet_category_name,
+  }: {
+    pet_category_name: string;
+  } = req.body;
+  await pool
+    .query(
+      `UPDATE pet_categories SET is_deleted=TRUE WHERE pet_category_name=$1`,
+      [pet_category_name]
+    )
+    .then((result) =>
+      res.json({
+        ...generateDefaultSuccessJson("Successfully deleted pet category"),
+        result: result.rows,
+      })
+    )
+    .catch((err) => res.json(generateDefaultErrorJson(err)));
 });
 
 export default petCategoryRoutes;

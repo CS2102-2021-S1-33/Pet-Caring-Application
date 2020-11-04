@@ -5,9 +5,9 @@
     </div>
     <div class="options">
       <ul class="header-list">
-        <li><a [routerLink] = "['find']">Find a caretaker </a></li>
-        <li><a [routerLink] = "['login']">Login </a></li>
-        <li><a [routerLink] = "['signup']">Sign Up </a></li>
+        <li><a [routerLink] = "['/find']">Find a caretaker </a></li>
+        <li><a [routerLink] = "['/login']">Login </a></li>
+        <li><a [routerLink] = "['/signup']">Sign Up </a></li>
       </ul>
     </div>
   </div>
@@ -21,7 +21,7 @@
           <label for="pet-category">I need a caretaker for my...</label>
           <mat-menu #petCategoryMenu="matMenu">
             <ng-template matMenuContent let-name="category">
-              <button mat-icon-button mat-menu-item>
+              <button mat-menu-item>
                 <mat-icon>pets</mat-icon>
                 Select a pet category
               </button>
