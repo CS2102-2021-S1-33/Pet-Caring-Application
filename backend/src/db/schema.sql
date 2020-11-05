@@ -12,6 +12,7 @@ GRANT ALL ON SCHEMA public TO public;
 
 -- ======================
 -- ADMIN
+-- D
 CREATE TABLE pcs_admins (
   username VARCHAR PRIMARY KEY,
   password VARCHAR NOT NULL
@@ -22,6 +23,7 @@ CREATE TABLE pcs_admins (
 -- ======================
 -- User
 -- ISA is with covering constraint 
+-- D
 CREATE TABLE pcs_user (
   username VARCHAR PRIMARY KEY,
   email VARCHAR UNIQUE NOT NULL,
@@ -34,16 +36,21 @@ CREATE TABLE pcs_user (
 
 -- ======================
 -- PET OWNERS AND PETS
+
 CREATE TABLE pet_owners (
   username VARCHAR PRIMARY KEY,
   FOREIGN KEY (username) REFERENCES pcs_user(username) 
 );
- 
+
+
 CREATE TABLE pet_categories (
   pet_category_name VARCHAR PRIMARY KEY,
-  set_by VARCHAR NOT NULL REFERENCES pcs_admins(username),
-  base_price INTEGER NOT NULL CHECK (base_price > 0),
-  is_deleted BOOLEAN DEFAULT FALSE
+  set_by VARCHAR NOT NULL,
+  base_price INTEGER NOT NULL,
+  is_deleted BOOLEAN DEFAULT FALSE,
+  FOREIGN KEY (set_by) 
+    REFERENCES pcs_admins(username),
+  CHECK (base_price > 0)
 );
 
 CREATE TABLE owned_pets (
@@ -53,39 +60,51 @@ CREATE TABLE owned_pets (
   pet_category_name VARCHAR NOT NULL,
   is_deleted BOOLEAN DEFAULT FALSE,
   PRIMARY KEY(username, pet_name),
-  FOREIGN KEY (username) REFERENCES pet_owners(username),
+  FOREIGN KEY (username) 
+    REFERENCES pet_owners(username),
   FOREIGN KEY (pet_category_name) 
-        REFERENCES pet_categories (pet_category_name)
+    REFERENCES pet_categories (pet_category_name)
 );
 -- ======================
 
 -- ======================
 -- CARETAKERS AND LEAVES (FULL-TIME ONLY)
+
 CREATE TABLE caretakers (
   username VARCHAR PRIMARY KEY,
   FOREIGN KEY (username) REFERENCES pcs_user(username)
 );
 
 CREATE TABLE part_time_caretakers (
-  username VARCHAR PRIMARY KEY REFERENCES caretakers(username)
+  username VARCHAR PRIMARY KEY, 
+  FOREIGN KEY (username) 
+    REFERENCES caretakers(username)
 );
 
 CREATE TABLE full_time_caretakers (
-  username VARCHAR PRIMARY KEY REFERENCES caretakers(username)
+  username VARCHAR PRIMARY KEY, 
+  FOREIGN KEY (username) 
+    REFERENCES caretakers(username)
 );
 
 CREATE TABLE verified_caretakers (
-  username VARCHAR PRIMARY KEY REFERENCES caretakers(username),
-  admin_username VARCHAR NOT NULL REFERENCES pcs_admins(username),
-  verified_date DATE
+  username VARCHAR PRIMARY KEY,
+  admin_username VARCHAR NOT NULL,
+  verified_date DATE,
+  FOREIGN KEY (admin_username)
+    REFERENCES pcs_admins(username),
+  FOREIGN KEY (username)
+     REFERENCES caretakers(username)
 );
 
 CREATE TABLE apply_leaves (
   username VARCHAR, 
   leave_start_date DATE,
   leave_end_date DATE,
-  FOREIGN KEY (username) REFERENCES full_time_caretakers(username),
-  PRIMARY KEY (username, leave_start_date, leave_end_date)
+  FOREIGN KEY (username) 
+    REFERENCES full_time_caretakers(username),
+  PRIMARY KEY (username, 
+    leave_start_date, leave_end_date)
 );
 
 CREATE TABLE approved_apply_leaves (
@@ -104,12 +123,15 @@ CREATE TABLE approved_apply_leaves (
 
 -- ======================
 -- ADVERTISE AVAILABILITIES AND BIDS 
+
 CREATE TABLE advertise_availabilities (
   username VARCHAR,
   availability_start_date DATE,
   availability_end_date DATE,
   is_deleted BOOLEAN DEFAULT FALSE,
-  PRIMARY KEY (username, availability_start_date)
+  PRIMARY KEY (username, availability_start_date),
+  FOREIGN Key (username) 
+    REFERENCES verified_caretakers (username)
 );
 
 CREATE TABLE advertise_for_pet_categories (
@@ -118,16 +140,19 @@ CREATE TABLE advertise_for_pet_categories (
   pet_category_name VARCHAR, 
   daily_price INTEGER NOT NULL CHECK (daily_price > 0), 
   FOREIGN KEY (username, availability_start_date) 
-    REFERENCES advertise_availabilities(username, availability_start_date),
+    REFERENCES advertise_availabilities(username, 
+      availability_start_date),
   FOREIGN KEY (pet_category_name) 
     REFERENCES pet_categories(pet_category_name),
-  PRIMARY KEY (username, availability_start_date, pet_category_name) 
+  PRIMARY KEY (username, 
+    availability_start_date, pet_category_name) 
 );
 
 CREATE TABLE bid_period (
   bid_start_period DATE, 
   bid_end_period DATE, 
-  PRIMARY KEY (bid_start_period, bid_end_period)
+  PRIMARY KEY (bid_start_period, 
+    bid_end_period)
 );
 
 CREATE TABLE makes (
@@ -148,7 +173,8 @@ CREATE TABLE makes (
   FOREIGN KEY (bid_start_period, bid_end_period) 
     REFERENCES bid_period(bid_start_period, bid_end_period),
   FOREIGN KEY (caretaker_username, availability_start_date) 
-    REFERENCES advertise_availabilities(username, availability_start_date),
+    REFERENCES advertise_availabilities(username, 
+        availability_start_date),
   PRIMARY KEY (pet_owner_username, pet_name, bid_start_period, 
     bid_end_period, caretaker_username, availability_start_date)
 );

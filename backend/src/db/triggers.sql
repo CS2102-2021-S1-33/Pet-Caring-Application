@@ -1,7 +1,8 @@
 CREATE OR REPLACE FUNCTION check_advertise_availability() RETURNS TRIGGER AS
   $$
   BEGIN
-    -- check if pet category exists, and if it exists check whether daily_price > base_price
+    -- check if pet category exists
+    -- and if it exists check whether daily_price > base_price
     IF EXISTS (
       SELECT 1
       FROM pet_categories pc
@@ -15,14 +16,16 @@ CREATE OR REPLACE FUNCTION check_advertise_availability() RETURNS TRIGGER AS
   $$
 LANGUAGE plpgsql;
 
-CREATE TRIGGER advertise_availability_insert_trigger BEFORE INSERT ON advertise_for_pet_categories
+CREATE TRIGGER advertise_availability_insert_trigger 
+BEFORE INSERT ON advertise_for_pet_categories
 FOR EACH ROW EXECUTE PROCEDURE check_advertise_availability();
 
 CREATE OR REPLACE FUNCTION check_make_bid() RETURNS TRIGGER AS
   $$
   BEGIN
-    -- check if caretaker is full time then if the price is at least above the base price 
-    -- checks if its full-time caretaker since ft ct will auto-accept any valid bids and num pets caring during that period < 5
+    -- check if caretaker is full time 
+    -- then if the price is at least above the base price 
+    -- and num pets caring during that period < 5
     IF (EXISTS (
       SELECT 1
       FROM full_time_caretakers f
@@ -30,14 +33,12 @@ CREATE OR REPLACE FUNCTION check_make_bid() RETURNS TRIGGER AS
     ) AND (
       SELECT COUNT(*) 
       FROM makes m 
-      WHERE m.caretaker_username = NEW.caretaker_username 
-        AND is_successful = TRUE 
-        AND (m.bid_start_period <= NEW.bid_end_period AND m.bid_end_period <= NEW.bid_start_period)) < 5)
+      WHERE m.caretaker_username = NEW.caretaker_username AND is_successful = TRUE 
+        AND m.bid_start_period <= NEW.bid_end_period AND m.bid_end_period <= NEW.bid_start_period) < 5)
       AND NOT EXISTS ( 
          SELECT 1 
         FROM advertise_for_pet_categories NATURAL JOIN pet_categories 
-          WHERE NEW.bid_price < daily_price 
-            AND NEW.bid_price < base_price
+          WHERE NEW.bid_price < daily_price AND NEW.bid_price < base_price
     ) THEN NEW.is_successful = TRUE; 
     END IF;
     RETURN NEW;
@@ -57,15 +58,13 @@ CREATE OR REPLACE FUNCTION check_choose_bid() RETURNS TRIGGER AS
   DECLARE rating NUMERIC;
   DECLARE cur_job NUMERIC;
   BEGIN
-    
     SELECT AVG(rating) 
       FROM makes m 
       WHERE m.caretaker_username = NEW.caretaker_username into rating;
 
     SELECT COUNT(*) 
       FROM makes m 
-      WHERE m.caretaker_username = NEW.caretaker_username 
-        AND is_successful = TRUE 
+      WHERE m.caretaker_username = NEW.caretaker_username AND is_successful = TRUE 
         AND m.bid_start_period <= NEW.bid_end_period 
         AND m.bid_end_period <= NEW.bid_start_period into cur_job;
 
