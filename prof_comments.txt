@@ -54,7 +54,7 @@ SOLUTION: TRIGGER ON FULL-TIME CARETAKER SUCH THAT THEY WILL BE MADE AVAILABLE A
 ==> but the identities are <datetime_of_bid, bidder_phone_number> and does not contain <start_period, end_period>
     which is needed for this constraint to work
 
-SOLUTION: CHANGE PK TO <START_PERIOD, END_PERIOD>.
+SOLUTION: MODIFY PK TO INCLUDE <START_PERIOD, END_PERIOD>.
 
 26. The part-time caretaker can choose to acceptor not acceptbids for their service from pet owners.
 ==> here, "proceed" simply means "successful bids"
