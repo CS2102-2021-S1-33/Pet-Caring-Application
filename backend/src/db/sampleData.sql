@@ -30,12 +30,13 @@ SELECT * FROM full_time_caretakers; -- should only have 1 entry */
 
 -- should insert 
 CALL add_pet_owner('sallyPO', 'sally@gmail.com', 'sally chan', 'password', 'petName', 'likes something', 'dog'); 
+
+-- now sallyPO has a dog and a cat pet
+CALL add_pet('sallyPO', 'testName', 'special', 'cat');
 /*
 -- should NOT insert as 'bird' does not exist as a pet category
 CALL add_pet_owner('nick', 'nick@gmail.com', 'nick choo', 'password', 'birdy', 'likes something', 'bird'); 
-
--- now sallyPO has a dog and a cat pet
-CALL add_pet('sallyPO', 'testName', 'special', 'cat'); */
+ */
 
 
 -- ======================
@@ -145,6 +146,7 @@ CALL approve_leave('Ben','admin', '2020-06-01', '2020-06-02');
 SELECT count(*) as num_approved from approved_apply_leaves; -- 2 records;
 SELECT * from advertise_availabilities;
 
+
 -- Doesn`t meet 2 x 150 days 
 -- Have 1 but have bid during period 
 INSERT into pcs_user VALUES ('James', 'James@hotmail.com', 'James Ho', 'password');
@@ -153,11 +155,28 @@ INSERT into full_time_caretakers VALUES ('James');
 INSERT into verified_caretakers VALUES ('James','admin','2020-01-01');
 INSERT into advertise_availabilities VALUES('James', '2020-01-01', '2020-05-30');
 INSERT into advertise_availabilities VALUES ('James', '2020-05-31');
-INSERT into advertise_for_pet_categories VALUES('James', '2020-05-31','dog', 10);
-CALL make_bid('sallyPO', 'petName', '2020-06-01', '2020-06-10', 'James', 15, 'CASH', 'PET_OWNER_DELIVERS'); 
+INSERT into advertise_for_pet_categories VALUES('James', '2020-05-31','cat', 10);
+
+CALL make_bid('sallyPO', 'testName', '2020-06-01', '2020-06-10', 'James', 15, 'CASH', 'PET_OWNER_DELIVERS'); 
 SELECT pet_owner_username, pet_name, bid_start_period, bid_end_period , caretaker_username, is_successful from makes; -- verify that there is a new bid created and that its already set to true 
 INSERT into apply_leaves VALUES ('James','2020-05-31', '2020-06-15');
-SELECT * from apply_leaves -- verify that james did not apply for leave 
+SELECT * from apply_leaves -- verify that james did not apply for leave  */
+
+-- ======================
+
+-- ======================
+-- TEST CASES FOR complext query careTaker2CQ
+/*
+INSERT into pcs_user VALUES ('James', 'James@hotmail.com', 'James Ho', 'password');
+INSERT into caretakers VALUES ('James');
+INSERT into full_time_caretakers VALUES ('James');
+INSERT into verified_caretakers VALUES ('James','admin','2020-01-01');
+INSERT into advertise_availabilities VALUES ('James', '2020-06-01');
+INSERT into advertise_for_pet_categories VALUES('James', '2020-06-01','cat', 12);
+INSERT into advertise_for_pet_categories VALUES('James', '2020-06-01', 'dog', 14);
+
+CALL make_bid('sallyPO', 'testName', '2020-06-01', '2020-06-10', 'James', 15, 'CASH', 'PET_OWNER_DELIVERS');
+CALL make_bid('sallyPO', 'petName', '2020-06-02', '2020-06-10', 'James', 15, 'CASH', 'PET_OWNER_DELIVERS'); 
 */
 
 /*

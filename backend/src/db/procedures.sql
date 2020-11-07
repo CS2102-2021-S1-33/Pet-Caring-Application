@@ -221,8 +221,13 @@ CREATE OR REPLACE PROCEDURE make_bid(
         WHERE a.pet_category_name = bid_pet_category 
             AND a.username = caretaker_username
         ) THEN
-  
-        INSERT INTO bid_period VALUES (bsp, bep);
+        IF NOT EXISTS ( 
+          SELECT 1 
+          FROM bid_period bp 
+          WHERE bp.bid_start_period = bsp
+            AND bp.bid_end_period = bep) 
+          THEN INSERT INTO bid_period VALUES (bsp, bep);
+        END IF;
         INSERT INTO makes VALUES (pet_owner_username, pet_name, bsp, bep, caretaker_username, asd, bid_price, FALSE, pm, tm); 
       END IF;
     END IF;
