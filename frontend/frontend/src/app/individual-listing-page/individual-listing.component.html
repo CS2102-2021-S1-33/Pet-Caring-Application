@@ -1,0 +1,92 @@
+<div class="page">  
+    <div class="header">
+        <div class="header-logo">
+        <img src="assets/logo.svg" height="28px">
+        </div>
+        <div class="options">
+        <ul class="header-list">
+            <li><a [routerLink] = "['/find']">Find a caretaker</a></li>
+            <li ><a [routerLink] = "['/login']">Login</a></li> <!-- ngIf NOT authenticated-->
+            <li><a [routerLink] = "['/signup']">Sign Up</a></li> <!-- ngIf NOT authenticated-->
+            <li ><a [routerLink] = "['/login']">Login</a></li> <!-- ngIf authenticated-->
+            <!-- <li><a [routerLink] = "['/bids']">Your bids</a></li> ngIf authenticated AND pet owner
+            <li><a [routerLink] = "['/jobs']">Your jobs</a></li>  ngIf authenticated AND caretaker
+            <li><a [routerLink] = "['/profile']">Profile</a></li>  ngIf authenticated
+            <li><a href=""><i class="fas fa-sign-out-alt"></i></a></li>  ngIf authenticated -->
+        </ul>
+      </div>
+    </div>
+    <div class="actual-content">
+        <div class="listing">
+            <div class="heading">About {{ name }}</div>
+            <div class="subheading">Accepted pet categories</div>
+            <div class="info">{{ petCategories }}</div>
+
+            <div class="heading">Availability</div>
+
+            <div class="heading">Review</div>
+            <div class="average-rating">
+                <div class="stars">
+                    <i *ngFor="let i of [].constructor(5)" class="fas fa-star"></i>
+                </div>
+                {{ avgRating }} average from {{ totalReviews }} reviews
+            </div>
+            <mat-divider></mat-divider>
+
+            <div class="review-listing" *ngFor="let review of obs | async">
+                <div class="review-header">
+                    {{ review.name }}
+                    <div class="recurring" *ngIf="review.recurring">
+                        <i class="fas fa-sync"></i>
+                        recurring customer
+                    </div>
+                </div>
+                
+                <div class="review-rating">
+                    <div class="stars">
+                        <i *ngFor="let i of [].constructor(review.rating)" class="fas fa-star"></i>
+                    </div>
+                    {{ review.date }}
+                </div>
+
+                <div class="review-description">
+                    {{ review.review }}
+                </div>
+                <mat-divider></mat-divider>
+
+            </div>
+            <mat-paginator [pageSize]="5"></mat-paginator>
+        </div>
+
+        <div class="bid-window">
+            <div class="form">
+                <div class="heading">Bid for service</div>
+                <form [formGroup]="bidForm">
+                    <label for="bid-pets">Pet for caretaking</label>
+                    <input class="field">
+
+                    <label>Caretaking period</label>
+                    <div class="date-container">
+                        <div class="date-label-container">
+                            <label for="bid-start-date" id="date-label">Start date</label>
+                            <input class="field" id="date-field" >
+                        </div>
+
+                        <div class="date-label-container">
+                            <label for="bid-end-date" id="date-label">End date</label>
+                            <input class="field" id="date-field">
+                        </div>
+                    </div>
+
+                    <label for="bid-phone">Phone number</label>
+                    <input class="field" id="bid-phone" type="text" formControlName="phone">
+
+                    <label for="bid-price">Bid price</label>
+                    <input class="field" id="bid-price" placeholder="$17 minimum"type="text" formControlName="price">
+
+                    <input class="button" type="submit" value="Bid for service">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,95 @@
+<div class="page">
+    <div class="header">
+        <div class="header-logo">
+            <img src="assets/logo.svg" height="28px">
+        </div>
+        <div class="options">
+            <ul class="header-list">
+                <li><a [routerLink] = "['/find']">Find a caretaker </a></li>
+                <li><a [routerLink] = "['/login']">Login </a></li>
+                <li><a [routerLink] = "['/signup']">Sign Up </a></li>
+                <!-- <li><a [routerLink] = "['/bids']">Your bids</a></li> ngIf authenticated AND pet owner
+                <li><a [routerLink] = "['/jobs']">Your jobs</a></li>  ngIf authenticated AND caretaker
+                <li><a [routerLink] = "['/profile']">Profile</a></li>  ngIf authenticated
+                <li><a href=""><i class="fas fa-sign-out-alt"></i></a></li>  ngIf authenticated -->
+            </ul>
+        </div>
+    </div>
+
+    <div class="actual-content">
+        <div class="title">Current</div>
+        <div class="subheading">Completed jobs pending payment</div>
+        <div class="table">
+            <ngx-datatable class="material" [columnMode]="'force'" [rows]="PJobDataTableSource" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [limit]="10" > 
+                <ngx-datatable-column name="Name"></ngx-datatable-column>
+                <ngx-datatable-column name="Price"></ngx-datatable-column>
+                <ngx-datatable-column name="Pets"></ngx-datatable-column>
+                <ngx-datatable-column name="Caretaking period"></ngx-datatable-column>
+                <ngx-datatable-column name="Phone"></ngx-datatable-column>
+                <ngx-datatable-column name="Bid date"></ngx-datatable-column>
+                <ngx-datatable-column name="" [width]="180" [sortable]="false" prop="name">
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                        <input type="button" class="button" id="pay-button" (click)="onCashSelect(row)" value="Cash" />
+                        <input type="button" style="margin-left: 10px;" class="button" id="pay-button" (click)="onCreditSelect(row)" value="Credit" />
+                    </ng-template>
+                </ngx-datatable-column>
+            </ngx-datatable>
+        </div>
+        <div class="subheading">Completed jobs pending review</div>
+        <div class="table">
+            <ngx-datatable class="material" [columnMode]="'force'" [rows]="RJobDataTableSource" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [limit]="10" > 
+                <ngx-datatable-column name="Name"></ngx-datatable-column>
+                <ngx-datatable-column name="Price"></ngx-datatable-column>
+                <ngx-datatable-column name="Pets"></ngx-datatable-column>
+                <ngx-datatable-column name="Caretaking period"></ngx-datatable-column>
+                <ngx-datatable-column name="Phone"></ngx-datatable-column>
+                <ngx-datatable-column name="Bid date"></ngx-datatable-column>
+                <ngx-datatable-column name="" [width]="80" [sortable]="false" prop="name">
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                          <input type="button" class="button" id="review-button" (click)="onReviewSelect(row)" value="Review" />
+                    </ng-template>
+                </ngx-datatable-column>
+            </ngx-datatable>
+        </div>
+        <div class="subheading">Pending bids you made</div>
+        <div class="table">
+            <ngx-datatable class="material" [columnMode]="'force'" [rows]="PeBidDataTableSource" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [limit]="10" > 
+                <ngx-datatable-column name="Name"></ngx-datatable-column>
+                <ngx-datatable-column name="Price"></ngx-datatable-column>
+                <ngx-datatable-column name="Pets"></ngx-datatable-column>
+                <ngx-datatable-column name="Caretaking period"></ngx-datatable-column>
+                <ngx-datatable-column name="Phone"></ngx-datatable-column>
+                <ngx-datatable-column name="Bid date"></ngx-datatable-column>
+                <ngx-datatable-column name="" [width]="80" [sortable]="false" prop="name">
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                          <input type="button" class="button" id="cancel-button" (click)="onCancelSelect(row)" value="Cancel"/>
+                    </ng-template>
+                </ngx-datatable-column>
+            </ngx-datatable>
+        </div>
+        <div class="title">History</div>
+        <div class="subheading">Past bids you made</div>
+        <div class="table">
+            <ngx-datatable class="material" [columnMode]="'force'" [rows]="PaBidDataTableSource" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [limit]="10" > 
+                <ngx-datatable-column name="Name"></ngx-datatable-column>
+                <ngx-datatable-column name="Price"></ngx-datatable-column>
+                <ngx-datatable-column name="Pets"></ngx-datatable-column>
+                <ngx-datatable-column name="Caretaking period"></ngx-datatable-column>
+                <ngx-datatable-column name="Status"></ngx-datatable-column>
+                <ngx-datatable-column name="Bid date"></ngx-datatable-column>
+            </ngx-datatable>
+        </div>
+        <div class="subheading">Past completed jobs</div>
+        <div class="table">
+            <ngx-datatable class="material" [columnMode]="'force'" [rows]="HJobDataTableSource" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [limit]="10" > 
+                <ngx-datatable-column name="Name"></ngx-datatable-column>
+                <ngx-datatable-column name="Price"></ngx-datatable-column>
+                <ngx-datatable-column name="Pets"></ngx-datatable-column>
+                <ngx-datatable-column name="Caretaking period"></ngx-datatable-column>
+                <ngx-datatable-column name="Rating given"></ngx-datatable-column>
+                <ngx-datatable-column name="Review given"></ngx-datatable-column>
+                <ngx-datatable-column name="Bid date"></ngx-datatable-column>
+            </ngx-datatable>
+        </div>
+    </div>
+</div>

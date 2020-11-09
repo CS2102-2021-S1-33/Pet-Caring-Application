@@ -1,0 +1,88 @@
+<div class="content">
+    <div class="header">
+        <div class="header-logo">
+          <img src="assets/logo.png" height="28px">
+          <h3 id="admin-logo">Admin</h3>
+        </div>
+        <div class="options">
+            <li><a [routerLink] = "['/admin/view-pet-categories']">View pet categories</a></li>
+            <li><a [routerLink] = "['/admin/verify-caretaker']">Verify caretaker</a></li>
+            <li><a [routerLink] = "['/admin/approve-leave']">Approve leave</a></li>
+            <li><a [routerLink] = "['']"><mat-icon>exit_to_app</mat-icon></a></li>
+        </div>
+    </div>
+
+    <div class="pending-caretaker-applications">
+        <h1>Pending caretaker applications</h1>
+        <mat-table>
+            <ng-container matColumnDef="name">
+                <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.name}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="username">
+                <mat-header-cell *matHeaderCellDef> Username </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.username}} </mat-cell>
+            </ng-container>
+            
+            <ng-container matColumnDef="caretakerType">
+                <mat-header-cell *matHeaderCellDef> Caretaker Type </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.caretakerType}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="email">
+                <mat-header-cell *matHeaderCellDef> Email </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.email}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="address">
+                <mat-header-cell *matHeaderCellDef> Address </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.address}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="approval">
+                <td mat-cell *matCellDef="let row">
+                  <button mat-flat-button color="green">Accept</button>
+                  <button mat-flat-button color="red">Reject</button>
+                </td>
+              </ng-container>
+
+            <mat-header-row *matHeaderRowDef="['name', 'username', 'caretakerType', 'email', 'address', 'approval']"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: ['name', 'username', 'caretakerType', 'email', 'address', 'approval']"></mat-row>
+        </mat-table>
+    </div>
+
+    <div class="caretaker-application-history">
+        <h1>Caretaker application history</h1>
+        <mat-table>
+            <ng-container matColumnDef="name">
+                <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.name}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="username">
+                <mat-header-cell *matHeaderCellDef> Username </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.username}} </mat-cell>
+            </ng-container>
+            
+            <ng-container matColumnDef="caretakerType">
+                <mat-header-cell *matHeaderCellDef> Caretaker Type </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.caretakerType}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="email">
+                <mat-header-cell *matHeaderCellDef> Email </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.email}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="address">
+                <mat-header-cell *matHeaderCellDef> Address </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.address}} </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="['name', 'username', 'caretakerType', 'email', 'address']"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: ['name', 'username', 'caretakerType', 'email', 'address']"></mat-row>
+        </mat-table>
+        <mat-paginator [length]="length" [pageSize]="pageSize"></mat-paginator>
+    </div>
+</div>

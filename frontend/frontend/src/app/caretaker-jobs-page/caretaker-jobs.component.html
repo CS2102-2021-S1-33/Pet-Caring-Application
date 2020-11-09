@@ -1,0 +1,80 @@
+<div class="page">
+    <div class="header">
+        <div class="header-logo">
+            <img src="assets/logo.svg" height="28px">
+        </div>
+        <div class="options">
+            <ul class="header-list">
+                <li><a [routerLink] = "['/find-caretaker']">Find a caretaker </a></li>
+                <li><a [routerLink] = "['/login']">Login </a></li>
+                <li><a [routerLink] = "['/signup']">Sign Up </a></li>
+                <!-- <li><a [routerLink] = "['/bids']">Your bids</a></li> ngIf authenticated AND pet owner
+                <li><a [routerLink] = "['/jobs']">Your jobs</a></li>  ngIf authenticated AND caretaker
+                <li><a [routerLink] = "['/profile']">Profile</a></li>  ngIf authenticated
+                <li><a href=""><i class="fas fa-sign-out-alt"></i></a></li>  ngIf authenticated -->
+            </ul>
+        </div>
+    </div>
+
+    <div class="actual-content">
+        <div class="subtitle">Summary for this month</div>
+        <div class="summary">
+            <mat-card>
+                <div class="card-title">Your statistics</div>
+                <i>Your expected salary for the month:</i> $23.40
+                <br/>
+                <i>Total pet days thus far:</i> 19 days
+                <br/>
+                <i>Average rating for the month:</i> 4.3
+            </mat-card>
+            <mat-card>
+                <div class="card-title">Global statistics</div>
+                <i>Pet categories most bidded for the month:</i> Cat, dog, rabbit
+                <br/>
+            </mat-card>
+        </div>
+
+        <div class="title">Bids for you</div>
+        <div class="table">
+            <ngx-datatable class="material" [columnMode]="'force'" [rows]="BidDataTableSource" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [limit]="10" > 
+                <ngx-datatable-column name="Name"></ngx-datatable-column>
+                <ngx-datatable-column name="Price"></ngx-datatable-column>
+                <ngx-datatable-column name="Pet categories"></ngx-datatable-column>
+                <ngx-datatable-column name="No. of pets"></ngx-datatable-column>
+                <ngx-datatable-column name="Caretaking period"></ngx-datatable-column>
+                <ngx-datatable-column name="Phone"></ngx-datatable-column>
+                <ngx-datatable-column name="Bid date"></ngx-datatable-column>
+                <ngx-datatable-column name="" [width]="180" [sortable]="false" prop="name">
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                          <input type="button" class="button" id="accept-button" (click)="onAcceptSelect(row)" value="Accept" />
+                          <input type="button" class="button" id="reject-button" (click)="onRejectSelect(row)" value="Reject"/>
+                    </ng-template>
+              </ngx-datatable-column>
+            </ngx-datatable>
+        </div>
+        <div class="title">Upcoming jobs</div>
+        <div class="table">
+            <ngx-datatable class="material" [columnMode]="'force'" [rows]="UJobDataTableSource" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [limit]="10" > 
+                <ngx-datatable-column name="Name"></ngx-datatable-column>
+                <ngx-datatable-column name="Price"></ngx-datatable-column>
+                <ngx-datatable-column name="Pet categories"></ngx-datatable-column>
+                <ngx-datatable-column name="No. of pets"></ngx-datatable-column>
+                <ngx-datatable-column name="Caretaking period"></ngx-datatable-column>
+                <ngx-datatable-column name="Phone"></ngx-datatable-column>
+                <ngx-datatable-column name="Bid date"></ngx-datatable-column>
+            </ngx-datatable>
+        </div>
+        <div class="title">Past jobs</div>
+        <div class="table">
+            <ngx-datatable class="material" [columnMode]="'force'" [rows]="PJobDataTableSource" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [limit]="10" > 
+                <ngx-datatable-column name="Name"></ngx-datatable-column>
+                <ngx-datatable-column name="Price"></ngx-datatable-column>
+                <ngx-datatable-column name="Pet categories"></ngx-datatable-column>
+                <ngx-datatable-column name="No. of pets"></ngx-datatable-column>
+                <ngx-datatable-column name="Caretaking period"></ngx-datatable-column>
+                <ngx-datatable-column name="Phone"></ngx-datatable-column>
+                <ngx-datatable-column name="Bid date"></ngx-datatable-column>
+            </ngx-datatable>
+        </div>
+    </div>
+</div>
