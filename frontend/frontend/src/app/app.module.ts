@@ -5,8 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatCardModule } from '@angular/material/card';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatTableModule } from '@angular/material/table';
+import {MatPaginatorModule} from '@angular/material/paginator';
 import { CdkTableModule } from '@angular/cdk/table';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatGridListModule } from '@angular/material/grid-list';
@@ -14,6 +13,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatDialogModule } from '@angular/material/dialog';
+import {MatSelectModule} from '@angular/material/select';
+
 
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http'
@@ -56,6 +58,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     PetOwnerBidsComponent,
     ProfileComponent
   ],
+
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -66,7 +69,6 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     MatDividerModule,
     MatCardModule,
     MatPaginatorModule,
-    MatTableModule,
     CdkTableModule,
     MatChipsModule,
     MatGridListModule,
@@ -76,12 +78,12 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     NgxDatatableModule,
     MatIconModule,
     MatMenuModule,
-    MatTableModule,
-    MatPaginatorModule,
     MatButtonModule,
     MatDatepickerModule,
     NgbModule,
     HttpClientModule,
+    MatDialogModule,
+    MatSelectModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

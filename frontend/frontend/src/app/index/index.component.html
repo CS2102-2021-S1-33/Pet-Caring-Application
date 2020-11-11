@@ -1,7 +1,7 @@
 <div class="page">
   <div class="header">
     <div class="header-logo">
-      <img src="../assets/logo.png" height="28px">
+      <img src="../assets/logo.svg" height="28px">
     </div>
     <div class="options">
       <ul class="header-list">
@@ -13,24 +13,20 @@
   </div>
 
     <div class="top">
-      <img src="../assets/dog.jpg">
+    <div class="bg-image"></div>
       <h1>Find peace of mind</h1>
       <h2>Hire an experienced pet sitter</h2>
       <div class="search">
         <form [formGroup]="searchForm">
           <label for="pet-category">I need a caretaker for my...</label>
-          <mat-menu #petCategoryMenu="matMenu">
-            <ng-template matMenuContent let-name="category">
-              <button mat-menu-item>
-                <mat-icon>pets</mat-icon>
-                Select a pet category
-              </button>
-            </ng-template>
-          </mat-menu>
-          
-          <button [matMenuTriggerFor]="petCategoryMenu" [matMenuTriggerData]="{category: 'Bird'}">Bird</button>
-          <button [matMenuTriggerFor]="petCategoryMenu" [matMenuTriggerData]="{category: 'Dog'}">Dog</button>
-          <button [matMenuTriggerFor]="petCategoryMenu" [matMenuTriggerData]="{category: 'Cat'}">Cat</button>
+          <mat-form-field appearance="fill">
+            <mat-label>Select pet category</mat-label>
+            <mat-select>
+              <mat-option *ngFor="let category of categories" [value]="category.name">
+                {{category.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
 
           <label for="address">I live near...</label>
           <input class="field" id="address" type="text" formControlName="address">

@@ -21,6 +21,7 @@ export interface Pet {
   pet_name: string;
   special_requirements: string;
   pet_category: string;
+  average_caretaking_cost: string
 }
 
 export interface Leave {
@@ -50,12 +51,14 @@ const PET_DATA: Pet[] = [
   {
     pet_name: 'Maru',
     special_requirements: '',
-    pet_category: 'Cat'
+    pet_category: 'Cat',
+    average_caretaking_cost: '$300'
   },
   {
     pet_name: 'Nala',
     special_requirements: 'She does not eat chicken.',
-    pet_category: 'Dog'
+    pet_category: 'Dog',
+    average_caretaking_cost: '$200'
   },
 ]
 

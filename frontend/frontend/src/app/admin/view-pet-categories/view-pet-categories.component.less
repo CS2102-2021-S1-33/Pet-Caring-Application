@@ -1,0 +1,209 @@
+@header-hover: #F95124;
+@paragraph-black: #000000;
+@paragraph-grey: #403F3F;
+@paragraph-white: #ffffff;
+@button: #F2994A;
+@button-hover: #EB7F20;
+@form-field-height: 42px;
+
+.page {
+  font-family: 'Asap', sans-serif;
+  display: flex;
+  flex-flow: column;
+  flex-wrap: nowrap;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  position: fixed;
+  z-index: auto;
+  overflow-y: auto;
+  color: @paragraph-grey;
+}
+
+.heading {
+  font-family: 'Balsamiq Sans', sans-serif;
+  font-size: 25px;
+  margin-bottom: 20px;
+}
+
+@media screen and (max-width: 2560px) and (min-width: 1920px) {
+    .actual-content {
+      display: flex;
+      flex-flow: row;
+      flex-wrap: nowrap;
+      height: 100%;
+      width: 85%;
+    }
+}
+  
+@media screen and (max-width: 1919px) {
+    .actual-content {
+        display: flex;
+        flex-flow: row;
+        flex-wrap: nowrap;
+        height: 100%;
+        width: 95%;
+    }
+}
+
+.header {
+    display: flex;
+    flex: 0 1 auto;
+    padding: 10px;
+    font-weight: 500;
+  }
+  
+.header-logo {
+    float: left;
+    padding: 7px;
+    margin-right: 32vw;
+}
+
+#admin-logo {
+    color: #F95124;
+}
+  
+.header-list {
+    list-style-type: none;
+    overflow: hidden;
+    display: flex;
+    margin: 2px 5px;
+    float: right;
+  
+    li {
+      float: right;
+      color: #000000;
+      font-size: 16px;
+      text-align: center;
+      cursor: pointer;
+    }
+  
+    li:hover {
+      color: @header-hover;
+    }
+}
+  
+ul li:not(:last-child) {
+    margin-right: 4vw;
+}
+  
+a {
+    text-decoration: none;
+  
+    &:visited {
+        color: #000000;
+    }
+}
+  
+.options {
+    float: right;
+    padding: 8px;
+}
+
+.actual-content {
+    column-count: 2;
+}
+
+#add {
+    position: relative;
+    left: 4vh;
+    top: 2vh;
+}
+
+.add-new-pet-category {
+    margin-top: 2vh;
+    border-radius: 20px;
+    background-color: #FBDFC5;
+    margin-left: auto;
+    margin-right: 8vw;
+    height: fit-content;
+}
+
+.form {
+    margin: 45px;
+    max-height: fit-content;
+    top: 0px;
+}
+  
+form {
+    display: flex;
+    flex-flow: column;
+}
+  
+label {
+    display: inline-block;
+    margin-bottom: 10px;
+    font-size: 16px;
+    color: @paragraph-grey;
+}
+  
+.field {
+    font-size: 17px;
+    border-radius: 40px;
+    height: @form-field-height;
+    width: 22vw;
+    border: 1px solid @paragraph-grey;
+    padding: 0vw 1vw;
+    margin-bottom: 30px;
+  
+    &:hover {
+      border: 1px solid @button;
+    }
+    
+    &:focus {
+      outline: none;
+    }
+}
+
+.button {
+    font-size: 13px;
+    border-radius: 10px;
+    height: 30px;
+    width: 60px;
+    margin-top: 5px;
+    border: none;
+    color: @paragraph-white;
+    background-color: @button;
+    font-family: 'Asap', sans-serif;
+    align-self: center;
+    
+    &:focus {
+      outline: none;
+    }
+}
+
+@media screen and (max-width: 1919px) {
+    ::ng-deep .ngx-datatable {
+      width: 50vw;
+      border: 1px solid rgba(190, 190, 190, 0.3);
+      transform: scaleY(0.5);
+      font-size: 14px;
+      font-family: Asap, sans-serif;
+      box-shadow: none !important;
+    }
+    
+    ::ng-deep .datatable-body-row {
+      border-bottom: 1px solid rgba(190, 190, 190, 0.3);
+    }
+  }
+  
+  @media screen and (max-width: 2560px) and (min-width: 1920px) {
+    ::ng-deep .ngx-datatable {
+      width: 40vw;
+      border: 1px solid rgba(190, 190, 190, 0.3);
+      transform: scaleY(0.5);
+      font-size: 14px;
+      font-family: Asap, sans-serif;
+      box-shadow: none !important;
+    }
+    
+    ::ng-deep .datatable-body-row {
+      border-bottom: 1px solid rgba(190, 190, 190, 0.3);
+    }
+  }
+  
+  ::ng-deep .datatable-footer {
+    border: none !important;
+  }
+  
+  

@@ -2,6 +2,18 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 
 
+export interface PetCategory {
+  name: string,
+  basePrice: number
+}
+
+const CATEGORY_DATA: PetCategory[] = [
+  {
+    name: 'Cat',
+    basePrice: 200
+  },
+]
+
 @Component({
   selector: 'app-view-pet-categories',
   templateUrl: './view-pet-categories.component.html',
@@ -9,10 +21,9 @@ import { FormGroup, FormControl } from '@angular/forms';
 })
 export class ViewPetCategoriesComponent implements OnInit {
 
+  PetCategoriesDataTableSource = CATEGORY_DATA
+  
   constructor() { }
-
-  length = 100;
-  pageSize = 10;
 
   addPetCategoryForm = new FormGroup({
     name: new FormControl(),

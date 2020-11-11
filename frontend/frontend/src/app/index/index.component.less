@@ -1,0 +1,76 @@
+@header-hover: #F95124;
+@button: #F2994A;
+@button-hover: #EB7F20;
+@footer: #F4AD6E;
+@form-field-height: 42px;
+
+.page {
+    font-family: 'Asap', sans-serif;
+    display: flex;
+    flex-flow: column;
+    flex-wrap: nowrap;
+    overflow-y: auto;
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    z-index: auto;
+}
+
+.header {
+display: flex;
+flex: 0 1 auto;
+padding: 10px;
+font-weight: 500;
+}
+
+.header-logo {
+float: left;
+padding: 7px;
+margin-right: 40vw;
+}
+
+.header-list {
+list-style-type: none;
+overflow: hidden;
+display: flex;
+margin: 2px 5px;
+float: right;
+
+    li {
+        float: right;
+        color: #000000;
+        font-size: 16px;
+        text-align: center;
+        cursor: pointer;
+    }
+
+    li:hover {
+        color: @header-hover;
+    }
+}
+
+ul li:not(:last-child) {
+margin-right: 4vw;
+}
+
+a {
+    text-decoration: none;
+    color: #000000;
+    
+    &:visited {
+        color: #000000;
+    }
+}
+  
+.options {
+float: right;
+padding: 8px;
+}
+
+.top {
+    background-image: url("hero.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 75%;
+}

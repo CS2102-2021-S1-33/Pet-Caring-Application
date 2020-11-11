@@ -21,11 +21,11 @@ const routes: Routes = [
   {path: 'profile', component: ProfileComponent},
   {path: 'jobs', component: CaretakerJobsComponent},
   {path: 'bids', component: PetOwnerBidsComponent},
-  {path: '', component: RegisterLoginPageComponent},
+  {path: '', component: IndexComponent},
   {path: 'admin', component: AdminHomepageComponent},
-  {path: 'admin/approve-leave', component: ApproveLeaveComponent},
-  {path: 'admin/verify-caretaker', component: VerifyCaretakerComponent},
-  {path: 'admin/view-pet-categories', component: ViewPetCategoriesComponent}
+  {path: 'approveleave', component: ApproveLeaveComponent},
+  {path: 'verifycaretaker', component: VerifyCaretakerComponent},
+  {path: 'viewpetcategories', component: ViewPetCategoriesComponent}
 ];
 
 @NgModule({
