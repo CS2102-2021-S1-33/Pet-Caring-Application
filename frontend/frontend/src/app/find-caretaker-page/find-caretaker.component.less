@@ -60,6 +60,11 @@ ul li:not(:last-child) {
 
 a {
     text-decoration: none;
+    color: #000000;
+
+    &:hover {
+        color: @header-hover !important;
+    }
 
     &:visited {
         color: #000000;
@@ -244,7 +249,6 @@ input {
   }
 
 .listing {
-    margin-top: 20px;
     font-family: 'Asap', sans-serif;
     font-size: 15px;
     color: @paragraph-grey;
