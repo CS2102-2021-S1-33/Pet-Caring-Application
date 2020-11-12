@@ -26,7 +26,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { RegisterLoginPageComponent } from './register-login-page/register-login-page.component';
 import { SignUpPageComponent } from './sign-up-page/sign-up-page.component';
-import { AboutPageComponent } from './about-page/about-page.component';
 import { FindCaretakerComponent } from './find-caretaker-page/find-caretaker.component';
 import { IndividualListingComponent } from './individual-listing-page/individual-listing.component';
 import { CaretakerJobsComponent } from './caretaker-jobs-page/caretaker-jobs.component';
@@ -49,7 +48,6 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     IndexComponent,
     RegisterLoginPageComponent,
     SignUpPageComponent,
-    AboutPageComponent,
     FindCaretakerComponent,
     IndividualListingComponent,
     AdminHomepageComponent,
