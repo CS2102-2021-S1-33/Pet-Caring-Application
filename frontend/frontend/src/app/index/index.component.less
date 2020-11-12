@@ -2,6 +2,9 @@
 @button: #F2994A;
 @button-hover: #EB7F20;
 @footer: #F4AD6E;
+@paragraph-black: #000000;
+@paragraph-grey: #403F3F;
+@paragraph-white: #ffffff;
 @form-field-height: 42px;
 
 .page {
@@ -73,4 +76,160 @@ padding: 8px;
     background-repeat: no-repeat;
     background-size: cover;
     height: 75%;
+    position: relative;
+}
+
+#peace {
+    color: #F95124;
+    font-weight: bolder;
+    font-size: 64px;
+}
+
+#hire {
+    font-size: 36px;
+}
+
+.search {
+    background-color: #ffffff;
+    height: 100px;
+    padding: 10px;
+    border-radius: 100px;
+    border-color: @paragraph-grey;
+    width: 50%;
+    align-items: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%)
+}
+
+label {
+    font-weight: bold;
+}
+
+#need {
+    position: absolute;
+    top: 2vh;
+    left: 2vw;
+}
+
+.select {
+    position: absolute;
+    top: 4vh;
+    left: 2vw;
+}
+
+#live-near {
+    position: absolute;
+    left: 20vw;
+    bottom: 8vh;
+}
+
+.field {
+    font-size: 17px;
+    border-radius: 40px;
+    height: @form-field-height;
+    width: 22vw;
+    border: 1px solid @paragraph-grey;
+    padding: 0vw 1vw;
+    margin-bottom: 30px;
+  
+    &:hover {
+      border: 1px solid @button;
+    }
+    
+    &:focus {
+      outline: none;
+    }
+
+    position: absolute;
+    left: 20vw;
+    top: 6vh;
+}
+
+.button {
+    font-size: 13px;
+    border-radius: 10px;
+    height: 30px;
+    width: 60px;
+    margin-top: 5px;
+    border: none;
+    color: @paragraph-white;
+    background-color: @button;
+    font-family: 'Asap', sans-serif;
+    align-self: center;
+    
+    &:focus {
+      outline: none;
+    }
+
+    position: absolute;
+    left: 44vw;
+    top: 4vh;
+}
+
+h1 {
+    font-weight: bold;
+    font-size: 50px;
+
+    b {
+        color: #F2994A;
+    }
+
+    margin-left: 10%;
+    margin-top: 10%;
+}
+
+h3 {
+    font-size: 18px;
+    margin-left: 10%;
+}
+
+.column {
+    column-count: 3;
+    column-rule-width: 50px;
+    margin-bottom: 10%;
+}
+
+.find1 {
+    border: 3px solid #403F3F;
+    border-radius: 20px;
+    margin-left: 5%;
+}
+
+.find2 {
+    border: 3px solid #403F3F;
+    border-radius: 20px;
+}
+
+.find3 {
+    border: 3px solid #403F3F;
+    border-radius: 20px;
+    margin-right: 5%
+}
+
+mat-icon {
+    right: 2vw;
+    top: 2vh;
+}
+
+
+.become1 {
+    border: 3px solid #403F3F;
+    border-radius: 20px;
+    margin-left: 5%;
+}
+
+
+.become2 {
+    border: 3px solid #403F3F;
+    border-radius: 20px;
+}
+
+
+.become3 {
+    border: 3px solid #403F3F;
+    border-radius: 20px;
+    margin-right: 5%;
 }

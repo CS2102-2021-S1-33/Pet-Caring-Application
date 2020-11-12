@@ -14,69 +14,80 @@
 
     <div class="top">
     <div class="bg-image"></div>
-      <h1>Find peace of mind</h1>
-      <h2>Hire an experienced pet sitter</h2>
+      <h1 id="peace">Find peace of mind</h1>
+      <h2 id="hire">Hire an experienced pet sitter</h2>
       <div class="search">
         <form [formGroup]="searchForm">
-          <label for="pet-category">I need a caretaker for my...</label>
-          <mat-form-field appearance="fill">
-            <mat-label>Select pet category</mat-label>
-            <mat-select>
-              <mat-option *ngFor="let category of categories" [value]="category.name">
-                {{category.name}}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
+          <label for="pet-category" id="need">I need a caretaker for my...</label>
+          <div class="select">
+            <mat-form-field appearance="outline">
+              <mat-label>Select pet category</mat-label>
+              <mat-select>
+                <mat-option *ngFor="let category of categories" [value]="category.name">
+                  {{category.name}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
 
-          <label for="address">I live near...</label>
+          <label for="address" id="live-near">I live near...</label>
           <input class="field" id="address" type="text" formControlName="address">
+          <input class="button" type="submit" value="Search">
         </form>
       </div>
     </div>
 
     <div class="find">
-      <h1>How to find a pet caretaker</h1>
-      <h3>PoochFriendly is 100% free for pet owners. You only pay for the sitter you choose.</h3>
-      <div class="find1">
-        <mat-icon>search</mat-icon>
-        <h4>Search a caretaker</h4>
-        <h5>Discover verified caretaker near your area who provide quality services.</h5>
+      <div class="find0">
+        <h1>How to <b>find</b> a pet caretaker</h1>
+        <h3>PoochFriendly is 100% free for pet owners. You only pay for the sitter you choose.</h3>
       </div>
-      <div class="find2">
-        <mat-icon>ballot</mat-icon>
-        <h4>Bid for a caretaker</h4>
-        <h5>Found a caretaker? Bid for their services via their listing.</h5>
-      </div>
-      <div class="find3">
-        <mat-icon>attach_money</mat-icon>
-        <h4>Pay for the service</h4>
-        <h5>You can pay your caretaker either through cash or wireless payment!</h5>
+      <div class="column">
+        <div class="find1">
+          <mat-icon id="search-icon">search</mat-icon>
+          <h4>Search a caretaker</h4>
+          <h5>Discover verified caretaker near your area who provide quality services.</h5>
+        </div>
+        <div class="find2">
+          <mat-icon>ballot</mat-icon>
+          <h4>Bid for a caretaker</h4>
+          <h5>Found a caretaker? Bid for their services via their listing.</h5>
+        </div>
+        <div class="find3">
+          <mat-icon>attach_money</mat-icon>
+          <h4>Pay for the service</h4>
+          <h5>You can pay your caretaker either through cash or wireless payment!</h5>
+        </div>
       </div>
     </div>
 
     <div class="become">
-      <h1>How to become a pet sitter</h1>
-      <h3>Passionate about animals? Join our network of pet caretakers</h3>
-      <div class="become1">
-        <mat-icon>account_circle</mat-icon>
-        <h4>Create an account</h4>
-        <h5>Create a free account with PoochFriendly before applying to be a caretaker.</h5>
+      <div class="find0">
+        <h1>How to <b>become</b> a pet sitter</h1>
+        <h3>Passionate about animals? Join our network of pet caretakers</h3>
       </div>
-      <div class="become2">
-        <mat-icon>highlight_alt</mat-icon>
-        <h4>Submit an application</h4>
-        <h5>Found a pet sitter? Bid for your pet sitter's services via their listing.</h5>
-      </div>
-      <div class="become3">
-        <mat-icon>done</mat-icon>
-        <h4>Wait for verification</h4>
-        <h5>Our team will take about a week to vet your application and verify you.</h5>
+      <div class="column">
+        <div class="become1">
+          <mat-icon>account_circle</mat-icon>
+          <h4>Create an account</h4>
+          <h5>Create a free account with PoochFriendly before applying to be a caretaker.</h5>
+        </div>
+        <div class="become2">
+          <mat-icon>highlight_alt</mat-icon>
+          <h4>Submit an application</h4>
+          <h5>Found a pet sitter? Bid for your pet sitter's services via their listing.</h5>
+        </div>
+        <div class="become3">
+          <mat-icon>done</mat-icon>
+          <h4>Wait for verification</h4>
+          <h5>Our team will take about a week to vet your application and verify you.</h5>
+        </div>
       </div>
     </div>
 
     <div class="footer">
       <div class="footer-logo">
-        <img src="../assets/logo.png" height="28px">
+        <img src="../assets/logo.svg" height="28px">
       </div>
       <div class="options">
         <ul class="header-list">
