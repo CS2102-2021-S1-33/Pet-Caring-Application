@@ -1,4 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
+import { Router } from '@angular/router'
 
 export interface Bid {
   name: string;
@@ -47,7 +48,7 @@ const PENDING_BID_DATA: Bid[] = [
     price: 51,
     petCategories: ['Cat', ' Dog'],
     noOfPets: 2,
-    caretakingPeriod: '24/9/2020 - 27/9/2020',
+    caretakingPeriod: '04/10/2020 - 07/10/2020',
     phone: '98765432',
     bidDate: '18/9/2020'
   }
@@ -63,7 +64,7 @@ const JOB_PAY_DATA: Job[] = [
     price: 51,
     petCategories: ['Cat'],
     noOfPets: 1,
-    caretakingPeriod: '24/9/2020 - 27/9/2020',
+    caretakingPeriod: '16/9/2020 - 20/9/2020',
     review: null,
     rating: null,
     phone: '98765431',
@@ -99,7 +100,7 @@ export class PetOwnerBidsComponent implements OnInit {
   review: string;
   rating: number;
 
-  constructor() {
+  constructor(private router: Router) {
 
   }
   
@@ -121,5 +122,9 @@ export class PetOwnerBidsComponent implements OnInit {
 
   onCancelSelect(row) {
     console.log(row); 
+  }
+
+  onClickLogout() {
+    this.router.navigate(['/login']);
   }
 }

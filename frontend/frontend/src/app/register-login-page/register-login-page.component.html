@@ -13,7 +13,7 @@
           <li><a [routerLink] = "['/find']">Find a caretaker</a></li>
           <li ><a [routerLink] = "['/login']">Login</a></li> <!-- ngIf NOT authenticated-->
           <li><a [routerLink] = "['/signup']">Sign Up</a></li> <!-- ngIf NOT authenticated-->
-          <li ><a [routerLink] = "['/login']">Login</a></li> <!-- ngIf authenticated-->
+          <li ><a [routerLink] = "['/about']">About Us</a></li> <!-- ngIf authenticated-->
           <!-- <li><a [routerLink] = "['bids']">Your bids</a></li> ngIf authenticated AND pet owner
           <li><a [routerLink] = "['jobs']">Your jobs</a></li>  ngIf authenticated AND caretaker
           <li><a [routerLink] = "['profile']">Profile</a></li>  ngIf authenticated
@@ -30,6 +30,7 @@
         <label for="login-password">Password</label>
         <input class="field" id="login-password" type="password" formControlName="userPassword">
         <input class="button" type="submit" value="Login" (click)="onClickLogin()">
+        <input class="button" type="submit" value="Login as Admin" (click)="onClickAdminLogin()">
         <p><u>Forgot your password?</u></p>
       </form>
     </div>

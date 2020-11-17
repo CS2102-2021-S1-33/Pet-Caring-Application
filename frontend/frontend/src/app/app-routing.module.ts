@@ -23,6 +23,7 @@ const routes: Routes = [
   {path: 'bids', component: PetOwnerBidsComponent},
   {path: '', component: RegisterLoginPageComponent},
   {path: 'admin', component: AdminHomepageComponent},
+  {path: 'about', component: IndexComponent},
   {path: 'admin/approve-leave', component: ApproveLeaveComponent},
   {path: 'admin/verify-caretaker', component: VerifyCaretakerComponent},
   {path: 'admin/view-pet-categories', component: ViewPetCategoriesComponent}

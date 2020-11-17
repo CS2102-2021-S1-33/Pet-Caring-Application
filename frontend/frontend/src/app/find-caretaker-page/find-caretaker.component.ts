@@ -3,6 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { Observable } from 'rxjs';
+import { Router } from '@angular/router'
 
 export interface Listing {
   name: string;
@@ -21,53 +22,53 @@ const DATA: Listing[] = [
     relativeLocation: 1.2,
     petCategories: ['Cat', 'Dog'],
     price: 17,
-    rating: 4,
-    review: 82
+    rating: 5,
+    review: 3
   }, 
   {
-    name: 'Joel Lim',
+    name: 'Joaey Lim',
     address: 'Bukit Batok, Singapore',
     relativeLocation: 1.4,
     petCategories: ['Cat'],
     price: 15,
     rating: 4,
-    review: 89
+    review: 11
   },
   {
-    name: 'Priscilla Lim',
-    address: 'Bukit Batok, Singapore',
+    name: 'Joel',
+    address: 'Bukit Timah, Singapore',
     relativeLocation: 1.2,
     petCategories: ['Cat', 'Dog'],
     price: 17,
-    rating: 4,
-    review: 82
+    rating: 3,
+    review: 8
   }, 
   {
-    name: 'Joel Lim',
-    address: 'Bukit Batok, Singapore',
+    name: 'John',
+    address: 'Buona Vista, Singapore',
     relativeLocation: 1.4,
-    petCategories: ['Cat'],
+    petCategories: ['Dog'],
     price: 15,
     rating: 4,
-    review: 89
+    review: 8
   },
   {
-    name: 'Priscilla Lim',
-    address: 'Bukit Batok, Singapore',
+    name: 'Johanna',
+    address: 'Tampines, Singapore',
     relativeLocation: 1.2,
     petCategories: ['Cat', 'Dog'],
     price: 17,
-    rating: 4,
-    review: 82
+    rating: 5,
+    review: 6
   }, 
   {
-    name: 'Joel Lim',
-    address: 'Bukit Batok, Singapore',
+    name: 'Lee Pin',
+    address: 'KentRidge, Singapore',
     relativeLocation: 1.4,
-    petCategories: ['Cat'],
-    price: 15,
+    petCategories: ['Dog'],
+    price: 12,
     rating: 4,
-    review: 89
+    review: 7
   },
 ];
 
@@ -78,6 +79,8 @@ const DATA: Listing[] = [
 })
 
 export class FindCaretakerComponent implements OnInit {
+
+  listing = DATA;
 
   searchForm = new FormGroup({
     keyword: new FormControl(''),
@@ -91,7 +94,8 @@ export class FindCaretakerComponent implements OnInit {
   obs: Observable<any>;
   dataSource: MatTableDataSource<Listing> = new MatTableDataSource<Listing>(DATA);
 
-  constructor(private changeDetectorRef: ChangeDetectorRef) {
+  constructor(private changeDetectorRef: ChangeDetectorRef,
+     private router: Router) {
 
   };
 
@@ -106,5 +110,13 @@ export class FindCaretakerComponent implements OnInit {
     if (this.dataSource) { 
       this.dataSource.disconnect(); 
     }
+  }
+
+  onClickLogout() {
+    this.router.navigate(['/login']);
+  }
+
+  onClickCard() {
+    this.router.navigate(['/listing']);
   }
 }

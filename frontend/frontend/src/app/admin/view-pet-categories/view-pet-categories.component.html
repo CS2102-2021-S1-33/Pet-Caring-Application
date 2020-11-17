@@ -1,51 +1,43 @@
-<div class="content">
+<div class="page">
     <div class="header">
         <div class="header-logo">
-          <img src="assets/logo.png" height="28px">
+          <img src="assets/logo.svg" height="28px">
           <h3 id="admin-logo">Admin</h3>
         </div>
         <div class="options">
-            <li><a [routerLink] = "['/admin/view-pet-categories']">View pet categories</a></li>
-            <li><a [routerLink] = "['/admin/verify-caretaker']">Verify caretaker</a></li>
-            <li><a [routerLink] = "['/admin/approve-leave']">Approve leave</a></li>
-            <li><a [routerLink] = "['']"><mat-icon>exit_to_app</mat-icon></a></li>
+            <ul class="header-list">
+                <li><a [routerLink] = "['/admin/view-pet-categories']">View pet categories</a></li>
+                <li><a [routerLink] = "['/admin/verify-caretaker']">Verify caretaker</a></li>
+                <li><a [routerLink] = "['/admin/approve-leave']">Approve leave</a></li>
+                <li><a [routerLink] = "['']"><mat-icon>exit_to_app</mat-icon></a></li>
+            </ul>
         </div>
     </div>
 
-    <div class="current-pet-categories">
-        <h1>Current pet categories</h1>
-        <mat-table>
-            <ng-container matColumnDef="petCategory">
-                <mat-header-cell *matHeaderCellDef> Pet Category </mat-header-cell>
-                <mat-cell *matCellDef="let row"> {{row.petCategory}} </mat-cell>
-            </ng-container>
+    <div class="actual-content">
+        <div class="current-pet-categories">
+            <h1>Current pet categories</h1>
+            <ngx-datatable class="material" [columnMode]="'force'" [rows]="PetCategoriesDataTableSource" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [limit]="10"  (select)="onSelect($event)"
+            (activate)="onActivate($event)"> 
+                <ngx-datatable-column name="Pet Category"></ngx-datatable-column>
+                <ngx-datatable-column name="Base Price"></ngx-datatable-column>
+                <ngx-datatable-column name="" [width]="180" [sortable]="false" prop="name">
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                        <input type="button" class="button" id="edit-button" value="Delete">
+                    </ng-template>
+            </ngx-datatable-column>
+            </ngx-datatable>
+        </div>
 
-            <ng-container matColumnDef="basePrice">
-                <mat-header-cell *matHeaderCellDef> Base Price </mat-header-cell>
-                <mat-cell *matCellDef="let row"> {{row.basePrice}} </mat-cell>
-            </ng-container>
-
-            <ng-container matColugreenmnDef="edit">
-                <td mat-cell *matCellDef="let row">
-                  <button mat-flat-button class="button">Edit</button>
-                </td>
-            </ng-container>
-
-            <mat-header-row *matHeaderRowDef="['petCategory', 'basePrice', 'edit']"></mat-header-row>
-            <mat-row *matRowDef="let row; columns: ['petCategory', 'basePrice', 'edit']"></mat-row>
-        </mat-table>
-        <mat-paginator [length]="length" [pageSize]="pageSize"></mat-paginator>
-    </div>
-
-    <div class="add-new-pet-category">
-        <h1>Add new pet category</h1>
-        <form [formGroup]="addPetCategoryForm">
-            <label for="new-name">Name of pet category</label>
-            <input class="field" id="new-name" type="text" formControlName="name">
-            <label for="new-price">Base price</label>
-            <mat-icon>attach_money</mat-icon>
-            <input class="field" id="new-price" type="text" formControlName="basePrice">
-            <input class="button" type="submit" value="Add">
-        </form>
+        <div class="add-new-pet-category">
+            <h1 id="add">Add new pet category</h1>
+            <form [formGroup]="addPetCategoryForm" class="form">
+                <label for="new-name">Name of pet category</label>
+                <input class="field" id="new-name" type="text" formControlName="name">
+                <label for="new-price">Base price</label>
+                <input class="field" id="new-price" type="text" formControlName="basePrice">
+                <input class="button" type="submit" value="Add" (click)="onAddPetCategory()">
+            </form>
+        </div>
     </div>
 </div>

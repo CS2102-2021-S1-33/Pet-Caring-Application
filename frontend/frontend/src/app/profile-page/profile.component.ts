@@ -2,6 +2,9 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@ang
 import { MatPaginator } from '@angular/material/paginator';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
+import { Router } from '@angular/router'
+import { GeneralService } from '../general.service'
+
 
 export interface User {
   name: string;
@@ -88,8 +91,8 @@ const AVAILABILITY_DATA: Availability[] = [
 const CARETAKER_DATA: Caretaker[] = [
   {
     petCategories: ['Cat', 'Dog'],
-    avgRating: 4,
-    totalReviews: 180,
+    avgRating: 5,
+    totalReviews: 3,
     lastWorked: 2
   },
 ]
@@ -101,9 +104,12 @@ const CARETAKER_DATA: Caretaker[] = [
 })
 
 export class ProfileComponent implements OnInit {
-  user = USER_DATA;
-  pets = PET_DATA;
-
+  user: User[] = [];
+  userdetails: User[] = [];
+  pets: Pet[] = PET_DATA;
+  petdetails: Pet[] = [];
+  account_type: string[] = ['PET_OWNER', 'FULL_TIME_CARETAKER'];
+  averageCostPerPet: string = "";
   caretaker = CARETAKER_DATA;
   LDataSource = LEAVE_DATA;
   ADataSource = AVAILABILITY_DATA;
@@ -113,7 +119,30 @@ export class ProfileComponent implements OnInit {
     rating: new FormControl('')
   });
 
+  constructor(private router: Router, private _service: GeneralService) {
+
+  }
+
   ngOnInit() {
+
+    this._service.getUsersDetails().subscribe(res => {
+      let s = (res["result"]);
+      this.userdetails.push({name: s["name"], username: s["username"], 
+    email: s["email"], accountType: this.account_type});
+    console.log(this.userdetails);
+    this.user = this.userdetails;
+    //this.account_type = s["user_type"];
+  })
+
+  this._service.getUserPets().subscribe(res => {
+    JSON.stringify(res["result"].map(s => this.petdetails.push({pet_name: s["pet_name"],
+    special_requirements: s["special_requirements"], pet_category: s["pet_category_name"]})));
+    //this.pets = this.petdetails;
+  })
+
+  // if(this.account_type==="PET_OWNER") {
+  //   this._service.petOwnerGetCq().subscribe()
+  // }
 
   }
 
@@ -131,5 +160,9 @@ export class ProfileComponent implements OnInit {
 
   onAddLeaveClick(row) {
     console.log(row); //go to leave application page
+  }
+
+  onClickLogout() {
+    this.router.navigate(['/login']);
   }
 }

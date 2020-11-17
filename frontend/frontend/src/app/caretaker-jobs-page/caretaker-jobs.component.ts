@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { Router } from '@angular/router'
+
 
 export interface Bid {
   name: string;
@@ -70,7 +72,7 @@ export class CaretakerJobsComponent implements OnInit {
   UJobDataTableSource = UPCOMING_JOB_DATA;
   PJobDataTableSource = PAST_JOB_DATA;
 
-  constructor() {
+  constructor(private router: Router) {
   };
 
   ngOnInit() {
@@ -83,5 +85,9 @@ export class CaretakerJobsComponent implements OnInit {
 
   onAcceptSelect(row) {
     console.log(row); 
+  }
+
+  onClickLogout() {
+    this.router.navigate(['/login']);
   }
 }

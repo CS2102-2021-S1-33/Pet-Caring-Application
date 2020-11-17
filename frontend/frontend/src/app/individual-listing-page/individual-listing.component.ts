@@ -3,6 +3,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { FormBuilder, Validators, FormArray, ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
+import { Router } from '@angular/router'
 
 export interface Review {
   name: string;
@@ -48,15 +49,16 @@ const DATA: Review[] = [
 export class IndividualListingComponent implements OnInit, OnDestroy {
   name = "Priscilla";
   petCategories = "Cats, rabbits, dog"
-  avgRating = "4.5"
-  totalReviews = "30"
+  avgRating = "5"
+  totalReviews = "3"
   minPrice = "17"
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   obs: Observable<any>;
   dataSource: MatTableDataSource<Review> = new MatTableDataSource<Review>(DATA);
 
-  constructor(private changeDetectorRef: ChangeDetectorRef) {
+  constructor(private changeDetectorRef: ChangeDetectorRef,
+    private router: Router) {
   }
   
   bidForm = new FormGroup({
@@ -77,5 +79,9 @@ export class IndividualListingComponent implements OnInit, OnDestroy {
     if (this.dataSource) { 
       this.dataSource.disconnect(); 
     }
+  }
+
+  onClickLogout() {
+    this.router.navigate(['/login']);
   }
 }

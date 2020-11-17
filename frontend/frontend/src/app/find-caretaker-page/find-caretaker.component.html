@@ -6,11 +6,11 @@
       </div>
       <div class="options">
         <ul class="header-list">
-          <li><a href="http://localhost:4200/find-caretaker">Find a caretaker</a></li>
-          <li><a href="">Your jobs</a></li>
-          <li><a href="">Your bids</a></li>
-          <li><a href="">Profile</a></li>
-          <li><a href=""><i class="fas fa-sign-out-alt"></i></a></li>
+          <li><a [routerLink] = "['/find']">Find a caretaker</a></li>
+          <li ><a [routerLink] = "['/jobs']">Your Jobs</a></li> <!-- ngIf NOT authenticated-->
+          <li><a [routerLink] = "['/bids']">Your bids</a></li> <!-- ngIf NOT authenticated-->
+          <li ><a [routerLink] = "['/profile']">Profile</a></li> <!-- ngIf authenticated-->
+          <li><a href=""><i class="fas fa-sign-out-alt" (click)="onClickLogout()"></i></a></li>
         </ul>
       </div>
     </div>
@@ -48,9 +48,9 @@
 
     <div class="search-result">
       <div class="table">
-        <mat-card  *ngFor="let listing of obs | async">
+        <mat-card  *ngFor="let listing of obs | async" (click)="onClickCard()">
           <div class="listing">
-            <div class="list-name">Priscilla Lim</div>
+            <div class="list-name">{{listing.name}}</div>
           
             <div class="list-pet-categories"> 
               <mat-chip-list>
@@ -59,13 +59,13 @@
             </div>
           
             <div class="list-price">
-              <div id="price">$17</div> per day
+              <div id="price">{{listing.price}}</div> $ per day
             </div>
           
             <div class="list-rating">
                 <div class="stars">
                     <i *ngFor="let i of [].constructor(5)" class="fas fa-star"></i>
-                </div> 82 reviews
+                </div> {{listing.review}} reviews
             </div>
           </div>
         </mat-card>

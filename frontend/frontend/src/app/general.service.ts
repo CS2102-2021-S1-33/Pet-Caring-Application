@@ -2,11 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import axios from 'axios'
 
-if (window.location.hostname == "localhost") {
-  axios.defaults.baseURL = "http://localhost:4200/";
-}
-axios.defaults.withCredentials = true;
-
 @Injectable({
   providedIn: 'root'
 })
@@ -60,7 +55,7 @@ export class GeneralService {
       "password": password
       }
     
-    this._http.post(url, null, {params: data, withCredentials: true});
+    return this._http.post(url, data, {withCredentials: true});
 
   }
 
@@ -184,13 +179,13 @@ export class GeneralService {
       "base_price": basePrice
     }
 
-    this._http.post(url, null, { params: data, withCredentials: true});
+    return this._http.post(url, data, {withCredentials: true});
   }
 
   getAllPetCategories() {
 
     let url = this.baseUrl + "pet-category";
-    this._http.get(url, {withCredentials: true});
+    return this._http.get(url, {withCredentials: true});
   }
 
   adminDeletePetCategory(petCategory: string) {
@@ -201,7 +196,7 @@ export class GeneralService {
       "pet_category_name": petCategory
     }
 
-    this._http.delete(url, {params: data, withCredentials: true});
+    return this._http.delete(url, {params: data, withCredentials: true});
   }
 
   petOwnerAddsPet(petName: string, specialReq: string, category: string) {
@@ -222,7 +217,7 @@ export class GeneralService {
 
     let url = this.baseUrl + "pet";
 
-    this._http.get(url, {withCredentials: true});
+    return this._http.get(url, {withCredentials: true});
   }
 
   //changes
@@ -256,11 +251,11 @@ export class GeneralService {
     this._http.post(url, null, {params: data, withCredentials: true});
   }
 
-  adminGetUsersDetails() {
+  getUsersDetails() {
 
     let url = this.baseUrl + "user/user-details";
 
-    this._http.get(url, {withCredentials: true});
+    return this._http.get(url, {withCredentials: true});
   }
 
   adminDeleteUser(username: string) {
@@ -284,4 +279,24 @@ export class GeneralService {
 
     this._http.post(url, null, {params: data, withCredentials: true});
   }
+
+  adminGetAllUsers() {
+
+    let url = this.baseUrl + "user";
+    return this._http.get(url, {withCredentials: true});
+  }
+
+  adminGetUnderperformingCaretakers() {
+
+    let url = this.baseUrl + "user/admin-cq";
+    return this._http.get(url, { withCredentials: true});
+  }
+
+  petOwnerGetCq() {
+
+    let url = this.baseUrl + "user/petowner-cq";
+    return this._http.get(url, {withCredentials: true});
+  }
+
+  
 }

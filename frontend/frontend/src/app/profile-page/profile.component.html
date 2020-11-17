@@ -6,12 +6,10 @@
         <div class="options">
         <ul class="header-list">
             <li><a [routerLink] = "['/find']">Find a caretaker</a></li>
-            <li ><a [routerLink] = "['/login']">Login</a></li> <!-- ngIf NOT authenticated-->
-            <li><a [routerLink] = "['/signup']">Sign Up</a></li> <!-- ngIf NOT authenticated-->
-            <!-- <li><a [routerLink] = "['bids']">Your bids</a></li> ngIf authenticated AND pet owner
-            <li><a [routerLink] = "['jobs']">Your jobs</a></li>  ngIf authenticated AND caretaker
-            <li><a [routerLink] = "['profile']">Profile</a></li>  ngIf authenticated
-            <li><a href=""><i class="fas fa-sign-out-alt"></i></a></li>  ngIf authenticated -->
+          <li ><a [routerLink] = "['/jobs']">Your Jobs</a></li> <!-- ngIf NOT authenticated-->
+          <li><a [routerLink] = "['/bids']">Your bids</a></li> <!-- ngIf NOT authenticated-->
+          <li ><a [routerLink] = "['/profile']">Profile</a></li> <!-- ngIf authenticated-->
+          <li><a href=""><i class="fas fa-sign-out-alt" (click)="onClickLogout()"></i></a></li>
         </ul>
       </div>
     </div>
@@ -111,6 +109,16 @@
                     </ngx-datatable-column>
                 </ngx-datatable>
             </div>
+        </div>
+
+        <div class="sub-heading">
+            <div class="subheading">Cost</div>
+            <br>
+            <div class="average-rating"> 
+                <div class="stars">
+                </div> Average daily caretaking cost for each pet is $13
+            </div>
+            <br>
         </div>
     </div>
 </div>
