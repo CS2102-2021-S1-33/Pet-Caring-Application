@@ -11,6 +11,12 @@ const godRoutes = express.Router();
 const schema = fs
   .readFileSync(path.join(__dirname, "../db/schema.sql"))
   .toString();
+const pet_owners_mock_data = fs
+  .readFileSync(path.join(__dirname, "../db/pet_owners.sql"))
+  .toString();
+const caretakers_mock_data = fs
+  .readFileSync(path.join(__dirname, "../db/caretakers.sql"))
+  .toString();
 const procedures = fs
   .readFileSync(path.join(__dirname, "../db/procedures.sql"))
   .toString();
@@ -26,7 +32,15 @@ const sessions = fs
 
 godRoutes.post("/", async (req, res) => {
   await pool
-    .query(schema + procedures + triggers + sampleData + sessions)
+    .query(
+      schema +
+        pet_owners_mock_data +
+        caretakers_mock_data +
+        procedures +
+        triggers +
+        sampleData +
+        sessions
+    )
     .then((result) => res.json({ result: result.rows }))
     .catch((err) => res.json({ err }));
 });
