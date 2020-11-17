@@ -7,7 +7,7 @@ import axios from 'axios'
 })
 export class GeneralService {
 
-  baseUrl: string = "http://localhost:5000/api/";
+  baseUrl: string = "https://poochfriendly.herokuapp.com/api/";
 
   constructor(private _http: HttpClient) { }
 
